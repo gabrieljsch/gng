@@ -73,7 +73,7 @@ class CharacterRaces():
 		"Cytherean" :  [[2,2,4,5,3,1.0, 12], [("wraithwalk", True)]],
 		"Gnome" :      [[2,3,5,4,3,0.8, 11], []],
 		"Hobbit" :     [[2,3,4,3,5,0.9, 11], []],
-		"Elf" : 	   [[3,3,4,4,3,0.9, 13], []],
+		"Elf" : 	   [[3,3,4,4,3,1.0, 13], []],
 		"Terran" :     [[4,3,3,3,4,1.0, 15], []],
 		"Ghoul" :      [[4,4,4,2,1,1.1,  8], []],
 		"Dragonborn" : [[4,5,2,3,1,1.2, 13], ["tail smash"]],
@@ -92,6 +92,9 @@ class Brands():
 		"frozen": {"count": 2},
 	}
 
+	# Manage brands
+	brands = ["flaming","frozen","silvered","envenomed","hellfire","infernal","vampiric","void"]
+
 
 class Weapons():
 	# self,  name, rep, wclass hands,  enchantment, damage, to_hit, speed,   brand(optional), (percent to swing) 
@@ -100,11 +103,14 @@ class Weapons():
 
 		# Innate Weapons
 		"fists" : 	   ['','fist',0, 0, 3, 9, 0.7, None, 100],
-		"horns" :  	   ['','horns',0, 0, 6, 0, 0.7, None, 50],
-		"headbutt" :   ['','head',0, 0, 8, -1, 0.9, None, 15],
-		"tail smash" : ['','tail',0, 0, 6, 2, 0.8, None, 25],
+		"horns" :  	   ['','horns',0, 0, 7, 0, 0.7, None, 50],
+		"headbutt" :   ['','head',0, 0, 8, -1, 0.9, None, 20],
+		"tail smash" : ['','tail',0, 0, 6, 2, 0.8, None, 30],
 		"shield hit" : ['','shield',0, 0, 5, 5, 1.0, None, 15],
 		"fist smash" : ['','fists',0, 0, 17, -2, 1.6, None, 100],
+
+		# Ranged Innate
+		"vomit" :      ['','vomit',0, 0, 6, 0, 1.2, None, 40],
 
 
 
@@ -155,7 +161,7 @@ class Weapons():
 
 
 		# Uruk Weapons
-		"hooked longsword" :     ['!','sword',1, 0, 9, 2, 1.1],
+		"hooked longsword" :     ['!','sword',1, 0, 9, 1, 1.1],
 		"hooked greatsword" :    ['!','greatsword',2, 0, 15, -3, 1.25],
 		"uruk-hai pike" :    	 ['/','pike', 2, 0, 10, -1, 1.2],
 
@@ -166,6 +172,9 @@ class Weapons():
 		# Bone Weapons
 		"bone cleaver" :   ['!','sword',1, 0, 9, 2, 1.2],
 		"sawtooth blade" : ['!','sword',1, 0, 11, -1, 1.2],
+
+		# Top-tier
+		"witchhunter blade" : ['!','sword',1, 0, 10, 3, 1.0,"void"],
 
 
 		# Ranged Weapons
@@ -183,7 +192,8 @@ class Weapons():
 		"Bloodreaver" :           ['!','demon sword', 1, -6, 24, 6, 1, 'vampiric'],
 		"Longclaw" :              ['!','greatsword',  2, d(10), 18, 5, 1.1],
 		"God-Cleaver" : 		  ['!','god sword',   2, d(5), 22, -10, 1.4, 'hellfire'],
-		"Worldshaper" :     	  ['%','god hammer',  2, d(10), 25, -15, 1.6, 'frozen']
+		"Worldshaper" :     	  ['%','god hammer',  2, d(10), 25, -15, 1.6, 'frozen'],
+		"Nighthunter" :     	  ['%','bastard sword',  2, d(10), 16, 6, 1.2, 'silvered'],
 		}
 
 
@@ -195,7 +205,7 @@ class Weapons():
 		"fist" : ['punch', 'into'],
 		"fists" : ['slam', 'onto'],
 		"horns" : ["stab", "into"],
-		"head" : ["smash", "onto"],
+		"head" : ["smash", "into"],
 		"tail" : ["smash", "into"],
 
 		# Basic Weapons
@@ -217,6 +227,7 @@ class Weapons():
 		# Ranged Weapons
 		"bow" : ["loose", "into"],
 		"crossbow" : ["fire", "into"],
+		"vomit" : ["loose", "onto"],
 
 		# God weapons
 		"god spear" : ["plunge", "deep into"],
@@ -227,7 +238,7 @@ class Weapons():
 
 
 
-	ranged_wclasses = set(["bow", "crossbow"])
+	ranged_wclasses = set(["bow", "crossbow","vomit"])
 
 
 
@@ -237,7 +248,7 @@ class Weapons():
 
 	# DEFINE spells
 
-	def dark_transformation(attacker, enemy, game, map, roomfiller, ability = False):
+	def dark_transformation(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		status = 'grotesque'
@@ -267,7 +278,7 @@ class Weapons():
 			game.game_log.append("Your body twists into a huge, grotesque abomination!")
 		return True
 
-	def wraithwalk(attacker, enemy, game, map, roomfiller, ability = False):
+	def wraithwalk(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		count = 5
@@ -300,7 +311,7 @@ class Weapons():
 		return True
 
 
-	def poison_breath(attacker, enemy, game, map, roomfiller, ability = False):
+	def poison_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		status = 'poisoned'
@@ -322,7 +333,7 @@ class Weapons():
 		enemy.passives.append([status, count])
 		return True
 
-	def fire_breath(attacker, enemy, game, map, roomfiller, ability = False):
+	def fire_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		status = 'aflame'
@@ -338,7 +349,7 @@ class Weapons():
 
 		# Manage damage
 		enemy.hp -= damage
-		if attacker.name != 'you': game.player.well_being_statement(enemy, game)
+		if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
 
 		# Apply Effect
 		for passive in enemy.passives:
@@ -350,13 +361,15 @@ class Weapons():
 		enemy.passives.append([status, count])
 		return True
 
-	def frost_breath(attacker, enemy, game, map, roomfiller, ability = False):
+	def frost_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
+		status = "frozen"
+		count = 4
 		if ability: damage = int(md(2, 1/2 + 1/2 * attacker.str))
 		else: damage = int(md(2, 1/2 + 1/2 * attacker.int))
 
-		def freeze(attacker, enemy, game, map, roomfiller, ability = False):
+		def freeze(attacker, enemy):
 
 			# Flavor Text
 			if attacker.name == 'you' and enemy.name != 'you':
@@ -366,8 +379,17 @@ class Weapons():
 
 			# Manage damage
 			enemy.hp -= damage
-			if enemy.name != 'you': game.player.well_being_statement(enemy, game)
-			enemy.time += 4
+			if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
+
+			# Apply effect
+			for passive in enemy.passives:
+
+				if passive[0] == status:
+					passive[1] += count
+					return
+
+			enemy.passives.append([status, count])
+
 
 		# Check Condition
 		tar = False
@@ -375,7 +397,7 @@ class Weapons():
 			los = ai.los(attacker.loc, unit.loc, Maps.rooms[game.map.map][0], game)
 			if los is not None:
 				if len(los) - 1 <= Weapons.spells['frost breath'][5]:
-					freeze(attacker, unit, game, map, roomfiller, ability)
+					freeze(attacker, unit)
 					tar = True
 		if not tar:
 			game.temp_log.append("There are no targets in range")
@@ -383,7 +405,7 @@ class Weapons():
 
 		return True
 
-	def magic_missile(attacker, enemy, game, map, roomfiller, ability = False):
+	def magic_missile(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		damage = int(md(2, 1/2 + 1/2 * attacker.int))
@@ -396,10 +418,10 @@ class Weapons():
 
 		# Manage damage
 		enemy.hp -= damage
-		if attacker.name != 'you': game.player.well_being_statement(enemy, game)
+		if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
 		return True
 
-	def bloodreave(attacker, enemy, game, map, roomfiller, ability = False):
+	def bloodreave(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		damage = int(md(4, max(2, 1 + 1/2 * attacker.int)))
@@ -414,11 +436,11 @@ class Weapons():
 		# Manage damage
 		enemy.hp -= damage
 		attacker.hp -= self_dam
-		if attacker.name != 'you': game.player.well_being_statement(enemy, game)
+		if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
 		return True
 
 
-	def dark_bolt(attacker, enemy, game, map, roomfiller, ability = False):
+	def dark_bolt(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
 		damage = int(md(3, 1 + 1/2 * attacker.int))
@@ -431,16 +453,16 @@ class Weapons():
 
 		# Manage damage
 		enemy.hp -= damage
-		if attacker.name != 'you': game.player.well_being_statement(enemy, game)
+		if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
 		return True
 
-	def chain_lightning(attacker, enemy, game, map, roomfiller, ability = False):
+	def chain_lightning(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
-		damage = int(md(2, 1/2 + 1/2 * attacker.int))
+		damage = int(md(2, 1/2 + 1/3 * attacker.int))
 		bounce_chance = 80
 
-		def chain(attacker, enemy, game, map, roomfiller, ability = False, zapped = set()):
+		def chain(attacker, enemy, zapped = set()):
 
 			# Base case:
 			if enemy in zapped: return
@@ -455,18 +477,18 @@ class Weapons():
 
 			# Manage damage
 			enemy.hp -= damage
-			if enemy.name != 'you': game.player.well_being_statement(enemy, game)
+			if enemy.name != 'you': game.player.well_being_statement(enemy, name, game)
 			zapped.add(enemy)
 
 			# Chain Effect
 			for unit in game.units:
 				los = ai.los(enemy.loc, unit.loc, Maps.rooms[game.map.map][0], game )
 				if los is not None:
-					if unit not in zapped and len(los) - 1 <= 2 and d(100) >= 100 - bounce_chance: chain(attacker, unit, game, map, roomfiller, ability, zapped)
+					if unit not in zapped and len(los) - 1 <= 2 and d(100) >= 100 - bounce_chance: chain(attacker, unit, zapped)
 
 			return True
 
-		return chain(attacker, enemy, game, map, roomfiller, ability)
+		return chain(attacker, enemy)
 
 
 
@@ -487,7 +509,7 @@ class Weapons():
 		"chain lightning" : 	(chain_lightning, 		8, 1.4,  True, True,  6),
 
 		# Dragonborn
-		"fire breath" :  		(fire_breath,      		5, 1.2,  True, True,  4),
+		"fire breath" :  		(fire_breath,      		5, 1.1,  True, True,  4),
 		"frost breath" :  		(frost_breath,      	7, 1.3,  False, False, 3),
 		# Cytherean
 		"wraithwalk" : 			(wraithwalk,   			0, 0,  False, False),
