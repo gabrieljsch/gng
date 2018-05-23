@@ -51,10 +51,16 @@ class Monsters():
 		"Black Eye Chosen" :    ["C","man",7,  7,3,3,6,4,1.0, 100, ['spiked mace'] , ['tainted robe'], ['dark transformation','bloodreave']],
 
 		# Dark Elves
-		"Dark Elf Scout" : 		["s","elf",3,  4,3,5,4,4,0.95, 15, ['sun spear'] , ['blackscale']],
-		"Dark Elf Hunter" : 	["h","elf",4,  4,4,6,4,4,0.85, 23, ['sun spear'] , ['blackscale'], ['blackwood longbow']],
+		"Dark Elf Scout" : 		["s","elf",3,  4,3,5,4,4,0.95, 15, ['sun spear'] , ['iron scale mail']],
+		"Dark Elf Hunter" : 	["h","elf",4,  4,4,6,4,4,0.85, 23, ['sun spear'] , ['iron scale mail'], ['blackwood longbow']],
 		"Dark Elf Praetorian" : ["d","elf",4,  5,4,5,4,6,0.95, 23, ['sun spear'] , ['blackscale']],
 		"Dark Elf Dragoon" :    ["D","elf",5,  6,4,5,4,9,0.60, 30, ['sun spear'] , ['blackscale']],
+
+		# Large Creatures
+		"Ogre" : 		 ["O","ogre",1,  5,4,2,1,6,1.4, 15, ['club','bone club'] , ['ogre hide','scrap plate armor']],
+		"Ooze" : 		 ["O","ooze",1,  4,4,2,1,6,1.2, 15, ['jelly slap','acid slap'] , ['ogre hide']],
+		"Giant Spider" : ["S","spider",2,  4,4,4,2,6,0.7, 30, ['fangs'] , ['berserker mail','scrap plate armor'],['massive stinger']],
+		"Cave Troll" : 	 ["T","troll",2,  6,5,1,1,6,1.3, 30, ['spiked club'] , ['troll hide','cave troll hide','scrap plate armor']],
 		}
 
 class Bands():  # Tier Bonus :   formations
@@ -93,7 +99,7 @@ class Bands():  # Tier Bonus :   formations
 			 								['Dark Elf Praetorian'],
 			 								[],
 			 								['Dark Elf Dragoon'],
-			 								[],
+			 								['Dark Elf Praetorian'],
 			 								[],
  			] ),
 
@@ -105,15 +111,17 @@ class Bands():  # Tier Bonus :   formations
 			 								[],
 			 								['Black Eye Prophet'],
  			] ),
+ 		'Wandering Monster' : (0, [	['Ogre','Ooze','Giant Spider','Cave Troll']	
+ 			] ),
 
 
  	}
 
- 	dicto = { 	   1 : ['Orc Band','Undead Horde'],
- 				   2 : ['Orc Band','Undead Horde','Black Eye Cult'],
- 				   3 : ['Orc Band','Undead Horde','Dark Elf Raiding Party','Black Eye Cult'],
- 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Raiding Party','Black Eye Cult'],
- 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Raiding Party','Black Eye Cult'],
+ 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster'],
+ 				   2 : ['Orc Band','Undead Horde','Wandering Monster'],
+ 				   3 : ['Orc Band','Undead Horde','Dark Elf Raiding Party','Black Eye Cult','Wandering Monster'],
+ 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Raiding Party','Black Eye Cult','Wandering Monster'],
+ 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Raiding Party','Black Eye Cult','Wandering Monster'],
  				   }
 
  	# dicto = { 	   1 : ['Black Eye Cult'],

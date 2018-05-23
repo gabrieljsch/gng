@@ -19,7 +19,6 @@ class Player():
 
 	def __init__(self, statsheet, innate_equipment, game):
 
-
 		# Initialize Location, Time
 		self.loc, self.time = (2,5), 0
 
@@ -35,12 +34,11 @@ class Player():
 		self.mana = 3 * self.int
 		self.maxmana = 3 * self.int
 
-
 		# Initialze Equipment
 		self.wielding, self.hands = [], 2
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities = [], ["frost breath", "magic missile", "fire breath"], ["fire breath"]
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["frost breath", "magic missile"], [], []
 
 		for equipment in innate_equipment:
 			if equipment in Weapons.array: self.give_weapon(equipment)
@@ -66,8 +64,7 @@ class Player():
 
 		# Innate passives
 		if self.race == 'Dragonborn': self.innate_ac += 2
-
-		if self.race == 'Troll': self.innate_ac += 1
+		if self.race == 'Hill Troll': self.innate_ac += 1
 
 
 
@@ -445,6 +442,8 @@ class Player():
 
 						if spell(spell_name, self, unit, game, Maps.rooms[game.map.map][0], game.map.room_filler, True):
 							self.time += Weapons.spells[spell_name][2]
+							self.cooldowns.append( [spell_name, Weapons.spells[spell_name][1] * 2] )
+							self.abilities.remove(spell_name)
 						valid = True
 
 						# # Enemy Well-being Statement
@@ -648,6 +647,7 @@ class Player():
 
 		# Take a turn
 		self.time += self.mspeed
+		return True
 
 	def unequip(self, weapon):
 		if type(item) == Weapon:
@@ -1015,9 +1015,9 @@ class Weapon():
 				elif self.brand == "infernal": brandhit = d(100) > 65
 				elif self.brand == "frozen": brandhit = d(100) > 80
 				elif self.brand == "void":
-					if len(enemy.spells) > 0: brandhit = True
-				elif self.brand == "silvered" and attacker.name == 'you': 
-					if enemy.etype in set(["undead"]): brandhit = True
+					brandhit = True if len(enemy.spells) > 0 else False
+				elif self.brand == "silvered": 
+					brandhit = True if enemy.etype in set(["undead"]) and attacker.name == 'you' else False
 				elif self.brand is not None: brandhit = True
 
 				# Apply Brands
@@ -1070,25 +1070,79 @@ class Weapon():
 					damage = int (d(counter.damage) + attacker.str / 1.5 + counter.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					if damage > 0:
 						if type(attacker) != Monster:
-							game.game_log.append("The "  + str(enemy.name) + " counters you with its blade for " + str(damage) + "damage!")
+							game.game_log.append("The "  + str(enemy.name) + " counters you with its blade for " + str(damage) + " damage!")
 						else:
 							game.game_log.append("You counter the " + str(attacker.name) + " with your blade for " + str(damage) + " damage!")
 
 						attacker.hp -= damage
-						game.player.well_being_statement(attacker, counter.name, game)
+						if attacker.name != "you": game.player.well_being_statement(attacker, counter.name, game)
 
 
 	def weapon_type_effect(self, attacker, enemy, damage):
 
+
 		# Blunt weapons
-		if self.wclass == "hammer" or self.wclass == "club" or self.wclass == "god hammer" or self.wclass == "mace":
+		if self.wclass == "hammer" or self.wclass == "club" or self.wclass == "mace":
 			if enemy.equipped_armor.brand == 'plate': damage *= 1.3
+
+		if self.wclass == "warhammer" or  self.wclass == "god hammer":
+			if enemy.equipped_armor.brand == 'plate': damage *= 1.3
+
+			# CLEAVE Attack
+			# --START--------------------------------
+			y = attacker.loc[0] - enemy.loc[0]
+			x = attacker.loc[1] - enemy.loc[1]
+
+			for unit in game.units:
+
+				# Horizontal Case
+				if x == 0:
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1): self.strike(attacker, unit, False)
+
+				# Vertical Case
+				elif y == 0:
+					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]): self.strike(attacker, unit, False)
+
+				# Corner case
+				else:
+					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + x): self.strike(attacker, unit, False)
+			# --END------------------------------------
+
+
 
 		if self.wclass == "dagger":
 			pass
 
 		if self.wclass == "greatsword" or self.wclass == "god sword":
-			pass
+
+			# CLEAVE Attack
+			# --START--------------------------------
+			y = attacker.loc[0] - enemy.loc[0]
+			x = attacker.loc[1] - enemy.loc[1]
+
+			for unit in game.units:
+
+				# Horizontal Case
+				if x == 0:
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1): self.strike(attacker, unit, False)
+
+				# Vertical Case
+				elif y == 0:
+					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]): self.strike(attacker, unit, False)
+
+				# Corner case
+				else:
+					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + x): self.strike(attacker, unit, False)
+
+				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, False)
+			# --END------------------------------------
+
 
 		if self.wclass == "spear" or self.wclass == "polearm":
 			for unit in game.units:
@@ -1107,7 +1161,30 @@ class Weapon():
 			damage *= (1 + (0.25 - enemy.calc_AC() / 50 ) )
 
 		if self.wclass == "greataxe" or self.wclass == "god axe":
- 			damage *= (1 + (0.25 - enemy.calc_AC() / 50 ) )
+			damage *= (1 + (0.25 - enemy.calc_AC() / 50 ) )
+
+ 			# CLEAVE Attack
+			# --START--------------------------------
+			y = attacker.loc[0] - enemy.loc[0]
+			x = attacker.loc[1] - enemy.loc[1]
+
+			for unit in game.units:
+
+				# Horizontal Case
+				if x == 0:
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1): self.strike(attacker, unit, False)
+
+				# Vertical Case
+				elif y == 0:
+					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]): self.strike(attacker, unit, False)
+
+				# Corner case
+				else:
+					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + x): self.strike(attacker, unit, False)
+			# --END------------------------------------
 
 
 		return int(damage)
@@ -1142,8 +1219,7 @@ class Weapon():
 				attacker.hp += int(damage / 3)
 
 				# Heal
-				if attacker.hp > attacker.maxhp:
-					attacker.hp = attacker.maxhp
+				if attacker.hp > attacker.maxhp: attacker.hp = attacker.maxhp
 
 			if self.brand == "hellfire":
 				damage += int((1 - (enemy.hp / enemy.maxhp) ) * damage * 0.5)
@@ -1269,11 +1345,26 @@ class Chest():
 		self.opened = False
 
 		if self.type == "orc":
-			self.pot_weapons = [["troll hide","drake scale armor"], ["choppa"], ["slica"], ["bear hide"], ["toxic slica"]]
+			self.pot_weapons = [["bear hide","ogre hide"],
+								 ["choppa","slica","smasha"],
+								 ["goblin bow","crude shortbow"], 
+								 ["big choppa","big slica","skull smasha"], 
+								 ["scrap plate armor","berserker mail","troll hide"], 
+								 ["toxic slica"],
+								 ["ice choppa"],]
 		elif self.type == "elf":
-			self.pot_weapons = [["spear","elven leafblade"], ["Singing Spear of Dorn","ranger longbow"]]
+			self.pot_weapons = [["spear","elven leafblade"],
+								[],
+								[],
+								["Singing Spear of Dorn","ranger longbow"],
+								 ]
 		else:
-			self.pot_weapons = [["steel bastard sword"],["crude shortbow","iron dagger","iron axe","spear","hammer"], ["iron battleaxe","iron longsword","mace"], ["iron battleaxe"], ["steel plate armor"]]
+			self.pot_weapons = [["steel dagger","iron axe","spear","hammer","mace","iron longsword"], 
+									["crude shortbow","iron battleaxe","iron longsword","mace"], 
+									["buckler shield", "wooden broadshield","trollhide shield"], 
+									["iron battleaxe","iron greatsword","warhammer","spiked club"],
+									["steel plate armor","iron chainmail"],
+									]
 
 	def open(self):
 
@@ -1281,12 +1372,15 @@ class Chest():
 		while n > 0:
 			if len(self.pot_weapons) == 0: return
 
+			
+
 			# Calculate Tier
-			tier = self.pot_weapons[min( d(game.player.level) - 1, len(self.pot_weapons) - 1 )]
+			tier = self.pot_weapons[min( d(game.player.level) - 1, len(self.pot_weapons) - 1 )] # player level / Specifies not to overshoot
 
 			item_name = tier [ d( len(tier)) - 1]
 
 
+			# If weapon
 			if item_name in Weapons.array:
 
 				# Chance for brand
@@ -1294,14 +1388,20 @@ class Chest():
 				if Weapons.array[item_name][2] > 0:
 					if d(100) + 2 * n > 99: brand = Brands.brands[d(len(Brands.brands)) - 1]
 
+				# Chance to place Weapon
+				# t = (d(100) / 100)
+				# print(t)
+				# if t < 1 / len(self.pot_weapons[0][:min(game.player.level, len(self.pot_weapons) - 1)]):
 				game.map.room_filler.place_weapon(item_name, self.loc, d(self.tier), brand)
 
+			# If Armor
 			elif item_name in Armors.array:
 				game.map.room_filler.place_armor(item_name, self.loc, d(self.tier))
 
+			#If Shield
 			elif item_name in Shields.array:
 				game.map.room_filler.place_shield(item_name, self.loc, d(self.tier))
-				
+
 			self.pot_weapons.remove(tier)
 
 			n -= 1
@@ -1541,7 +1641,7 @@ class Game():
 
 	def __init__(self):
 		# Manage Constants
-		self.race = "Dragonborn"
+		self.race = "Ghoul"
 
 		self.player = Player(CharacterRaces.races[self.race][0], CharacterRaces.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -1599,43 +1699,20 @@ class Game():
 		def action(move):
 			x, y = self.player.loc[0], self.player.loc[1]
 
-			# Regen Health
-			if self.player.hp < self.player.maxhp:
-
-				# Increment Counter
-				self.hregen += 1
-
-				# Regen one health
-				if self.hregen >= (self.player.reg  -  1/3  * self.player.con):
-
-					self.player.hp += 1
-					self.hregen = 0
-
-			# Regen Mana
-			if self.player.mana < self.player.maxmana:
-
-				# Increment Counter
-				self.mregen += 1
-
-				# Regen one health
-				if self.mregen >= (14 - self.player.int):
-
-					self.player.mana += 1
-					self.mregen = 0
 
 
 			# Base Case
 			if move in set(['h','H','j','J','k','K','l','L','y','Y','u','U','b','B','n','N',',','.','w','W','f','r','s','a']):
 
 				# Attack Move (1 turn)
-				if move == 'l': return self.player.atk_mv(map, (x + 1, y))
-				elif move == 'k': return self.player.atk_mv(map, (x, y - 1))
-				elif move == 'j': return self.player.atk_mv(map, (x, y + 1))
-				elif move == 'h': return self.player.atk_mv(map, (x - 1, y))
-				elif move == 'y': return self.player.atk_mv(map, (x - 1, y - 1))
-				elif move == 'u': return self.player.atk_mv(map, (x + 1, y - 1))
-				elif move == 'b': return self.player.atk_mv(map, (x - 1, y + 1))
-				elif move == 'n': return self.player.atk_mv(map, (x + 1, y + 1))
+				if move == 'l': self.player.atk_mv(map, (x + 1, y))
+				elif move == 'k': self.player.atk_mv(map, (x, y - 1))
+				elif move == 'j': self.player.atk_mv(map, (x, y + 1))
+				elif move == 'h': self.player.atk_mv(map, (x - 1, y))
+				elif move == 'y': self.player.atk_mv(map, (x - 1, y - 1))
+				elif move == 'u': self.player.atk_mv(map, (x + 1, y - 1))
+				elif move == 'b': self.player.atk_mv(map, (x - 1, y + 1))
+				elif move == 'n': self.player.atk_mv(map, (x + 1, y + 1))
 				# Run Right
 				elif move == 'L':
 					if len(game.units) == 1:
@@ -1645,7 +1722,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run Up
 				elif move == 'K':
 					if len(game.units) == 1:
@@ -1655,7 +1734,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run Down
 				elif move == 'J':
 					if len(game.units) == 1:
@@ -1665,7 +1746,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run Left
 				elif move == 'H':
 					if len(game.units) == 1:
@@ -1675,7 +1758,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run UL
 				elif move == 'Y':
 					if len(game.units) == 1:
@@ -1685,7 +1770,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run UR
 				elif move == 'U':
 					if len(game.units) == 1:
@@ -1695,7 +1782,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run DL
 				elif move == 'B':
 					if len(game.units) == 1:
@@ -1705,7 +1794,9 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 				# Run DR
 				elif move == 'N':
 					if len(game.units) == 1:
@@ -1715,20 +1806,33 @@ class Game():
 								self.player.time = 0
 								self.check_passives(self.player)
 							else: break
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
 
 				# fire
 				elif move == 'f': self.player.fire()
 				# spell
-				elif move == 's': self.player.spell()
+				elif move == 's': 
+					if len(self.player.spells) > 0: self.player.spell()
+					else:
+						game.temp_log.append("You do not know any spells.")
+						return
 				# ability
-				elif move == 'a': self.player.ability()
+				elif move == 'a': 
+					if len(self.player.abilities) > 0: self.player.ability()
+					else:
+						game.temp_log.append("All your abilites are on cooldown.")
+						return
 				# wield
-				elif move == 'w': self.equip(Weapon)
+				elif move == 'w':
+					if not self.equip(Weapon): return
 				# Wear
-				elif move == 'W': self.equip(Armor)
+				elif move == 'W':
+					if not self.equip(Armor): return
 				# Investigate
-				elif move == ',': self.investigate()
+				elif move == ',':
+					if not self.investigate(): return
 				# Wait
 				elif move == '.':
 					self.player.time += self.player.mspeed
@@ -1739,7 +1843,49 @@ class Game():
 						while self.player.hp < self.player.maxhp or self.player.mana < self.player.maxmana: action('.')
 						game.temp_log.append("You feel well-rested")
 						self.player.time = 0
-					else: game.temp_log.append("There are enemies nearby!")
+					else:
+						game.temp_log.append("There are enemies nearby!")
+						return
+
+
+				# Reduce Cooldowns
+				#------------------
+
+				# Reduce
+				for tuplee in self.player.cooldowns:
+					tuplee[1] -= 1
+
+					# Add back
+					if tuplee[1] == 0:
+						self.player.abilities.append(tuplee[0])
+						self.game_log.append("You can use your " + str(tuplee[0] + " again!"))
+						self.player.cooldowns.remove(tuplee)
+
+				# Regen Health
+				if self.player.hp < self.player.maxhp:
+					print("uh oh")
+
+					# Increment Counter
+					self.hregen += 1
+
+					# Regen one health
+					if self.hregen >= (self.player.reg  -  1/3  * self.player.con):
+
+						self.player.hp += 1
+						self.hregen = 0
+
+				# Regen Mana
+				if self.player.mana < self.player.maxmana:
+
+					# Increment Counter
+					self.mregen += 1
+
+					# Regen one health
+					if self.mregen >= (14 - self.player.int):
+
+						self.player.mana += 1
+						self.mregen = 0
+
 			else: game.temp_log.append("Invalid Move")
 
 
@@ -1884,13 +2030,20 @@ class Game():
 		opened_a_chest = False
 		for item in self.items:
 			if self.player.loc == item.loc:
-				if type(item) != Chest: drops.append(item)
+				if type(item) != Chest:
+					drops.append(item)
 				else:
 					if not item.opened:
 						game.game_log.append("You bust open the chest!")
 						print("You bust open the chest!")
 						item.open()
 						opened_a_chest = True
+					else:
+						return False
+
+		if len(drops) == 0:
+			self.game_log.append("There is nothing here to interact with.")
+			return False
 
 		# One item on the ground
 		if len(drops) == 1 and not opened_a_chest: self.player.pick_up(drops[0])
@@ -1898,7 +2051,7 @@ class Game():
 		# Nothing on the ground
 		elif len(drops) == 0:
 			game.temp_log.append("There is nothing here to interact with.")
-			return
+			return False
 
 		# Multiple ground items
 		else: self.ground_inventory(drops)
@@ -1960,7 +2113,7 @@ class Game():
 							self.player.equip(item_array[item_order.index(decision)])
 							valid = True
 						else: print("That is not a valid input")
-				else: print("That is not a valid input")
+				if not valid: return
 			# Reset the terminal:
 			termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
 			fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
