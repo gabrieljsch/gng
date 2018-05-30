@@ -156,7 +156,12 @@ class Player():
 
 					# Check for quiver
 					if self.quivered is None:
-						game.temp_log.append("You do not have ammo quivered.")
+						game.temp_log.append("You do not have the correct ammo type quivered.")
+						return
+					# Wrong ammo type
+					if item.wclass in Weapons.ranged_wclasses and self.quivered.wclass not in Ammos.projectile[item.wclass]:
+						game.temp_log.append("You do not have the correct ammo type quivered.")
+						if thrown: self.wielding.pop()
 						return
 
 					units_in_range = []
@@ -910,6 +915,14 @@ class Player():
 
 	def atk_mv(self, map, coords):
 
+		# Find melee weapons
+		weaps = []
+		carrying = []
+		for item in self.wielding[::-1]:
+			if type(item) == Weapon:
+				if item.hands > 0: carrying.append(item)
+				if item.wclass not in Weapons.ranged_wclasses: weaps.append(item)
+
 		if map.square_identity(coords) in set(['|', '-', ' ', '#']): return
 
 		if map.square_identity(coords) == '+':
@@ -934,13 +947,7 @@ class Player():
 
 				# Equip fists
 				unarmed = []
-				if self.hands > 1: unarmed.append(self.give_weapon('fists'))
-
-				# Find melee weapons
-				weaps = []
-				for item in self.wielding[::-1]:
-					if type(item) == Weapon:
-						if item.wclass not in Weapons.ranged_wclasses: weaps.append(item)
+				if self.hands > 1 and (len(carrying) < 2 and self.race == "Hill Troll"): unarmed.append(self.give_weapon('fists'))
 
 				# Attack with each weapon
 				for item in weaps:
@@ -2526,7 +2533,7 @@ class Game():
 
 
 		print("")
-		print("Pick up which items? (enter '9' to cancel)")
+		print("Pick up which item?")
 		inp, outp, err = select.select([sys.stdin], [], [])
 		decision = sys.stdin.read()
 

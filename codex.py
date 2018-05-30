@@ -120,11 +120,19 @@ class Ammos():
 	array = {
 		"iron arrow" :     ['(', 'arrow', 1],
 		"steel arrow" :    ['(', 'arrow', 2],
+		"iron bolt" : 	   ['(', 'bolt', 1],
 		"iron javelin" :   ['/', 'javelin', 5],
 		"barbed javelin" : ['/', 'javelin', 6],
 	}
 
 	thrown_amclasses = set(["javelin"])
+
+	projectile = {
+		"bow" : set(["arrow"]),
+		"crossbow" : set(["bolt"]),
+		"ballista" : set(["bolt"]),
+
+	}
 
 
 class Weapons():
@@ -311,6 +319,7 @@ class Weapons():
 		"arrow" : ["loose", "into"],
 		"bolt" : ["fire", "into"],
 		"vomit" : ["hurl", "onto"],
+		"ballista" : ["launch", "into"],
 		"javelin" : ["hurl", "into"],
 
 		# God weapons
@@ -322,7 +331,7 @@ class Weapons():
 
 
 
-	ranged_wclasses = set(["bow", "crossbow","vomit"])
+	ranged_wclasses = set(["bow", "crossbow","vomit","ballista"])
 
 
 
