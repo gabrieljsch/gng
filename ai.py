@@ -13,86 +13,86 @@ def move_towards(one, other, map):
 
 		if dx == 0:
 			if dy < 0:
-				if map.can_move(one, (x, y + 1)): one.loc = (one.loc[0], one.loc[1] + 1)
+				if map.can_move((x, y + 1)): one.loc = (one.loc[0], one.loc[1] + 1)
 			else:
-				if map.can_move(one, (x, y - 1)): one.loc = (one.loc[0], one.loc[1] - 1)
+				if map.can_move((x, y - 1)): one.loc = (one.loc[0], one.loc[1] - 1)
 
 		if dy == 0:
 			if dx < 0:
-				if map.can_move(one, (x + 1, y)): one.loc = (one.loc[0] + 1, one.loc[1])
+				if map.can_move((x + 1, y)): one.loc = (one.loc[0] + 1, one.loc[1])
 			else:
-				if map.can_move(one, (x - 1, y)): one.loc = (one.loc[0] - 1, one.loc[1])
+				if map.can_move((x - 1, y)): one.loc = (one.loc[0] - 1, one.loc[1])
 
 	else:
 
 
 		if dx <= 1 and dy <= 1:
-			if map.can_move(one, (x + 1, y + 1)):
+			if map.can_move((x + 1, y + 1)):
 				one.loc = (one.loc[0] + 1, one.loc[1] + 1)
 			else:
 				if dx > dy:
-					if map.can_move(one, (x + 1, y)):
+					if map.can_move((x + 1, y)):
 						one.loc = (one.loc[0] + 1, one.loc[1])
 						return
-					if map.can_move(one, (x, y + 1)):
+					if map.can_move((x, y + 1)):
 						one.loc = (one.loc[0], one.loc[1] + 1)
 				else:
-					if map.can_move(one, (x, y + 1)):
+					if map.can_move((x, y + 1)):
 						one.loc = (one.loc[0], one.loc[1] + 1)
 						return
-					if map.can_move(one, (x + 1, y)):
+					if map.can_move((x + 1, y)):
 						one.loc = (one.loc[0] + 1, one.loc[1])
 
 		elif dx >= 1 and dy >= 1:
-			if map.can_move(one, (x - 1, y - 1)):
+			if map.can_move((x - 1, y - 1)):
 				one.loc = (one.loc[0] - 1, one.loc[1] - 1)
 			else:
 				if dx > dy:
 
-					if map.can_move(one, (x - 1, y)):
+					if map.can_move((x - 1, y)):
 						one.loc = (one.loc[0] - 1, one.loc[1])
 						return
-					if map.can_move(one, (x, y - 1)):
+					if map.can_move((x, y - 1)):
 						one.loc = (one.loc[0], one.loc[1] - 1)
 				else:
-					if map.can_move(one, (x, y - 1)):
+					if map.can_move((x, y - 1)):
 						one.loc = (one.loc[0], one.loc[1] - 1)
 						return
-					if map.can_move(one, (x - 1, y)):
+					if map.can_move((x - 1, y)):
 						one.loc = (one.loc[0] - 1, one.loc[1])
 
 		elif dx <= 1 and dy >= 1:
-			if map.can_move(one, (x + 1, y - 1)):
+			if map.can_move((x + 1, y - 1)):
 				one.loc = (one.loc[0] + 1, one.loc[1] - 1)
 			else:
 				if dx > dy:
-					if map.can_move(one, (x + 1, y)):
+					if map.can_move((x + 1, y)):
 						one.loc = (one.loc[0] + 1, one.loc[1])
 						return
-					if map.can_move(one, (x, y - 1)):
+					if map.can_move((x, y - 1)):
 						one.loc = (one.loc[0], one.loc[1] - 1)
 				else:
-					if map.can_move(one, (x, y - 1)):
+					if map.can_move((x, y - 1)):
 						one.loc = (one.loc[0], one.loc[1] - 1)
 						return
-					if map.can_move(one, (x + 1, y)):
+					if map.can_move((x + 1, y)):
 						one.loc = (one.loc[0] + 1, one.loc[1])
 
 		elif dx >= 1 and dy <= 1:
-			if map.can_move(one, (x - 1, y + 1)):
+			if map.can_move((x - 1, y + 1)):
 				one.loc = (one.loc[0] - 1, one.loc[1] + 1)
 			else:
 				if dx > dy:
-					if map.can_move(one, (x - 1, y)):
+					if map.can_move((x - 1, y)):
 						one.loc = (one.loc[0] - 1, one.loc[1])
 						return
-					if map.can_move(one, (x, y + 1)):
+					if map.can_move((x, y + 1)):
 						one.loc = (one.loc[0], one.loc[1] + 1)
 				else:
-					if map.can_move(one, (x, y + 1)):
+					if map.can_move((x, y + 1)):
 						one.loc = (one.loc[0], one.loc[1] + 1)
 						return
-					if map.can_move(one, (x - 1, y)):
+					if map.can_move((x - 1, y)):
 						one.loc = (one.loc[0] - 1, one.loc[1])
 
 
@@ -247,7 +247,7 @@ def los(looker, other, map_arr, game):
 						otherb = True
 
 						for cnode in new:
-							if map_arr[cnode[1]][cnode[0]] in set(['|', '-', ' ', '#','+']):
+							if map_arr[cnode[1]][cnode[0]] in set(['|', '-', '#','+']):
 								otherb = False
 								break
 

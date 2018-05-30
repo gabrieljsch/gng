@@ -2,16 +2,14 @@ from maps import Maps
 import ai
 
 from bestiary import Monsters, Bands
-from codex import Weapons, Brands, Armors, Shields, CharacterRaces
+from codex import Weapons, Ammos, Brands, Armors, Shields, CharacterRaces
 
-from random import randint
+from random import randint, shuffle
 from copy import deepcopy
 
 import sys, os
 import termios, fcntl
 import select
-
-
 
 
 
@@ -34,11 +32,11 @@ class Player():
 		self.mana = 3 * self.int
 		self.maxmana = 3 * self.int
 
-		# Initialze Equipment
-		self.wielding, self.hands = [], 2
-
 		# Inventory, Spells
 		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["frost breath", "magic missile"], [], []
+
+		# Initialze Equipment
+		self.wielding, self.hands, self.quivered = [], 2, None
 
 		for equipment in innate_equipment:
 			if equipment in Weapons.array: self.give_weapon(equipment)
@@ -46,7 +44,7 @@ class Player():
 			elif equipment[0] in Weapons.spells and not equipment[1]: self.spells.append(equipment[0])
 
 		# Initialize Armor
-		self.equipped_armor = Armor('bear hide','}',3,1, 0, None)
+		self.equipped_armor = Armor('leather armor','}','hide',5,2, 0, None)
 
 		# Initialize Level, XP
 		self.level = 1
@@ -64,7 +62,73 @@ class Player():
 
 		# Innate passives
 		if self.race == 'Dragonborn': self.innate_ac += 2
-		if self.race == 'Hill Troll': self.innate_ac += 1
+		if self.race == 'Hill Troll':
+			self.innate_ac += 1
+			self.hands = 4
+
+
+	def quiver(self):
+		item_order = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+		ammo = []
+		for thing in self.inventory:
+			if type(thing) == Ammo and thing != self.quivered: ammo.append(thing)
+
+		if len(ammo) != 0:
+			print("=======================================================================================")
+			print("                                                                     ")
+			for i in range(len(ammo)):
+
+				ammunition = ammo[i]
+				if ammunition.brand is None: print(str(item_order[i]) + " - " + ammunition.name + " (" + str(ammunition.number) + ")")
+				else: print(str(item_order[i]) + " - " + ammunition.brand + ' ' + ammunition.name + " (" + str(ammunition.number) + ")")
+
+			print("                                                                     ")
+			print("=======================================================================================")
+
+			fd = sys.stdin.fileno()
+			newattr = termios.tcgetattr(fd)
+			newattr[3] = newattr[3] & ~termios.ICANON
+			newattr[3] = newattr[3] & ~termios.ECHO
+			termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+			oldterm = termios.tcgetattr(fd)
+			oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+			fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+			print("")
+			print("Quiver what?")
+			inp, outp, err = select.select([sys.stdin], [], [])
+			decision = sys.stdin.read()
+
+
+			if len(decision) == 1:
+				if decision in item_order:
+					if item_order.index(decision) < len(ammo):
+
+						# Quiver Item
+						self.quivered = ammo[item_order.index(decision)]
+						self.time += self.mspeed
+
+						# Quiver Statement
+						if self.quivered.brand is None:
+							if self.quivered.number > 1: game.game_log.append("You quiver " + str(self.quivered.number) + " " + self.quivered.name + "s!")
+							else: game.game_log.append("You quiver 1 " + self.quivered.name + "!")
+						else:
+							if self.quivered.number > 1: game.game_log.append("You quiver " + str(self.quivered.number) + " " + self.quivered.brand + ' ' + self.quivered.name + "s!")
+							else: game.game_log.append("You quiver 1 " + self.quivered.brand + ' ' + self.quivered.name + "!")
+
+				else: game.temp_log.append("That is not a valid input")
+			else: game.temp_log.append("That is not a valid input")
+
+
+			# Reset the terminal:
+			termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+			fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+
+
+		else: game.temp_log.append("You have nothing to quiver.")
+
 
 
 
@@ -72,10 +136,28 @@ class Player():
 
 		item_order = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+
+		# Throwing weapon
+		thrown = False
+		if self.quivered is not None:
+			if self.quivered.wclass in Ammos.thrown_amclasses:
+				thrown = True
+				# Create Throwing platform
+				item = self.give_weapon(self.quivered.name)
+
+
+
 		for item in self.wielding:
 
+			# Ranged Projectile Thrower
+
 			if type(item) == Weapon:
-				if item.wclass in Weapons.ranged_wclasses:
+				if item.wclass in Weapons.ranged_wclasses or item.wclass in Ammos.thrown_amclasses:
+
+					# Check for quiver
+					if self.quivered is None:
+						game.temp_log.append("You do not have ammo quivered.")
+						return
 
 					units_in_range = []
 					for unit in game.units[1:]:
@@ -110,9 +192,7 @@ class Player():
 						inp, outp, err = select.select([sys.stdin], [], [])
 						decision = sys.stdin.read()
 
-						if decision == '9': valid = True
-
-						elif len(decision) == 1:
+						if len(decision) == 1:
 							if decision in item_order:
 								if item_order.index(decision) < len(units_in_range):
 
@@ -123,7 +203,15 @@ class Player():
 									# ATTACK
 									item.strike(self, unit)
 									self.well_being_statement(unit, item.name, game)
-									valid = True
+
+									# Remove throwing weapon
+									if thrown: self.wielding.pop()
+
+									# Remove Ammo
+									self.quivered.number -= 1
+									if self.quivered.number == 0:
+										self.inventory.remove(self.quivered)
+										self.quivered = None
 									return
 
 								else: game.temp_log.append("That is not a valid input")
@@ -136,9 +224,13 @@ class Player():
 
 					else:
 						game.temp_log.append("There are no targets in range!")
+						# Remove throwing weapon
+						if thrown: self.wielding.pop()
 						return
 
 		game.temp_log.append("You are not wielding a ranged weapon!")
+		# Remove throwing weapon
+		if thrown: self.wielding.pop()
 
 
 	def well_being_statement(self, unit, means, game):
@@ -298,6 +390,13 @@ class Player():
 						# Choose Legal Enemy
 						unit = units_in_range[item_order.index(decision)]
 
+						# Enemy Resist spell
+						if d(100) / 100 <= max(0.05, min(0.75, (unit.cha / 2) / self.int)):
+							self.time += Weapons.spells[spell_name][2]
+							self.mana -= Weapons.spells[spell_name][1]
+							game.game_log.append("The " + unit.name + " resists your " + spell_name + "!")
+							return
+
 						if spell(spell_name, self, unit, game, Maps.rooms[game.map.map][0], game.map.room_filler):
 							self.mana -= Weapons.spells[spell_name][1]
 							self.time += Weapons.spells[spell_name][2]
@@ -383,7 +482,10 @@ class Player():
 		# Self-cast
 		if not Weapons.spells[spell_name][3]:
 			print(spell_name)
-			if spell(spell_name, self, self, game, Maps.rooms[game.map.map][0], game.map.room_filler, True): self.time += Weapons.spells[spell_name][2]
+			if spell(spell_name, self, self, game, Maps.rooms[game.map.map][0], game.map.room_filler, True):
+				self.time += Weapons.spells[spell_name][2]
+				self.cooldowns.append( [spell_name, Weapons.spells[spell_name][1] * 2] )
+				self.abilities.remove(spell_name)
 			return
 
 
@@ -464,6 +566,124 @@ class Player():
 			return
 
 
+	def racial_level_bonuses(self):
+		# Racial level-ups
+		if self.race == "Elf" and self.level % 4 == 0:
+			if d(10) <= 6:
+				self.dex += 1
+				game.game_log.append("You feel more agile...")
+			else:
+				self.int += 1
+				game.game_log.append("You feel smarter...")
+
+		if self.race == "Cytherean" and self.level % 4 == 0:
+			if d(10) <= 7:
+				self.int += 1
+				game.game_log.append("You feel smarter...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+		if self.race == "Dragonborn" and self.level % 5 == 0:
+			if d(10) <= 5:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+		if self.race == "Gnome" and self.level % 4 == 0:
+			if d(10) <= 5:
+				self.int += 1
+				game.game_log.append("You feel smarter...")
+			else:
+				self.cha += 1
+				game.game_log.append("You feel more charismatic...")
+
+		if self.race == "Hobbit" and self.level % 4 == 0:
+			if d(10) <= 4:
+				self.cha += 1
+				game.game_log.append("You feel more charismatic...")
+			else:
+				self.dex += 1
+				game.game_log.append("You feel more agile...")
+
+		if self.race == "Terran" and self.level % 4 == 0:
+			roll = d(10)
+			if roll > 8:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			elif roll > 6:
+				self.dex += 1
+				game.game_log.append("You feel more agile...")
+			elif roll > 4:
+				self.cha += 1
+				game.game_log.append("You feel more charismatic...")
+			elif roll > 2:
+				self.int += 1
+				game.game_log.append("You feel smarter...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+		if self.race == "Naga" and self.level % 4 == 0:
+			if d(10) <= 4:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			else:
+				self.dex += 1
+				game.game_log.append("You feel more agile...")
+
+		if self.race == "Hill Troll" and self.level % 5 == 0:
+			if d(10) <= 5:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+		if self.race == "Ghoul" and self.level % 5 == 0:
+			if d(10) <= 5:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+		if self.race == "Black Orc" and self.level % 5 == 0:
+			if d(10) <= 4:
+				self.str += 1
+				game.game_log.append("You feel stronger...")
+			elif d(10) <= 6:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+			else:
+				self.cha += 1
+				game.game_log.append("You feel more charismatic...")
+
+		if self.race == "Dwarf" and self.level % 4 == 0:
+			if d(10) <= 3:
+				self.cha += 1
+				game.game_log.append("You feel more charismatic...")
+			else:
+				self.con += 1
+				self.hp += 5
+				self.maxhp += 5
+				game.game_log.append("You feel hardier...")
+
+
 
 
 
@@ -478,41 +698,14 @@ class Player():
 			self.level += 1
 
 			# Gain HP/mana
-			bonushp = d(self.cha)
+			bonushp = d(self.con)
 			self.hp += 2 + bonushp
 			self.maxhp += 2 + bonushp
 			self.mana += 2
 			self.maxmana += 2
 
-
 			# Racial level-ups
-			if self.race == "Elf" and self.level % 4 == 0:
-				if d(10) <= 6:
-					self.dex += 1
-					game.game_log.append("You feel more agile...")
-				else:
-					self.int += 1
-					game.game_log.append("You feel smarter...")
-
-			if self.race == "Cytherean" and self.level % 4 == 0:
-				if d(10) <= 7:
-					self.int += 1
-					game.game_log.append("You feel smarter...")
-				else:
-					self.con += 1
-					self.hp += 5
-					self.maxhp += 5
-					game.game_log.append("You feel hardier...")
-
-			if self.race == "Dragonborn" and self.level % 5 == 0:
-				if d(10) <= 5:
-					self.str += 1
-					game.game_log.append("You feel stronger...")
-				else:
-					self.con += 1
-					self.hp += 5
-					self.maxhp += 5
-					game.game_log.append("You feel hardier...")
+			self.racial_level_bonuses()
 
 
 
@@ -574,15 +767,25 @@ class Player():
 		item_order = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 		# Carrying
+		total_hands = self.hands
 		carrying = []
 		for thing in self.wielding:
+			total_hands += thing.hands
 			if thing.hands > 0: carrying.append(thing)
 
 		# Equip Weapon
 		if type(item) == Weapon or type(item) == Shield:
-			if self.hands < item.hands:
 
-				if item.hands < 2 and len(carrying) != 1:
+			# Not enough total hands
+			if item.hands > total_hands:
+				game.temp_log.append("You cannot wield that weapon!")
+				return
+
+			# Not enough FREE Hands
+			if self.hands < item.hands or len(carrying) == 2:
+
+				# Already carrying something
+				if len(carrying) == 2:
 
 					fd = sys.stdin.fileno()
 					newattr = termios.tcgetattr(fd)
@@ -618,6 +821,8 @@ class Player():
 							if item_order.index(decision) < len(carrying):
 								ditem = carrying[item_order.index(decision)]
 								valid = True
+
+								# Remove chosen item
 								game.game_log.append("You put away the " + ditem.name + '.')
 								self.wielding.remove(ditem)
 								self.inventory.append(ditem)
@@ -627,16 +832,18 @@ class Player():
 						termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
 						fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
 
+				# Remove all items in order to equip
 				else:
 					for weap in carrying:
 						self.wielding.remove(weap)
 						self.inventory.append(weap)
 						self.hands += weap.hands
-
+			# Wield item
 			self.wielding.append(item)
 			self.inventory.remove(item)
 			self.hands -= item.hands
 			game.game_log.append("You draw your " + item.name + "!")
+
 
 		# Equip Armor
 		elif type(item) == Armor:
@@ -659,9 +866,22 @@ class Player():
 
 	def pick_up(self, item):
 		item.loc = None
+		already_in = False
+		if type(item) == Ammo:
+
+			for thing in self.inventory:
+				if type(thing) == Ammo and thing.name == item.name and thing.brand == item.brand:
+					thing.number += item.number
+					already_in = True
+					break
+
 		game.items.remove(item)
-		self.inventory.append(item)
-		game.game_log.append("You pick up the " + item.name + ".")
+		if not already_in: self.inventory.append(item)
+		if type(item) == Ammo:
+			if item.number > 1: game.game_log.append("You pick up " + str(item.number) + ' ' + item.name + "s.")
+			else: game.game_log.append("You pick up the " + item.name + ".")
+		else:
+			game.game_log.append("You pick up the " + item.name + ".")
 		self.time += self.mspeed
 
 	def drop(self,item):
@@ -674,10 +894,14 @@ class Player():
 	def give_weapon(self, weapon):
 		data = Weapons.array[weapon]
 
+		# Manage Brand + Probability
+		try: brand = data[7]
+		except: brand = None
+		try: prob = data[8]
+		except: prob = None
+
 		# Create Weapon Object
-		if len(data) == 9: self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, data[7], data[8]))
-		elif len(data) == 7: self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None))
-		else: self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, data[7]))
+		self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, brand, prob))
 		return self.wielding[-1]
 
 	def calc_AC(self):
@@ -754,24 +978,40 @@ class Player():
 
 			if coords == item.loc and type(item) == Chest:
 				if item.opened: game.game_log.append("You see here an opened chest")
-				else: game.game_log.append("You see here a chest")
+				else:
+					article = "an" if item.type[0] in set(['a','e','i','o','u']) else 'a'
+					game.game_log.append("You see here " + article + " " + item.type + " chest")
 
 			# Look for loot on the ground in case of a move
 			elif coords == item.loc:
 
-				# Enchantment String
-				ench = item.enchantment
-				if ench >= 0: ench = '+' + str(ench)
+				if type(item) == Ammo:
 
-				if item.brand is not None and item.brand != "plate":
+					# Enchantment String
+					if item.brand is not None:
 
-					# Brand case
-					if len(ground_booty) == 0: ground_booty += str(item.brand) + ' ' + str(ench) + ' ' + item.name
-					else: ground_booty += ', ' + str(item.brand) + ' ' + str(ench) +  ' ' + item.name
+						# Brand case
+						if len(ground_booty) == 0: ground_booty += str(item.brand) + ' ' + item.name + " (" + str(item.number) + ")"
+						else: ground_booty += ', ' + str(item.brand) + ' ' + item.name + " (" + str(item.number) + ")"
+					else:
+						# No Brand Case
+						if len(ground_booty) == 0: ground_booty +=  item.name + " (" + str(item.number) + ")"
+						else: ground_booty += ', ' + item.name + " (" + str(item.number) + ")"
+
 				else:
-					# No Brand Case
-					if len(ground_booty) == 0: ground_booty += str(ench) + ' ' + item.name
-					else: ground_booty += ', ' + str(ench) +  ' ' + item.name
+					# Enchantment String
+					ench = item.enchantment
+					if ench >= 0: ench = '+' + str(ench)
+					if item.brand is not None:
+
+						# Brand case
+						if len(ground_booty) == 0: ground_booty += str(item.brand) + ' ' + str(ench) + ' ' + item.name
+						else: ground_booty += ', ' + str(item.brand) + ' ' + str(ench) +  ' ' + item.name
+					else:
+						# No Brand Case
+						if len(ground_booty) == 0: ground_booty += str(ench) + ' ' + item.name
+						else: ground_booty += ', ' + str(ench) +  ' ' + item.name
+
 
 		# Add ground loot to the log
 		if len(ground_booty) != 0: game.game_log.append("You see here: " + ground_booty)
@@ -796,7 +1036,7 @@ class Monster():
 		self.hp = 5 * con + bonushp
 
 		# Initialize Mana
-		self.mana, self.maxmana = 4 * int + self.tier, 4 * int + self.tier
+		self.mana, self.maxmana = 5 * int + self.tier, 5 * int + self.tier
 
 		# Coordinates
 		self.loc, self.time = loc, 1
@@ -806,72 +1046,98 @@ class Monster():
 		self.con, self.str, self.dex, self.int, self.cha, self.mspeed, self.xp = con, st, dex, int, cha, mspeed, xp
 
 		# Monster's Equipment
-		self.wielding , self.other_items = [], other_items
+		self.wielding , self.other_items, self.quivered = [], other_items, None
 
 		# Give innate weapons / shields
 		if other_items is not None:
 			for item in other_items:
+				if item in Ammos.array: self.give_ammo(item)
+				elif item in Weapons.array: self.give_weapon(item)
+				elif item in Shields.array: self.give_shield(item)
+				elif item in Weapons.spells: self.spells.append(item)
+
+		# Give Weapon and Armor
+		weapon = pot_weapons[d(len(pot_weapons)) - 1]
+		if type(weapon) == list:
+			for item in weapon:
 				if item in Weapons.array: self.give_weapon(item)
 				if item in Shields.array: self.give_shield(item)
-				if item in Weapons.spells: self.spells.append(item)
-
-		self.give_weapon(pot_weapons[d(len(pot_weapons)) - 1])
+		else: self.give_weapon(weapon)
 		self.give_armor( pot_armor[  d(len(pot_armor)) - 1])
 
 	def calc_AC(self):
 		return self.equipped_armor.armor_rating + self.equipped_armor.enchantment
 
 	def drop_booty(self):
+		self.equipped_armor.loc = self.loc
+		game.items.append(self.equipped_armor)
 		for weapon in self.wielding:
+			if weapon in Ammos.thrown_amclasses: continue
 			if weapon.hands > 0:
 				weapon.loc = self.loc
 				game.items.append(weapon)
-		self.equipped_armor.loc = self.loc
-		game.items.append(self.equipped_armor)
+		if self.quivered is not None:
+			self.quivered.loc = self.loc
+			game.items.append(self.quivered)
+
 
 	def give_weapon(self, weapon):
 		data = Weapons.array[weapon]
 
-		
 		# Manage Enchantment
 		spawned_enchantment = data[3]
 		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
 
-		# Manage Brand
+		# Manage Brand + Probability
 		try: brand = data[7]
 		except: brand = None
-
 		if brand is None:
-			if d(100) > 99 - self.tier and data[2] > 0:
-				brand = Brands.brands[d(len(Brands.brands)) - 1]
+			if d(100) > 99 - self.tier and data[2] > 0: brand = Brands.brands[d(len(Brands.brands)) - 1]
+		try: prob = data[8]
+		except: prob = None
 
 		# Create Weapon Object
-		if len(data) == 9: self.wielding.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], None, brand, data[8]))
-		else: self.wielding.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], None, brand))
+		self.wielding.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], None, brand, prob))
 
 	def give_armor(self, armor):
 		data = Armors.array[armor]
 
 		# Manage Enchantment
-		spawned_enchantment = data[3]
-
+		spawned_enchantment = data[4]
 		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
+		try: brand = data[5]
+		except: brand = None
 
 		# Create Armor Object
-		if len(data) == 4: self.equipped_armor = Armor(armor, data[0], data[1], data[2], spawned_enchantment, None)
-		else: self.equipped_armor = Armor(armor, data[0], data[1], data[2], spawned_enchantment, None, data[4])
+		self.equipped_armor = Armor(armor, data[0], data[1], data[2], data[3], spawned_enchantment, None, brand)
 
 	def give_shield(self, shield):
 		data = Shields.array[shield]
 
-		# Manage Enchantment
-		spawned_enchantment = data[3]
-
+		# Manage Enchantment + brand
+		spawned_enchantment = data[4]
 		if d(10) + (1.5 * self.tier) > 10: spawned_enchantment += d(self.tier)
+		try: brand = data[5]
+		except: brand = None
 
 		# Create Shield Object
-		if len(data) == 4: self.wielding.append(Shield(shield, data[0], data[1], data[2], spawned_enchantment, None))
-		else: self.wielding.append(Shield(shield, data[0], data[1], data[2], spawned_enchantment, None, data[4]))
+		self.wielding.append(Shield(shield, data[0], data[1], data[2], data[3], spawned_enchantment, None, brand))
+
+	def give_ammo(self, ammo):
+		data = Ammos.array[ammo]
+
+		# Manage Enchantment + Brand
+		try: brand = data[3]
+		except: brand = None
+		if brand is None:
+			if d(100) > 99 - self.tier and data[2] > 0: brand = Brands.brands[d(len(Brands.brands)) - 1]
+
+		# Manage Number
+		if data[1] in Ammos.thrown_amclasses: number = 4 + 2 * self.tier
+		else: number = 10 + 5 * self.tier
+
+		# Create Ammo Object
+		self.quivered = Ammo(ammo, data[0], data[1], number, data[2], None, brand)
 
 
 	def turn(self):
@@ -882,7 +1148,7 @@ class Monster():
 		if len(self.spells) > 0:
 
 			# Chance to use spells
-			if d(10) + 3/4 * self.int >= 11:
+			if d(10) + min(self.int, 7) >= 11:
 
 
 				los = ai.los(self.loc, game.player.loc, Maps.rooms[game.map.map][0], game )
@@ -890,18 +1156,29 @@ class Monster():
 
 					# Zap with spells
 					for spell in self.spells:
-
+						# Check for mana
 						if self.mana >= Weapons.spells[spell][1]:
-
 							spell_fun = Weapons.spells[spell][0]
 
+							# If target
 							if Weapons.spells[spell][4]:
 
+								# If in spell range
 								if len(los) - 1 <= Weapons.spells[spell][5]:
+
+									# Player Resist spell
+									if d(100) / 100 <= max(0.05, min(0.9, (game.player.cha / 2) / self.int)):
+										self.time += Weapons.spells[spell][2]
+										self.mana -= Weapons.spells[spell][1]
+										game.game_log.append("You resist the " + spell + " from the " + self.name + "!")
+										return
+
+
 									if spell_fun(spell, self, game.player, game, Maps.rooms[game.map.map][0], game.map.room_filler):
 										self.time += Weapons.spells[spell][2]
 										self.mana -= Weapons.spells[spell][1]
 										return
+							# No target
 							else:
 								if spell_fun(spell, self, game.player, game, Maps.rooms[game.map.map][0], game.map.room_filler):
 									self.time += Weapons.spells[spell][2]
@@ -931,22 +1208,42 @@ class Monster():
 			self.time += maxas
 			melee_attacked = True
 
+		# Add thrown weapon platform
+		thrown = False
+		if self.quivered is not None:
+			if self.quivered.wclass in Ammos.thrown_amclasses:
+				thrown = True
+				item = self.give_weapon(self.quivered.name)
+
 		# Make Ranged attacks
 		for item in self.wielding:
 			if type(item) == Weapon:
-				if item.wclass in Weapons.ranged_wclasses:
+				if item.wclass in Weapons.ranged_wclasses or item.wclass in Ammos.thrown_amclasses:
 
-					if item.hands > 0 and melee_attacked: return
+					if self.quivered is not None or item.hands == 0:
 
-					los = ai.los(self.loc, game.player.loc, Maps.rooms[game.map.map][0], game )
-					if los is not None:
+						if item.hands > 0 and melee_attacked:
+							if thrown: self.wielding.pop()
+							return
 
-						# Ranged range
-						if len(los) <= (2 * item.damage  + item.to_hit):
-							item.strike(self, game.player)
-							if item.hands > 0:
-								self.time += item.speed
-								return
+						los = ai.los(self.loc, game.player.loc, Maps.rooms[game.map.map][0], game )
+						if los is not None:
+
+							# Ranged range
+							if len(los) <= (2 * item.damage  + item.to_hit):
+								item.strike(self, game.player)
+
+								# Remove Ammo
+								if thrown: self.wielding.pop()
+								if item.hands > 0:
+									self.quivered.number -= 1
+									if self.quivered.number == 0: self.quivered = None
+									self.time += item.speed
+									return
+							else:
+								if thrown: self.wielding.pop()
+						else:
+							if thrown: self.wielding.pop()
 
 		# If can't, move
 		if not melee_attacked:
@@ -966,13 +1263,20 @@ class Weapon():
 		# Deal with prob
 		if self.probability is None: self.probability = 100
 
+		# Ranged Brands
+		if self.wclass in Weapons.ranged_wclasses: self.brand = None
+
 	def strike(self, attacker, enemy, wtypeeff = True):
+
+		brand = self.brand
+		wclass = self.wclass
 
 		# Check for enemy status
 		frozen = False
 		for passive in enemy.passives:
 			if passive[0] == "frozen": frozen = True
 
+		# Swing Probability
 		if d(100) > (100 - self.probability):
 
 			# Calc Encumberance
@@ -989,20 +1293,26 @@ class Weapon():
 				# Shield Block
 				for weapon in enemy.wielding:
 					if type(weapon) == Shield:
-						if d(100) > (90 - (2 * weapon.armor_rating) ):
+						if d(100) > max(33, 90 - (3 * weapon.armor_rating)):
 
 							# Block Statement
-							if type(attacker) == Monster:
-								game.game_log.append("You block the "   + str(attacker.name) + "'s " + self.name + " with your " + weapon.name + "!")
-							else:
-								game.game_log.append("The "   + str(enemy.name) +  " blocks your " + self.name + " with its " + weapon.name + "!")
+							if type(attacker) == Monster: game.game_log.append("You block the "   + str(attacker.name) + "'s " + self.name + " with your " + weapon.name + "!")
+							else: game.game_log.append("The "   + str(enemy.name) +  " blocks your " + self.name + " with its " + weapon.name + "!")
 							return
 
 
 				# DAMAGE forumla
 
-				# Ranged weapon
-				if self.wclass in Weapons.ranged_wclasses and self.hands > 0:   damage = int (d(self.damage) + attacker.dex / 2 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
+				# Projectile weapon
+				if self.wclass in Weapons.ranged_wclasses and self.hands > 0:
+					damage = int (d(self.damage) + d(attacker.quivered.damage) + attacker.dex / 2 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
+					brand = attacker.quivered.brand
+					wclass = attacker.quivered.wclass
+				# Thrown Weapon
+				elif self.wclass in Ammos.thrown_amclasses and self.hands > 0:
+					damage = int (d(self.damage) + d(attacker.quivered.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
+					brand = attacker.quivered.brand
+					wclass = attacker.quivered.wclass
 				# Melee weapon
 				else: damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 
@@ -1010,18 +1320,18 @@ class Weapon():
 				# Apply Brands
 				brandhit = False
 
-				if self.brand == "envenomed": brandhit = d(100) > 30
-				elif self.brand == "flaming": brandhit = d(100) > 60
-				elif self.brand == "infernal": brandhit = d(100) > 65
-				elif self.brand == "frozen": brandhit = d(100) > 80
-				elif self.brand == "void":
-					brandhit = True if len(enemy.spells) > 0 else False
-				elif self.brand == "silvered": 
-					brandhit = True if enemy.etype in set(["undead"]) and attacker.name == 'you' else False
-				elif self.brand is not None: brandhit = True
+				if brand == "envenomed": brandhit = d(100) > 33
+				elif brand == "flaming": brandhit = d(100) > 60
+				elif brand == "infernal": brandhit = d(100) > 65
+				elif brand == "frozen": brandhit = d(100) > 80
+				elif brand == "spectral": brandhit = True if len(enemy.spells) > 0 else False
+				elif brand == "silvered":
+					if enemy.name != 'you': brandhit = True if enemy.etype in set(["undead","demon"]) else False
+					else: brandhit = True if enemy.race in set(["ghoul"]) else False
+				elif brand is not None: brandhit = True
 
 				# Apply Brands
-				damage = self.apply_brands(attacker, enemy, damage, brandhit)
+				damage = self.apply_brands(attacker, enemy, damage, brand, brandhit)
 
 				# Weapon class effects
 				if wtypeeff: damage = self.weapon_type_effect(attacker, enemy, damage)
@@ -1030,13 +1340,11 @@ class Weapon():
 				if damage <= 0:
 					damage = 0
 
-					if type(attacker) == Monster:
-						game.game_log.append("The "  + str(attacker.name) + " hits you with its " + self.wclass + " but does no damage!")
-					else:
-						game.game_log.append("You " + Weapons.weapon_classes[self.wclass][0] + " your "+ str(self.wclass) + " " + Weapons.weapon_classes[self.wclass][1] + " the " + str(enemy.name)+ " but deal no damage!")
+					if type(attacker) == Monster: game.game_log.append("The "  + str(attacker.name) + " hits you with its " + wclass + " but does no damage!")
+					else: game.game_log.append("You " + Weapons.weapon_classes[wclass][0] + " your "+ str(wclass) + " " + Weapons.weapon_classes[wclass][1] + " the " + str(enemy.name)+ " but deal no damage!")
 
 				# Damage Case - Statement
-				else: self.damage_statement(attacker, enemy, damage, brandhit)
+				else: self.damage_statement(attacker, enemy, damage, brand, brandhit)
 						
 				# Resolve Damage
 				enemy.hp -= damage
@@ -1055,24 +1363,21 @@ class Weapon():
 
 				# Miss statement
 				if self.wclass in Weapons.ranged_wclasses:
-					if type(attacker) == Monster:
-						game.game_log.append("The "  + str(attacker.name) + " shoots at you with its " + self.wclass + " but misses.")
-					else:
-						game.game_log.append("You closely miss the " + str(enemy.name) + " with your " + self.wclass + "!")
+					if type(attacker) == Monster: game.game_log.append("The "  + str(attacker.name) + " shoots at you with its " + self.wclass + " but misses.")
+					else: game.game_log.append("You closely miss the " + str(enemy.name) + " with your " + self.wclass + "!")
+				elif self.wclass in Ammos.thrown_amclasses:
+					if type(attacker) == Monster: game.game_log.append("The "  + str(attacker.name) + " hurls a " + self.wclass + " at you but misses.")
+					else: game.game_log.append("You closely miss the " + str(enemy.name) + " with your " + self.wclass + "!")
 				else:
-					if type(attacker) == Monster:
-						game.game_log.append("The "  + str(attacker.name) + " swings at you with its " + self.wclass + " but misses.")
-					else:
-						game.game_log.append("You closely miss the " + str(enemy.name) + " with your " + self.wclass + "!")
+					if type(attacker) == Monster: game.game_log.append("The "  + str(attacker.name) + " swings at you with its " + self.wclass + " but misses.")
+					else: game.game_log.append("You closely miss the " + str(enemy.name) + " with your " + self.wclass + "!")
 
 				# Riposte with blade
 				if counter is not None:
-					damage = int (d(counter.damage) + attacker.str / 1.5 + counter.enchantment - ( 0.75 * enemy.calc_AC() ) )
+					damage = int (d(int(counter.damage * 0.75)) + attacker.str / 1.5 + counter.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					if damage > 0:
-						if type(attacker) != Monster:
-							game.game_log.append("The "  + str(enemy.name) + " counters you with its blade for " + str(damage) + " damage!")
-						else:
-							game.game_log.append("You counter the " + str(attacker.name) + " with your blade for " + str(damage) + " damage!")
+						if type(attacker) != Monster: game.game_log.append("The "  + str(enemy.name) + " counters you with its blade for " + str(damage) + " damage!")
+						else: game.game_log.append("You counter the " + str(attacker.name) + " with your blade for " + str(damage) + " damage!")
 
 						attacker.hp -= damage
 						if attacker.name != "you": game.player.well_being_statement(attacker, counter.name, game)
@@ -1082,11 +1387,11 @@ class Weapon():
 
 
 		# Blunt weapons
-		if self.wclass == "hammer" or self.wclass == "club" or self.wclass == "mace":
-			if enemy.equipped_armor.brand == 'plate': damage *= 1.3
+		if self.wclass == "hammer" or self.wclass == "club" or self.wclass == "mace" or self.wclass == "flail":
+			if enemy.equipped_armor.aclass == 'plate': damage *= 1.4
 
 		if self.wclass == "warhammer" or  self.wclass == "god hammer":
-			if enemy.equipped_armor.brand == 'plate': damage *= 1.3
+			if enemy.equipped_armor.aclass == 'plate': damage *= 1.4
 
 			# CLEAVE Attack
 			# --START--------------------------------
@@ -1116,7 +1421,7 @@ class Weapon():
 		if self.wclass == "dagger":
 			pass
 
-		if self.wclass == "greatsword" or self.wclass == "god sword":
+		if self.wclass == "greatsword" or self.wclass == "god sword" or self.wclass == "bastard sword":
 
 			# CLEAVE Attack
 			# --START--------------------------------
@@ -1124,23 +1429,36 @@ class Weapon():
 			x = attacker.loc[1] - enemy.loc[1]
 
 			for unit in game.units:
+				cleave = False
 
 				# Horizontal Case
 				if x == 0:
-					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1): self.strike(attacker, unit, False)
-					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1):
+						self.strike(attacker, unit, False)
+						cleave = True
+					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1):
+						self.strike(attacker, unit, False)
+						cleave = True
 
 				# Vertical Case
 				elif y == 0:
-					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]): self.strike(attacker, unit, False)
-					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]):
+						self.strike(attacker, unit, False)
+						cleave = True
+					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]):
+						self.strike(attacker, unit, False)
+						cleave = True
 
 				# Corner case
 				else:
-					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]): self.strike(attacker, unit, False)
-					if unit.loc == (enemy.loc[0], enemy.loc[1] + x): self.strike(attacker, unit, False)
+					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]):
+						self.strike(attacker, unit, False)
+						cleave = True
+					if unit.loc == (enemy.loc[0], enemy.loc[1] + x):
+						self.strike(attacker, unit, False)
+						cleave = True
 
-				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, False)
+				if not cleave and self.wclass != 'bastard sword' and unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, False)
 			# --END------------------------------------
 
 
@@ -1158,10 +1476,10 @@ class Weapon():
 					self.strike(attacker, unit, False)
 
 		if self.wclass == "axe":
-			damage *= (1 + (0.25 - enemy.calc_AC() / 50 ) )
+			damage *= (1 + max(0, (0.25 - enemy.calc_AC() / 50 )) )
 
 		if self.wclass == "greataxe" or self.wclass == "god axe":
-			damage *= (1 + (0.25 - enemy.calc_AC() / 50 ) )
+			damage *= (1 + max(0, (0.25 - enemy.calc_AC() / 50 )) )
 
  			# CLEAVE Attack
 			# --START--------------------------------
@@ -1190,11 +1508,12 @@ class Weapon():
 		return int(damage)
 
 
-	def apply_brands(self, attacker, enemy, damage, brandhit):
+	def apply_brands(self, attacker, enemy, damage, brand, brandhit):
+
 
 		# APPLY BRANDS
 		if brandhit:
-			if self.brand == "flaming":
+			if brand == "flaming":
 				count = Brands.dict["flaming"]["count"]
 				status = "aflame"
 
@@ -1204,7 +1523,7 @@ class Weapon():
 
 				enemy.passives.append([status, count])
 
-			if self.brand == "infernal":
+			if brand == "infernal":
 				count = Brands.dict["drained"]["count"]
 				status = "drained"
 
@@ -1215,16 +1534,16 @@ class Weapon():
 				enemy.passives.append([status, count])
 				enemy.dex -= Brands.dict["drained"]["dex_loss"]
 
-			if self.brand == "vampiric":
+			if brand == "vampiric":
 				attacker.hp += int(damage / 3)
 
 				# Heal
 				if attacker.hp > attacker.maxhp: attacker.hp = attacker.maxhp
 
-			if self.brand == "hellfire":
+			if brand == "hellfire":
 				damage += int((1 - (enemy.hp / enemy.maxhp) ) * damage * 0.5)
 
-			if self.brand == "envenomed":
+			if brand == "envenomed":
 				count = Brands.dict["envenomed"]["count"]
 				status = "poisoned"
 
@@ -1237,21 +1556,21 @@ class Weapon():
 				enemy.passives.append([status, count])
 
 			# Manage Silvered
-			if self.brand == "silvered":
+			if brand == "silvered":
 				damage *= 1.5
 
-			# Manage Void
-			if self.brand == "void":
+			# Manage Spectral
+			if brand == "spectral":
 				damage *= 1.5
 
-			if self.brand == "frozen":
+			if brand == "frozen":
 				status, count = "frozen", Brands.dict["frozen"]["count"]
 				# Apply effect
 				for passive in enemy.passives:
 
 					if passive[0] == status:
 						passive[1] += count
-						return
+						return damage
 
 				enemy.passives.append([status, count])
 
@@ -1259,81 +1578,89 @@ class Weapon():
 		return damage
 
 
-	def damage_statement(self, attacker, enemy,  damage, brandhit):
+	def damage_statement(self, attacker, enemy,  damage, brand, brandhit):
 		attacker_var =  str(attacker.name)
 		attackee_var = str(enemy.name)
+		name = self.name
+		wclass = self.wclass
+
+		if self.wclass in Weapons.ranged_wclasses and self.hands > 0:
+			name = attacker.quivered.name
+			wclass = attacker.quivered.wclass
 
 		# Make the sentence awesome
-		verb, preposition = Weapons.weapon_classes[self.wclass]
+		verb, preposition = Weapons.weapon_classes[wclass]
 
 		# Make the notes dank
-		if self.brand is None or not brandhit:
+		if brand is None or not brandhit:
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " +  self.name + "!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " +  name + "!")
 			else:
-				game.game_log.append("You " + verb + " your "+ str(self.wclass) + " " + preposition + " the " + attackee_var + " for " + str(damage) + " damage!")
+				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var + " for " + str(damage) + " damage!")
 
-		elif self.brand == "silvered":
+		elif brand == "silvered":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its "  + self.name + ", its silver burns you!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its "  + name + ", its silver burns you!")
 			else:
-				game.game_log.append("You " + verb + " your silvered "+ str(self.wclass) + " " + preposition + " the " + attackee_var+ ", the silver burns for " + str(damage) + " damage!")
+				game.game_log.append("You " + verb + " your silvered "+ str(wclass) + " " + preposition + " the " + attackee_var+ ", the silver burns for " + str(damage) + " damage!")
 
-		elif self.brand == "void":
+		elif brand == "spectral":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its void "  + self.name + ", your magic burns inside you!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its spectral "  + name + ", your magic burns inside you!")
 			else:
-				game.game_log.append("You " + verb + " your void "+ str(self.wclass) + " " + preposition + " the " + attackee_var+ ", tearing the mage apart for " + str(damage) + " damage!")
+				game.game_log.append("You " + verb + " your spectral "+ str(wclass) + " " + preposition + " the " + attackee_var+ ", tearing the mage apart for " + str(damage) + " damage!")
 
-		elif self.brand == "vampiric":
+		elif brand == "vampiric":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its "  + self.name + " and steals your life!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its "  + name + " and steals your life!")
 			else:
-				game.game_log.append("You " + verb + " your vampiric "+ str(self.wclass) + " " + preposition + " the " + attackee_var+ ", dealing " + str(damage) + " damage and draining its life!")
+				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var+ ", dealing " + str(damage) + " damage and draining its life!")
 
-		elif self.brand == "flaming":
+		elif brand == "flaming":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + self.name + " and sets you aflame!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + name + " and sets you aflame!")
 			else:
-				game.game_log.append("You " + verb + " your flaming "+ str(self.wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and setting it aflame!")
+				game.game_log.append("You " + verb + " your flaming "+ str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and setting it aflame!")
 
-		elif self.brand == "infernal":
+		elif brand == "infernal":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its infernal " + self.name + " and saps your soul!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its infernal " + name + " and saps your soul!")
 			else:
-				game.game_log.append("You " + verb + " your infernal "+ str(self.wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and sapping its soul!")
+				game.game_log.append("You " + verb + " your infernal "+ str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and sapping its soul!")
 
-		elif self.brand == "frozen":
+		elif brand == "frozen":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its frozen " + self.name + " and freezes you!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its frozen " + name + " and freezes you!")
 			else:
-				game.game_log.append("You " + verb + " your frozen "+ str(self.wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and freezing it!")
+				game.game_log.append("You " + verb + " your frozen "+ str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and freezing it!")
 
-		elif self.brand == "hellfire":
+		elif brand == "hellfire":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + self.name + " and sets your soul aflame!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + name + " and sets your soul aflame!")
 			else:
-				game.game_log.append("You " + verb + " your hellfire " + str(self.wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and tearing its soul!")
+				game.game_log.append("You " + verb + " your " + str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and tearing its soul!")
 
-		elif self.brand == "envenomed":
+		elif brand == "envenomed":
 			if type(attacker) == Monster:
-				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + self.name + " and poisons you!")
+				game.game_log.append("The "  + attacker_var + " hits you for " + str(damage) + " damage with its " + name + " and poisons you!")
 			else:
-				game.game_log.append("You " + verb + " your envenomed " + str(self.wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and poisoning it!")
+				game.game_log.append("You " + verb + " your envenomed " + str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and poisoning it!")
 
 
 class Armor():
 
-	def __init__(self, name, rep,  armor_rating, encumberance, enchantment, loc, brand = None):
-		self.name, self.rep, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, armor_rating, encumberance, enchantment, loc, brand
+	def __init__(self, name, rep,  aclass, armor_rating, encumberance, enchantment, loc, brand = None):
+		self.name, self.rep, self.aclass, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, aclass, armor_rating, encumberance, enchantment, loc, brand
 
 class Shield():
 
-	def __init__(self, name, rep,  armor_rating, encumberance, enchantment, loc, brand = None):
-		self.name, self.rep, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, armor_rating, encumberance, enchantment, loc, brand
+	def __init__(self, name, rep, hands, armor_rating, encumberance, enchantment, loc, brand = None):
+		self.name, self.rep, self.hands, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, hands, armor_rating, encumberance, enchantment, loc, brand
 
-		# Hands
-		self.hands = 1
+class Ammo():
+
+	def __init__(self, name, rep, wclass, number, damage, loc, brand = None):
+		self.name, self.rep, self.wclass, self.damage, self.number, self.loc, self.brand = name, rep, wclass, damage, number, loc, brand
 
 class Chest():
 
@@ -1344,67 +1671,67 @@ class Chest():
 		self.rep = '='
 		self.opened = False
 
-		if self.type == "orc":
-			self.pot_weapons = [["bear hide","ogre hide"],
+		# Chest contents
+		if self.type == "orcish":
+			self.pot_weapons = [ ["goblin spear","stabba"],
+								 ["bear hide","ogre hide"],
 								 ["choppa","slica","smasha"],
-								 ["goblin bow","crude shortbow"], 
+								 ["goblin bow","crude shortbow","iron javelin"], 
 								 ["big choppa","big slica","skull smasha"], 
 								 ["scrap plate armor","berserker mail","troll hide"], 
 								 ["toxic slica"],
 								 ["ice choppa"],]
-		elif self.type == "elf":
-			self.pot_weapons = [["spear","elven leafblade"],
-								[],
-								[],
-								["Singing Spear of Dorn","ranger longbow"],
-								 ]
-		else:
-			self.pot_weapons = [["steel dagger","iron axe","spear","hammer","mace","iron longsword"], 
-									["crude shortbow","iron battleaxe","iron longsword","mace"], 
+		elif self.type == "elven":
+			self.pot_weapons = [ ["spear","elven leafblade","iron javelin"],
+								 ["spear","elven leafblade"],
+								 ["spear","elven leafblade"],
+								 ["ranger longbow"], ]
+		elif self.type == "wooden":
+			self.pot_weapons = [    ["steel dagger","iron axe","spear","hammer","mace","iron longsword"], 
+									["crude shortbow","iron battleaxe","iron longsword","mace","flail"], 
 									["buckler shield", "wooden broadshield","trollhide shield"], 
-									["iron battleaxe","iron greatsword","warhammer","spiked club"],
-									["steel plate armor","iron chainmail"],
-									]
+									["iron battleaxe","iron greatsword","warhammer","spiked club","barbed javelin"],
+									["steel plate armor","iron chainmail"], ]
 
 	def open(self):
 
-		n = game.player.level
-		while n > 0:
+		game.map.room_filler.place_ammo("iron arrow", self.loc, 5 + 2 * self.tier)
+
+		n = 1
+		while n <= game.player.level:
 			if len(self.pot_weapons) == 0: return
 
-			
-
 			# Calculate Tier
-			tier = self.pot_weapons[min( d(game.player.level) - 1, len(self.pot_weapons) - 1 )] # player level / Specifies not to overshoot
-
+			tier = self.pot_weapons[min( n - 1, len(self.pot_weapons) - 1 )] # player level / Specifies not to overshoot
 			item_name = tier [ d( len(tier)) - 1]
 
+			# Chance to get item
+			if d(100) / 100 <= n / game.player.level:
 
-			# If weapon
-			if item_name in Weapons.array:
+				# If Ammo
+				if item_name in Ammos.array:
+					game.map.room_filler.place_ammo(item_name, self.loc, 5 + 4 * self.tier)
 
-				# Chance for brand
-				brand = None
-				if Weapons.array[item_name][2] > 0:
-					if d(100) + 2 * n > 99: brand = Brands.brands[d(len(Brands.brands)) - 1]
+				# If weapon
+				elif item_name in Weapons.array:
 
-				# Chance to place Weapon
-				# t = (d(100) / 100)
-				# print(t)
-				# if t < 1 / len(self.pot_weapons[0][:min(game.player.level, len(self.pot_weapons) - 1)]):
-				game.map.room_filler.place_weapon(item_name, self.loc, d(self.tier), brand)
+					# Chance for brand
+					brand = None
+					if Weapons.array[item_name][2] > 0:
+						if d(100) + 2 * n > 99: brand = Brands.brands[d(len(Brands.brands)) - 1]
+					game.map.room_filler.place_weapon(item_name, self.loc, d(self.tier) - 1, brand)
 
-			# If Armor
-			elif item_name in Armors.array:
-				game.map.room_filler.place_armor(item_name, self.loc, d(self.tier))
+				# If Armor
+				elif item_name in Armors.array:
+					game.map.room_filler.place_armor(item_name, self.loc, d(self.tier) - 1)
 
-			#If Shield
-			elif item_name in Shields.array:
-				game.map.room_filler.place_shield(item_name, self.loc, d(self.tier))
+				#If Shield
+				elif item_name in Shields.array:
+					game.map.room_filler.place_shield(item_name, self.loc, d(self.tier) - 1)
 
-			self.pot_weapons.remove(tier)
+				self.pot_weapons.remove(tier)
 
-			n -= 1
+			n += 1
 		self.opened = True
 
 
@@ -1429,13 +1756,15 @@ class Map():
 		self.map = room
 
 		self.player = player
+
 		self.def_map_array = Maps.rooms[self.map][0]
+		self.map_array = deepcopy(self.def_map_array)
 
 		self.entry_point, self.exits = Maps.rooms[self.map][2], Maps.rooms[self.map][3]
 
 
 		self.adjacent = {self.entry_point: None}
-		for point in self.exits:
+		for point in self.exits[1:]:
 			self.adjacent[point] = None
 
 		self.objects = []
@@ -1513,7 +1842,8 @@ class Map():
 		game.units, game.items = [game.player], []
 
 		# Make new Map
-		newmap = Map(self.player, Maps.sizes['small'][d(len(Maps.sizes['small'])) - 1])
+		pot_maps = Maps.sizes[Maps.rooms[self.map][3][0][d(len(Maps.rooms[self.map][3][0])) - 1]]
+		newmap = Map(self.player,pot_maps[ d(len(pot_maps)) - 1])
 		game.map = newmap
 
 		# Entry Point
@@ -1528,7 +1858,9 @@ class Map():
 		y,x = coord
 		return self.map_array[x][y]
 
-	def can_move(self, unit, loc):
+	def can_move(self, loc):
+		try: self.square_identity(loc)
+		except: return False
 		if self.square_identity(loc) in set(['|', '-', ' ', '#']): return False
 		for unit in game.units:
 			if loc == unit.loc: return False
@@ -1547,83 +1879,98 @@ class RoomFiller():
 		if Maps.rooms[self.map][4]: self.fill()
 
 		# Place Chests
-		for type,  loc in Maps.rooms[self.map][1]: self.place_chest(type, game.player.level, loc)
+		for loc, chance in Maps.rooms[self.map][1]:
+
+			# Pick Type
+			roll = d(100)
+			if roll > 95: type = "elven"
+			elif roll > 80: type = "orcish"
+			else: type = "wooden"
+
+			if d(100) <= chance: self.place_chest(type, game.player.level, loc)
 
 	def fill(self):
 
-		band = Bands.dicto[ min(self.tier, len(Bands.dicto)) ][d(len(Bands.dicto[d(self.tier)])) -1]
+		# Tier and Band pick
+		tier_group = Bands.dicto[ min(self.tier, len(Bands.dicto)) ]
+		band = tier_group[d(len(tier_group)) -1]
 
+		# Bonuses and actual bands
 		bonus, groups = Bands.formations[band]
 
 		# Cut off some units
-		i = 0
 		for group in groups[:self.tier + bonus]:
 
 			# Choose which units to spawn
 			if len(group) > 0:
 
-				unit =  d(self.tier + 1) - 1
+				unit = d(self.tier + 1) - 1
 				if unit >= len(group): unit = len(group) - 1
 
-				self.spawn(group[unit] , self.pos[::])
+				picked = False
+				while not picked:
 
-				
-				if i == 2:
-					i = 0
-					self.pos = (self.pos[0] + 1, self.pos[1] - 2)
-				else: self.pos = (self.pos[0], self.pos[1] + 1)
+					# Pick spawn location
+					try: spawn_location = (d(int(len(Maps.rooms[self.map][0][0]))) - 1, d(len(Maps.rooms[self.map][0])) - 1)
+					except: spawn_location = (d(len(Maps.rooms[self.map][0][0])) - 1, d(len(Maps.rooms[self.map][0])) - 1)
 
-				i += 1
+					if game.map.square_identity(spawn_location) not in set(['|', '-', ' ', '#','+']):
+						picked = True
+						prev_loc = spawn_location
 
+
+				self.spawn(group[unit] , spawn_location)
 
 	def spawn(self, monster_name, loc):
 		data = Monsters.array[monster_name]
+		try: other_items = data[12]
+		except: other_items = None
 
-		if len(data) == 12:
-			game.units.append(Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], loc))
-		else:
-			game.units.append(Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], loc, data[12]))
+		# Spawn Unit
+		game.units.append(Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], loc, other_items))
 
 	def place_weapon(self, weapon, loc, enchantment = 0, brand = None):
 		data = Weapons.array[weapon]
 
-		# Manage Enchantment
+		# Manage Enchantment + Brand
 		spawned_enchantment = data[3] + enchantment
+		try: brand = data[7]
+		except: pass
 
 		# Create Weapon Object
-		if len(data) == 7:
-			game.items.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], loc, brand))
-		else:
-			brand = data[7]
-			game.items.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], loc, brand))
+		game.items.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], loc, brand))
 
 	def place_armor(self, armor, loc, enchantment = 0, brand = None):
 		data = Armors.array[armor]
 
-		# Manage Enchantment
+		# Manage Enchantment + Brand
 		spawned_enchantment = data[2] + enchantment
+		try: brand = data[4]
+		except: pass
 
 		# Create Armor Object
-		if len(data) == 4:
-			game.items.append(Armor(armor, data[0], data[1], data[2], data[3], loc))
-		else:
-			brand = data[4]
-			game.items.append(Armor(armor, data[0], data[1], data[2], data[3], loc, brand))
+		game.items.append(Armor(armor, data[0], data[1], data[2], data[3], data[4], loc, brand))
 
-	def place_shield(self, armor, loc, enchantment = 0):
+	def place_shield(self, armor, loc, enchantment = 0, brand = None):
 		data = Shields.array[armor]
 
 		# Manage Enchantment
 		spawned_enchantment = data[2] + enchantment
+		try: brand = data[5]
+		except: pass
 
 		#Create Shield Object
-		if len(data) == 4:
-			game.items.append(Shield(armor, data[0], data[1], data[2], data[3], loc))
+		game.items.append(Shield(armor, data[0], data[1], data[2], data[3], data[4], loc, brand))
 
-		else:
-			if brand is None:
-				brand = data[4]
-			game.items.append(Shield(armor, data[0], data[1], data[2], data[3], loc, brand))
+	def place_ammo(self, ammo, loc, number, brand = None):
+		data = Ammos.array[ammo]
+
+		# Manage Enchantment
+		try: brand = data[3]
+		except: pass
+
+		#Create Shield Object
+		game.items.append(Ammo(ammo, data[0], data[1], number, data[2], loc, brand))
 
 	def place_chest(self, type, tier, loc):
 		game.items.append(Chest(type, tier, loc))
@@ -1641,7 +1988,9 @@ class Game():
 
 	def __init__(self):
 		# Manage Constants
-		self.race = "Ghoul"
+
+		# CHANGE RACE
+		self.race = "Hill Troll"
 
 		self.player = Player(CharacterRaces.races[self.race][0], CharacterRaces.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -1702,7 +2051,7 @@ class Game():
 
 
 			# Base Case
-			if move in set(['h','H','j','J','k','K','l','L','y','Y','u','U','b','B','n','N',',','.','w','W','f','r','s','a']):
+			if move in set(['h','H','j','J','k','K','l','L','y','Y','u','U','b','B','n','N',',','.','w','W','f','r','s','a','q']):
 
 				# Attack Move (1 turn)
 				if move == 'l': self.player.atk_mv(map, (x + 1, y))
@@ -1716,7 +2065,7 @@ class Game():
 				# Run Right
 				elif move == 'L':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] + 1, self.player.loc[1])):
+						while map.can_move((self.player.loc[0] + 1, self.player.loc[1])):
 							if map.square_identity((self.player.loc[0] + 1, self.player.loc[1])) != '+':
 								action('l')
 								self.player.time = 0
@@ -1728,7 +2077,7 @@ class Game():
 				# Run Up
 				elif move == 'K':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0], self.player.loc[1] - 1)):
+						while map.can_move((self.player.loc[0], self.player.loc[1] - 1)):
 							if map.square_identity((self.player.loc[0], self.player.loc[1] - 1)) != '+':
 								action('k')
 								self.player.time = 0
@@ -1740,7 +2089,7 @@ class Game():
 				# Run Down
 				elif move == 'J':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0], self.player.loc[1] + 1)):
+						while map.can_move((self.player.loc[0], self.player.loc[1] + 1)):
 							if map.square_identity((self.player.loc[0], self.player.loc[1] + 1)) != '+':
 								action('j')
 								self.player.time = 0
@@ -1752,7 +2101,7 @@ class Game():
 				# Run Left
 				elif move == 'H':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] - 1, self.player.loc[1])):
+						while map.can_move((self.player.loc[0] - 1, self.player.loc[1])):
 							if map.square_identity((self.player.loc[0] - 1, self.player.loc[1])) != '+':
 								action('h')
 								self.player.time = 0
@@ -1764,7 +2113,7 @@ class Game():
 				# Run UL
 				elif move == 'Y':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] - 1, self.player.loc[1] - 1)):
+						while map.can_move((self.player.loc[0] - 1, self.player.loc[1] - 1)):
 							if map.square_identity((self.player.loc[0] - 1, self.player.loc[1] - 1)) != '+':
 								action('y')
 								self.player.time = 0
@@ -1776,7 +2125,7 @@ class Game():
 				# Run UR
 				elif move == 'U':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] + 1, self.player.loc[1] - 1)):
+						while map.can_move((self.player.loc[0] + 1, self.player.loc[1] - 1)):
 							if map.square_identity((self.player.loc[0] + 1, self.player.loc[1] - 1)) != '+':
 								action('u')
 								self.player.time = 0
@@ -1788,7 +2137,7 @@ class Game():
 				# Run DL
 				elif move == 'B':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] - 1, self.player.loc[1] + 1)):
+						while map.can_move((self.player.loc[0] - 1, self.player.loc[1] + 1)):
 							if map.square_identity((self.player.loc[0] - 1, self.player.loc[1] + 1)) != '+':
 								action('b')
 								self.player.time = 0
@@ -1800,7 +2149,7 @@ class Game():
 				# Run DR
 				elif move == 'N':
 					if len(game.units) == 1:
-						while map.can_move(self.player, (self.player.loc[0] + 1, self.player.loc[1] + 1)):
+						while map.can_move((self.player.loc[0] + 1, self.player.loc[1] + 1)):
 							if map.square_identity((self.player.loc[0] + 1, self.player.loc[1] + 1)) != '+':
 								action('n')
 								self.player.time = 0
@@ -1810,6 +2159,8 @@ class Game():
 						game.temp_log.append("There are enemies nearby!")
 						return
 
+				# quiver
+				elif move == 'q': self.player.quiver()
 				# fire
 				elif move == 'f': self.player.fire()
 				# spell
@@ -1863,7 +2214,6 @@ class Game():
 
 				# Regen Health
 				if self.player.hp < self.player.maxhp:
-					print("uh oh")
 
 					# Increment Counter
 					self.hregen += 1
@@ -1924,22 +2274,41 @@ class Game():
 
 		# Print HP / Mana / Wielding / Wearing
 		weapon_string = ""
+
+		# Carrying
+		carrying = []
+		for weap in self.player.wielding:
+			if weap.hands != 0: carrying.append(weap)
+
 		for item in self.player.wielding:
 			if type(item) != Armor:
 				if item.hands != 0:
+
+					# Hand String Formulation
+					hands = item.hands
+					if self.player.race == "Hill Troll":
+						if item.hands >= 3: hands = 2
+						elif item.hands == 2: hands = 1			
+
 					if item.brand is None:
 						if item.enchantment >= 0:
-							weapon_string += " +" + str(item.enchantment) + " " + item.name + " (" + str(item.hands) + "h)"
+							weapon_string += " +" + str(item.enchantment) + " " + item.name + " (" + str(hands) + "h)"
 						else:
-							weapon_string += " " + str(item.enchantment) + " " + item.name + " (" + str(item.hands) + "h)"
+							weapon_string += " " + str(item.enchantment) + " " + item.name + " (" + str(hands) + "h)"
 					else:
 						if item.enchantment >= 0:
-							weapon_string += " " + item.brand + " +" + str(item.enchantment) + " " + item.name + " (" + str(item.hands) + "h)"
+							weapon_string += " " + item.brand + " +" + str(item.enchantment) + " " + item.name + " (" + str(hands) + "h)"
 						else:
-							weapon_string += " " + item.brand + " " + str(item.enchantment) + " " + item.name + " (" + str(item.hands) + "h)"
+							weapon_string += " " + item.brand + " " + str(item.enchantment) + " " + item.name + " (" + str(hands) + "h)"
 
 		# Wielding Nothing
 		if weapon_string == "": weapon_string = " None"
+
+		# Quiver String
+		if self.player.quivered is None: quivered_string = " None"
+		else:
+			if self.player.quivered.brand is None: quivered_string = " " + self.player.quivered.name + " (" + str(self.player.quivered.number) + ")"
+			else: quivered_string = " " + self.player.quivered.brand + ' ' + self.player.quivered.name + " (" + str(self.player.quivered.number) + ")"
 
 		# Enchantment Strings
 		a_ench = self.player.equipped_armor.enchantment
@@ -1947,7 +2316,7 @@ class Game():
 
 		print("Level " + str(self.player.level) + " " + self.player.race)
 		print("HP    " + str(self.player.hp)   + "/" + str(self.player.maxhp)   + "               Wielding:" + weapon_string + "             Armor: " + str(a_ench) + ' ' + self.player.equipped_armor.name)
-		print("MANA  " + str(self.player.mana) + "/" + str(self.player.maxmana))
+		print("MANA  " + str(self.player.mana) + "/" + str(self.player.maxmana) + "                 Quivered:" + quivered_string)
 
 		# YOU DIE!!
 		if self.player.hp <= 0:
@@ -1966,10 +2335,8 @@ class Game():
 					if wielding == "" and item.hands > 0: wielding += item.name
 					elif item.hands > 0: wielding += (", a " + item.name)
 
-				if len(wielding) == 0:
-					game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name)
-				else:
-					game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name + " and wielding a " + wielding)
+				if len(wielding) == 0: game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name)
+				else: game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
 				self.seen.add(unit)
 
 
@@ -2038,15 +2405,15 @@ class Game():
 						print("You bust open the chest!")
 						item.open()
 						opened_a_chest = True
-					else:
-						return False
 
 		if len(drops) == 0:
 			self.game_log.append("There is nothing here to interact with.")
 			return False
 
 		# One item on the ground
-		if len(drops) == 1 and not opened_a_chest: self.player.pick_up(drops[0])
+		if len(drops) == 1 and not opened_a_chest:
+			self.player.pick_up(drops[0])
+			return True
 
 		# Nothing on the ground
 		elif len(drops) == 0:
@@ -2054,7 +2421,8 @@ class Game():
 			return False
 
 		# Multiple ground items
-		else: self.ground_inventory(drops)
+		else:
+			return self.ground_inventory(drops)
 
 
 	def equip(self, item_type):
@@ -2129,11 +2497,18 @@ class Game():
 
 			unit = drops[i]
 
-			if unit.brand is not None and unit.brand != "plate": print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
+			if type(unit) == Ammo:
+
+				if unit.brand is not None: print( item_order[i] + " - " + unit.brand + ' ' + unit.name + ' (' + str(unit.number) + ')')
+				else: print( item_order[i] + " - " + unit.name + ' (' + str(unit.number) + ')')
+
 			else:
-				# Positive Encahntment
-				if unit.enchantment >= 0: print( item_order[i] + " - +" + str(unit.enchantment) + ' ' + unit.name)
-				else: print( item_order[i] + " - " + str(unit.enchantment) + ' ' + unit.name)
+
+				if unit.brand is not None: print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
+				else:
+					# Positive Encahntment
+					if unit.enchantment >= 0: print( item_order[i] + " - +" + str(unit.enchantment) + ' ' + unit.name)
+					else: print( item_order[i] + " - " + str(unit.enchantment) + ' ' + unit.name)
 		print("                                                                     ")
 		print("=======================================================================================")
 
@@ -2149,27 +2524,31 @@ class Game():
 		fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 		valid = False
 
-		while not valid:
 
-			print("")
-			print("Pick up which items? (enter '9' to cancel)")
-			inp, outp, err = select.select([sys.stdin], [], [])
-			decision = sys.stdin.read()
+		print("")
+		print("Pick up which items? (enter '9' to cancel)")
+		inp, outp, err = select.select([sys.stdin], [], [])
+		decision = sys.stdin.read()
 
-			# decision = input("Pick up which items? (enter '9' to cancel)")
-			if decision == '9':
-				valid = True
-				return
-			decision = set([char for char in decision])
-			for char in decision:
-				if char in item_order:
-					if item_order.index(char) < len(drops):
-						self.player.pick_up(drops[item_order.index(char)])
-						valid = True
-					else: print("That is not a valid input")
+		# decision = input("Pick up which items? (enter '9' to cancel)")
+		if decision == '9':
+			valid = True
+			return
+		decision = set([char for char in decision])
+		for char in decision:
+			if char in item_order:
+				if item_order.index(char) < len(drops):
+					self.player.pick_up(drops[item_order.index(char)])
+					valid = True
+		
+
 		# Reset the terminal:
 		termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
 		fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+
+		return True if valid else False
+
+
 
 
 
@@ -2183,7 +2562,7 @@ class Game():
 			# Manage poisoned
 			if name == "poisoned":
 
-				damage = Brands.dict["envenomed"]["damage"]
+				damage = count
 				unit.hp -= damage
 
 				if type(unit) == Player:
@@ -2194,7 +2573,7 @@ class Game():
 			# Manage aflame
 			if name == "aflame":
 
-				damage = Brands.dict["flaming"]["damage"]
+				damage = max(1, int(unit.con / 2))
 				unit.hp -= damage
 
 				if type(unit) == Player:
