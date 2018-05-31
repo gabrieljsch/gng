@@ -118,19 +118,26 @@ class Brands():
 class Ammos():
 	#                   rep, wclass, damage
 	array = {
+		# Arrows/Bolts
 		"iron arrow" :     ['(', 'arrow', 1],
 		"steel arrow" :    ['(', 'arrow', 2],
 		"iron bolt" : 	   ['(', 'bolt', 1],
+		"steel bolt" : 	   ['(', 'bolt', 2],
+
+		# Javelins
 		"iron javelin" :   ['/', 'javelin', 5],
 		"barbed javelin" : ['/', 'javelin', 6],
+
+		# Other
+		"throwing axe" :   ['/', 'throwing axe', 6],
 	}
 
-	thrown_amclasses = set(["javelin"])
+	thrown_amclasses = set(["javelin","throwing axe"])
 
 	projectile = {
 		"bow" : set(["arrow"]),
 		"crossbow" : set(["bolt"]),
-		"ballista" : set(["bolt"]),
+		"ballista" : set(["bolt","arrow"]),
 
 	}
 
@@ -258,6 +265,7 @@ class Weapons():
 		# Thrown
 		"iron javelin" : 	  ['/','javelin',1, 0, 3, 0, 1.2],
 		"barbed javelin" : 	  ['/','javelin',1, 0, 4, -1, 1.3],
+		"throwing axe" : 	  ['%','throwing axe',1, 0, 3, -1, 1.3],
 
 		# Projectile
 		"goblin bow" :        [')','bow',2, 0, 5, -4, 1.3],
@@ -321,6 +329,7 @@ class Weapons():
 		"vomit" : ["hurl", "onto"],
 		"ballista" : ["launch", "into"],
 		"javelin" : ["hurl", "into"],
+		"throwing axe" : ["hurl", "into"],
 
 		# God weapons
 		"god spear" : ["plunge", "deep into"],

@@ -781,6 +781,20 @@ class Player():
 		# Equip Weapon
 		if type(item) == Weapon or type(item) == Shield:
 
+			# Ranged weapons require all hands
+			if item.wclass in Weapons.ranged_wclasses:
+				# Remove current weapons
+				for weap in carrying:
+						self.wielding.remove(weap)
+						self.inventory.append(weap)
+
+				# Wield Weapon
+				self.hands = 0
+				self.wielding.append(item)
+				self.inventory.remove(item)
+				game.game_log.append("You draw your " + item.name + "!")
+				return
+
 			# Not enough total hands
 			if item.hands > total_hands:
 				game.temp_log.append("You cannot wield that weapon!")
@@ -947,18 +961,21 @@ class Player():
 
 				# Equip fists
 				unarmed = []
-				if self.hands > 1 and (len(carrying) < 2 and self.race == "Hill Troll"): unarmed.append(self.give_weapon('fists'))
+				if self.hands > 1 and (len(carrying) < 2 and self.race == "Hill Troll"):
+					fists = self.give_weapon('fists')
+					unarmed.append(fists)
+					weaps.append(fists)
 
 				# Attack with each weapon
 				for item in weaps:
 					item.strike(self, unit)
 					if unit.hp <= 0: break
 
-				# Unequip fists
-				for fist in unarmed: self.wielding.remove(fist)
-
 				# Enemy Well-being Statement
 				self.well_being_statement(unit, item.name, game)
+
+				# Unequip fists
+				for fist in unarmed: self.wielding.remove(fist)
 
 				# Unarmed wspeed
 				maxas = 0.9 - (0.05 * self.dex)
@@ -1702,9 +1719,9 @@ class Chest():
 
 	def open(self):
 
-		game.map.room_filler.place_ammo("iron arrow", self.loc, 5 + 2 * self.tier)
-
 		n = 1
+
+		# Place Weapons/Armor/Shield
 		while n <= game.player.level:
 			if len(self.pot_weapons) == 0: return
 
@@ -1739,6 +1756,11 @@ class Chest():
 				self.pot_weapons.remove(tier)
 
 			n += 1
+
+		# Place Ammo
+		game.map.room_filler.place_ammo("throwing axe", self.loc, 5 + 2 * self.tier)
+
+
 		self.opened = True
 
 

@@ -25,8 +25,8 @@ class Monsters():
 		# Goblins
 		"Goblin" : 		   	   ["g","goblin",1,  2,2,3,1,1,0.9, 4, ['stabba','goblin spear','club','bone club'] , ['wolf pelt','bear hide']],
 		"Goblin Archer" :      ["a","goblin",1,  2,1,4,1,1,0.85, 4, ['stabba'] , ['wolf pelt','bear hide'], ['goblin bow','iron arrow']],
-		"Goblin Skirmisher":   ["g","goblin",1,  3,2,3,1,1,0.85, 6, ['slica','choppa','bone club'] , ['bear hide'], ['buckler shield']],
-		"Goblin Spiderrider" : ["s","goblin",2,  4,2,4,1,3,0.6, 8, ['goblin spear','slica'] , ['spider hide'], ['buckler shield']],
+		"Goblin Skirmisher":   ["g","goblin",1,  3,2,3,1,1,0.85, 6, ['slica','choppa','bone club'] , ['bear hide'], ['buckler shield'], ['iron javelin']],
+		"Goblin Spiderrider" : ["s","goblin",2,  4,2,4,1,3,0.6, 8, ['goblin spear',['slica','buckler shield']], ['spider hide'], ['buckler shield']],
 		"Witch Goblin" :       ["w","goblin",2,  3,3,3,3,3,0.9, 8, ['bone club'] , ['troll hide'], ['poison breath']],
 		"Goblin Nob" : 	       ["n","goblin",2,  4,3,2,1,2,1.0, 8, ['smasha','choppa'] , ['troll hide','spider hide']],
 		"Goblin Chief" :   	   ["G","goblin",3,  5,4,4,2,3,0.95, 15,['big choppa','big slica','skull smasha'] , ['berserker mail','leather armor']],
@@ -38,16 +38,16 @@ class Monsters():
 		"Orc Warlock" :    ["W","orc",3,  4,3,3,4,4,1.0, 15, ['toxic slica'] , ['wyvernscale','studded armor'], ['poison breath']],
 		"Orc Berserker" :  ["b","orc",3,  4,5,4,2,3,0.8, 15, ['iron greatsword',['choppa','slica']] , ['berserker mail','studded armor'], ['headbutt']],
 		"Orc Nob" : 	   ["N","orc",4,  5,5,3,2,4,1.1, 15, ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['headbutt']],
-		"Orc Warboss" :    ["O","orc",5,  6,6,4,3,5,1.1, 30, ['boss choppa','ice choppa',['black ballista','big slica']] , ['Orcish dreadplate','scrap plate armor'], ['headbutt','iron arrow']],
+		"Orc Warboss" :    ["O","orc",5,  6,6,4,3,5,1.1, 30, ['boss choppa','ice choppa',['black ballista','big slica']] , ['Orcish dreadplate','scrap plate armor'], ['headbutt','iron bolt']],
 
 		# Uruks
 		"Uruk Warrior" :   ["u","uruk",3,  4,4,3,2,4,1.0, 15, ['hooked longsword','spiked axe','spiked mace'] , ['blackiron plate'], ['blackiron shield']],
 		"Uruk Pikeman" :   ["u","uruk",3,  4,4,3,2,4,1.0, 15, ['uruk-hai pike'] , ['blackiron plate']],
-		"Uruk Bolter" :    ["b","uruk",3,  4,3,4,2,4,0.9, 15, ['hooked shortsword'] , ['blackiron plate'], ['uruk crossbow','steel arrow']],
+		"Uruk Bolter" :    ["b","uruk",3,  4,3,4,2,4,0.9, 15, ['hooked shortsword'] , ['blackiron plate'], ['uruk crossbow','steel bolt']],
 		"Uruk Headhunter" :["h","uruk",4,  4,4,4,2,4,1.0, 22, ['hooked greatsword'] , ['blackiron plate'], ['barbed javelin']],
 		"Uruk Berserker" : ["U","uruk",4,  5,4,3,2,4,1.0, 22, ['hooked greatsword'] , ['berserker mail'], ['headbutt']],
 		"Uruk Bodyguard" : ["B","uruk",5,  6,5,3,2,6,1.2, 30, ['uruk-hai pike',['hooked greatsword','blackiron shield','shield hit']] , ['blackiron plate']],
-		"Uruk Warlord" :   ["U","uruk",6,  7,6,4,2,6,1.0, 60, ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','headbutt','steel arrow']],
+		"Uruk Warlord" :   ["U","uruk",6,  7,6,4,2,6,1.0, 60, ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','headbutt','steel bolt']],
 
 		# Undead
 		"Living Corpse" : 	  ["z","undead",1,  2,2,1,1,3,1.3, 4, ['iron longsword','iron axe','iron dagger'] , ['tattered garments',]],
@@ -91,7 +91,7 @@ class Monsters():
 
 		# Dragons
 		"Fire Dragon" :  ["D","fire dragon",10,  12,8,7,6,8,1.1, 500, ['dragon fangs','dragon tail'] , ['fire dragonscales']],
-		"Frost Dragon" : ["D","frost dragon",10,  14,7,6,4,10,1.2, 500, ['dragon fangs','dragon tail'] , ['frost dragonscales']],
+		"Frost Dragon" : ["D","frost dragon",10,  14,7,6,4,10,1.2, 500, ['dragon fangs','dragon tail'] , ['frost dragonscales'], ['frost breath']],
 		}
 
 class Bands():  # Tier Bonus :   formations
@@ -105,7 +105,7 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Direwolf Cannibal'],
  						 	    ['Direwolf Alpha'],
  			] ),
- 		'Kobold Party' : (2, [ ['Kobold'], 
+ 		'Kobold Party' : (2, [  ['Kobold'], 
  								['Kobold Archer'], 
  						 	    ['Kobold','Kobold','Kobold Mage','Greater Kobold'],
  						 	    [],
