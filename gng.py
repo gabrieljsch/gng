@@ -1758,7 +1758,7 @@ class Chest():
 			n += 1
 
 		# Place Ammo
-		game.map.room_filler.place_ammo("throwing axe", self.loc, 5 + 2 * self.tier)
+		game.map.room_filler.place_ammo("iron arrow", self.loc, 5 + 2 * self.tier)
 
 
 		self.opened = True
