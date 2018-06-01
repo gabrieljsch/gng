@@ -28,14 +28,13 @@ class Armors():
 		# Skins and Hides
 		"wolf pelt" : 		['[','hide',1,0, 0],
 		"bear hide" :   	['[','hide',2,0, 0],
-		"spider hide" :   	['[','hide',2,-1, 0],
-		"dog hide" : 		['[','hide',3,1, 0],
-		"ooze skin" :   	['[','hide',2,0, 0],
+		"ooze skin" :   	['[','hide',2,-1, 0],
 		"ogre hide" : 		['[','hide',3,2, 0],
+		"dog hide" : 		['[','hide',3,1, 0],
 		"troll hide" :  	['[','hide',4,2, 0],
-		"cave troll hide" : ['[','hide',6,4, 0],
 		"spider hide" : 	['[','hide',4,1, 0],
 		"flayed skins" : 	['[','hide',5,1, 0],
+		"cave troll hide" : ['[','hide',6,4, 0],
 
 		# Hide Armors
 		"leather armor" : 	['[','hide',5,2, 0],
@@ -56,10 +55,11 @@ class Armors():
 		"iron chainmail" :   [']','chainmail',6,5, 0],
 
 		# Plate Armors
-		"scrap plate armor" : [']','plate',8,10, 0],
-		"blackiron plate" :   [']','plate',8,8, 0],
-		"Orcish dreadplate" : [']','plate',12,18, 0],
+		"blackiron plate" :   [']','plate',7,6, 0],
+		"scrap plate armor" : [']','plate',8,11, 0],
+		"iron plate armor" :  [']','plate',8,8, 0],
 		"steel plate armor" : [']','plate',10,9, 0],
+		"Orcish dreadplate" : [']','plate',12,18, 0],
 
 		# Legendary Armor
 		"God-Frame" :     [']','plate',13,13, d(3), 'angelic'],
@@ -70,17 +70,17 @@ class Armors():
 class Shields():
 
 	array = {
-		# self,rep    name, hands, armor_rating, encumberance, enchantment
+		# self,rep    name, hands, armor_rating, encumberance, enchantment, brand
 
 		"buckler shield" : 	  ['}',1,3,1,0],
-		"wooden broadshield" :['}',1,5,3,0],
 		"trollhide shield" :  ['}',1,4,1,0],
+		"gauntlet shield" :   ['}',1,4,0,0],
 		"boneshield" :		  ['}',1,5,4,0],
-		"blackiron shield" :  ['}',1,6,4,0],
+		"wooden broadshield" :['}',1,5,3,0],
 		"bronze aegis" :      ['}',1,5,1,1],
+		"blackiron shield" :  ['}',1,6,4,0],
 		"steel kite shield" : ['}',1,8,5,0],
 		"tower shield" :  	  ['}',1,12,6,0],
-		"gauntlet shield" :   ['}',1,4,0,0],
 		}
 
 
@@ -93,12 +93,12 @@ class CharacterRaces():
 		"Hobbit" :     [[2,3,4,3,5,0.9, 11], []],
 		"Elf" : 	   [[3,3,4,4,3,1.0, 13], []],
 		"Terran" :     [[4,3,3,3,4,1.0, 15], []],
-		"Naga" :       [[4,3,4,4,1,0.9, 20], ["tail smash"]],
+		"Naga" :       [[4,3,4,4,1,0.9, 22], [("envenom", True), "tail smash"]],
 		"Ghoul" :      [[4,4,4,2,1,1.1,  8], [("feral bite", True)]],
 		"Dragonborn" : [[4,5,2,3,2,1.2, 13], [("flame tongue", True), "tail smash"]],
 		"Black Orc" :  [[5,4,2,2,1,1.3, 15], ["headbutt"]],
-		"Dwarf" : 	   [[6,3,2,3,2,1.3, 10], []],
-		"Hill Troll" : [[6,5,1,1,1,1.4, 16], []],
+		"Dwarf" : 	   [[6,3,2,3,2,1.3, 10], [("iron blessing", True)]],
+		"Hill Troll" : [[6,5,1,1,1,1.5, 16], []],
 	}
 
 
@@ -121,6 +121,7 @@ class Ammos():
 		# Arrows/Bolts
 		"iron arrow" :     ['(', 'arrow', 1],
 		"steel arrow" :    ['(', 'arrow', 2],
+		"thornarrow" : 	   ['(', 'arrow', 2,'envenomed'],
 		"iron bolt" : 	   ['(', 'bolt', 1],
 		"steel bolt" : 	   ['(', 'bolt', 2],
 
@@ -152,6 +153,7 @@ class Weapons():
 		"fists" : 	   	  	['','fist',0, 0, 3, 9, 0.7, None, 100],
 		"fist smash" : 	  	['','fists',0, 0, 17, -2, 1.6, None, 100],
 		"stone fists" : 	['%','fists',4, 0, 22, -4, 2.3, None, 100],
+		"claws" : 	   		['','claws',0, 0, 7, 3, 0.85, None, 100],
 		"bone claws" : 	   	['','claws',0, 0, 10, 2, 0.9, None, 100],
 
 		# Head
@@ -183,17 +185,21 @@ class Weapons():
 		# Blunt
 		"hammer" :       ['%','hammer',1, 0, 10, 0, 1.2],
 		"warhammer" :    ['%','warhammer',2, 0, 15, -4, 1.4],
-		"club" : 	     ['%','club',1, 0, 9, -1, 1.3],
+		"club" : 	     ['%','club',1, 0, 9, -1, 1.1],
 		"spiked club" :  ['%','club',2, 0, 16, -4, 1.7],
 		"flail" : 		 ['%','flail',1, 0, 10, -2, 1.3],
 		"greatflail" : 	 ['%','flail',2, 0, 17, -6, 1.5],
 		"mace" : 		 ['%','mace',1, 0, 9, 0, 1.2],
 		"spiked mace" :  ['%','mace',1, 0, 10, -1, 1.25],
 
+		# Staves
+		"quarterstaff": ['/','staff',2, 0, 10, 1, 1.1],
+
 		# Polearms
-		"spear" :        ['/','spear',1, 0, 9, -1, 1],
-		"pike" :      	 ['/','pike',2, 0, 10, 0, 1.2],
-		"halberd" :      ['/','polearm',2, 0, 12, -2, 1.15],
+		"spear" :	['/','spear',1, 0, 9, -1, 1],
+		"pike" :	['/','pike',2, 0, 10, 0, 1.2],
+		"halberd" : ['/','polearm',2, 0, 12, -2, 1.15],
+		"lance" :   ['/','lance',2, 0, 11, -1, 1],
 
 		# Blades
 		"iron dagger" :        ['!','dagger',1, 0, 5, 4, 0.75],
@@ -201,6 +207,8 @@ class Weapons():
 		"iron longsword" :     ['!','sword',1, 0, 7, 1, 1.0],
 		"steel longsword" :    ['!','sword',1, 0, 9, 1, 1.0],
 		"iron shortsword" :    ['!','sword',1, 0, 6, 2, 0.9],
+		"steel shortsword" :   ['!','sword',1, 0, 8, 3, 0.9],
+		"iron bastard sword" : ['!','bastard sword',2, 0, 11, -1, 1.2],
 		"steel bastard sword" :['!','bastard sword',2, 0, 13, -1, 1.1],
 		"iron greatsword" :    ['!','greatsword',2, 0, 11, -2, 1.2],
 		"steel greatsword" :   ['!','greatsword',2, 0, 13, -2, 1.2],
@@ -232,27 +240,30 @@ class Weapons():
 		"hooked longsword" :     ['!','sword',1, 0, 9, 1, 1.1],
 		"hooked shortsword" :    ['!','sword',1, 0, 8, 2, 1.0],
 		"spiked axe"  : 		 ['&','axe',1, 0, 10, -2, 1.2],
-		"hooked greatsword" :    ['!','greatsword',2, 0, 16, -3, 1.25],
+		"hooked broadsword" :    ['!','greatsword',2, 0, 16, -3, 1.25],
 		"uruk-hai pike" :    	 ['/','pike', 2, 0, 12, -1, 1.2],
 
 		# Demon Weapons
 		"bloodletter" :     ['!','demon sword',1, 0, 9, -2, 1.0],
-		"skullsplitter" :   ['!','greataxe',2, 0, 16, -5, 1.5],
+		"skullsplitter" :   ['!','greataxe',2, 0, 16, -5, 1.6],
 		"filthaxe" :   		['!','axe',1, 0, 9, -3, 1.3,"envenomed"],
-		"screamflail" :   	['!','flail',1, 0, 12, -4, 1.3],
+		"screamflail" :   	['!','flail',1, 0, 11, -4, 1.4,"infernal"],
 
 		# Dark Elf Weapons
 		"thornknife" : ['!','dagger',1, 0, 6, 2, 0.7],
 		"thornblade" : ['!','sword',1, 0, 8, 0, 0.9],
 		"sun spear" :  ['/','spear',1, 0, 9, 0, 1.2, "flaming"],
+		"sunlance" :   ['/','lance',2, 0, 10, 0, 1.3, "flaming"],
 
 		# Elvish Weapons
 		"elven leafblade" :  ['!','sword', 2, 0, 13, 0, 0.95],
 		"elven broadspear" : ['/','spear', 2, 0, 12, 2, 0.95],
 
 		# Bone Weapons
+		"boneknife" :      ['!','dagger',1, 0, 7, 3, 1.0],
 		"bone cleaver" :   ['!','sword',1, 0, 9, 2, 1.2],
 		"sawtooth blade" : ['!','sword',1, 0, 11, -1, 1.2],
+		"bonemace" : 	   ['%','mace',1, 0, 10, 0, 1.5],
 
 		# Top-tier
 		"witchhunter blade" : ['!','sword',1, 0, 10, 3, 1.0,"spectral"],
@@ -270,11 +281,12 @@ class Weapons():
 		# Projectile
 		"goblin bow" :        [')','bow',2, 0, 5, -4, 1.3],
 		"crude shortbow" :    [')','bow',2, 0, 6, -4, 1.35],
-		"blackwood longbow" : [')','bow',2, 0, 7, -1, 1.5],
-		"ranger longbow" :    [')','bow',2, 0, 7, 0, 1.7],
-		"elven longbow" :     [')','bow',2, 0, 7, 1, 1.5],
-		"uruk crossbow" :     [')','crossbow',2, 0, 9, 0, 2],
-		"black ballista" : 	  [')','bow',3, 0, 11, 0, 2.2],
+		"recurve bow " : 	  [')','bow',2, 0, 7, -2, 1.4],
+		"blackwood longbow" : [')','bow',2, 0, 7, 1, 1.5],
+		"ranger longbow" :    [')','bow',2, 0, 8, 0, 1.7],
+		"elven longbow" :     [')','bow',2, 0, 8, 1, 1.5],
+		"uruk crossbow" :     [')','crossbow',2, 0, 10, 0, 2],
+		"black ballista" : 	  [')','bow',3, 0, 12, 0, 2.2],
 
 
 		# Legendary Weapons
@@ -322,6 +334,8 @@ class Weapons():
 		"greatsword" : ["cleave", "into"],
 		"bastard sword" : ["slash", "into"],
 		"polearm" : ["slice", "into"],
+		"staff" : ["strike", "into"],
+		"lance" : ["drive", "into"],
 
 		# Ranged Weapons
 		"arrow" : ["loose", "into"],
@@ -379,6 +393,33 @@ class Weapons():
 			attacker.str += Brands.dict[status]['bonusstr']
 			game.game_log.append("Your body twists into a huge, grotesque abomination!")
 		return True
+
+	def raise_skeleton(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		spaces = []
+		for x in range(-3,4):
+			for y in range(-3,4):
+				if x > 0 and y > 0 and (x != 0 or y != 0): spaces.append((attacker.loc[0] + x, attacker.loc[1] + y))
+		shuffle(spaces)
+
+		for space in spaces:
+			if game.map.can_move(space):
+				if game.map.square_identity != '+':
+					# Spawn Skeleton
+					if d(10) >= 3: Skeleton = "Skeleton"
+					else: Skeleton = "Skeleton Warrior"
+
+					roomfiller.spawn(Skeleton,space)
+					# Flavor Text
+					if attacker.name != 'you':
+						game.game_log.append("The " + attacker.name + " calls a " + Skeleton + " to rise from the grave!")
+					else:
+						game.game_log.append("You call upon a  " + Skeleton + " to raise from the ground!")
+					return True
+
+		# No free spaces
+		if attacker.name == 'you': game.temp_log.append("There are no places to raise a skeleton!")
+		return False
 
 	def wraithwalk(name, attacker, enemy, game, map, roomfiller, ability = False):
 
@@ -463,6 +504,45 @@ class Weapons():
 		enemy.passives.append([status, count])
 		return True
 
+	def envenom(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Traits
+		brand = 'envenomed'
+		coated = False
+
+		# Weapons
+		for item in attacker.wielding:
+			if item.name in Weapons.array and item.hands > 0:
+				if item.wclass not in Weapons.ranged_wclasses and item.brand != brand:
+					item.brand = brand
+					coated = True
+
+		# Ammo
+		if attacker.quivered is not None:
+			if attacker.quivered.brand != brand:
+				# Envenom quiver
+				attacker.quivered.brand = brand
+				coated = True
+				# Check other ammo
+				for thing in attacker.inventory:
+					if thing.name in Ammos.array and thing != attacker.quivered:
+						if thing.name == attacker.quivered.name and thing.brand == attacker.quivered.brand:
+							attacker.quivered.number += thing.number
+							attacker.inventory.remove(thing)
+							break
+
+		if not coated:
+			if attacker.name == 'you': game.temp_log.append("There is nothing for you to envenom right now.")
+			return False
+
+		# Flavor Text
+		if attacker.name == 'you':
+			game.game_log.append("You coat your weapons in your deadly poison!")
+		else:
+			game.game_log.append("The " + attacker.name + " coats its weapons in a deadly poison!")
+
+		return True
+
 	def flame_tongue(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
@@ -489,6 +569,28 @@ class Weapons():
 				return True
 
 		enemy.passives.append([status, count])
+		return True
+
+	def iron_blessing(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Traits
+		status = 'blessed iron'
+		count = 8
+
+		# Flavor Text
+		if attacker.name == 'you':
+			game.game_log.append("You bless your weapons and armor, they feel lighter!")
+		else:
+			game.game_log.append("The " + attacker.name + " blesses its weapons and armor!")
+
+		# Apply Effect
+		for passive in attacker.passives:
+
+			if passive[0] == status:
+				passive[1] = count
+				return True
+
+		attacker.passives.append([status, count])
 		return True
 
 	def frost_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
@@ -655,16 +757,21 @@ class Weapons():
 		"chain lightning" : 	(chain_lightning, 		8, 1.4,  True, True,  6),
 		"blink" : 				(blink, 				4, 1.0,  False, False),
 
-		# Ghoul
-		"feral bite" : 			(feral_bite,      		6, 0.9,  True, True,  1),
+		# Cytherean
+		"wraithwalk" : 			(wraithwalk,   			9, 0,  False, False),
 		# Dragonborn
 		"flame tongue" :  		(flame_tongue,      	5, 1.1,  True, True,  4),
 		"frost breath" :  		(frost_breath,      	7, 1.3,  False, False, 3),
-		# Cytherean
-		"wraithwalk" : 			(wraithwalk,   			9, 0,  False, False),
+		# Dwarf
+		"iron blessing" :  		(iron_blessing,      	10, 1.5,  False, False),
+		# Ghoul
+		"feral bite" : 			(feral_bite,      		6, 0.9,  True, True,  1),
+		# Naga
+		"envenom" : 			(envenom,      			10,2.0,  False, False),
 
 		# Orc Spells
 		"poison breath" :  		(poison_breath,   		4, 1.2,  True, True,  3), 
+		"raise skeleton" : 		(raise_skeleton,   		6, 2.5,  False, False), 
 		# Black Eye Spells
 		"dark transformation" : (dark_transformation,   0, 3.0,  False, False),
 		"dark bolt" :  			(dark_bolt, 			5, 1.6,  True, True,  5), 

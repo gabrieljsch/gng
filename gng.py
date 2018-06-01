@@ -62,7 +62,7 @@ class Player():
 
 		# Innate passives
 		if self.race == 'Dragonborn': self.innate_ac += 2
-		if self.race == 'Hill Troll':
+		if self.race == 'Naga':
 			self.innate_ac += 1
 			self.hands = 4
 
@@ -782,18 +782,19 @@ class Player():
 		if type(item) == Weapon or type(item) == Shield:
 
 			# Ranged weapons require all hands
-			if item.wclass in Weapons.ranged_wclasses:
-				# Remove current weapons
-				for weap in carrying:
-						self.wielding.remove(weap)
-						self.inventory.append(weap)
+			if type(item) == Weapon:
+				if item.wclass in Weapons.ranged_wclasses:
+					# Remove current weapons
+					for weap in carrying:
+							self.wielding.remove(weap)
+							self.inventory.append(weap)
 
-				# Wield Weapon
-				self.hands = 0
-				self.wielding.append(item)
-				self.inventory.remove(item)
-				game.game_log.append("You draw your " + item.name + "!")
-				return
+					# Wield Weapon
+					self.hands = 0
+					self.wielding.append(item)
+					self.inventory.remove(item)
+					game.game_log.append("You draw your " + item.name + "!")
+					return
 
 			# Not enough total hands
 			if item.hands > total_hands:
@@ -804,7 +805,7 @@ class Player():
 			if self.hands < item.hands or len(carrying) == 2:
 
 				# Already carrying something
-				if len(carrying) == 2:
+				if len(carrying) == 2 and item.hands < total_hands:
 
 					fd = sys.stdin.fileno()
 					newattr = termios.tcgetattr(fd)
@@ -961,7 +962,7 @@ class Player():
 
 				# Equip fists
 				unarmed = []
-				if self.hands > 1 and (len(carrying) < 2 and self.race == "Hill Troll"):
+				if len(carrying) == 0 or (len(carrying) == 1 and self.race == "Hill Troll"):
 					fists = self.give_weapon('fists')
 					unarmed.append(fists)
 					weaps.append(fists)
@@ -1178,6 +1179,8 @@ class Monster():
 				los = ai.los(self.loc, game.player.loc, Maps.rooms[game.map.map][0], game )
 				if los is not None:
 
+					# Shift around spells
+					if len(self.spells) > 2: shuffle(self.spells)
 					# Zap with spells
 					for spell in self.spells:
 						# Check for mana
@@ -1294,6 +1297,7 @@ class Weapon():
 
 		brand = self.brand
 		wclass = self.wclass
+		to_hit = self.to_hit
 
 		# Check for enemy status
 		frozen = False
@@ -1306,13 +1310,24 @@ class Weapon():
 			# Calc Encumberance
 			self_encumb = attacker.equipped_armor.encumberance - attacker.equipped_armor.enchantment
 			enemy_encumb = enemy.equipped_armor.encumberance - enemy.equipped_armor.enchantment
+
 			for item in attacker.wielding:
 				if type(item) == Shield: self_encumb += item.encumberance
 			for item in enemy.wielding:
 				if type(item) == Shield: enemy_encumb += item.encumberance
 
+			# Blessed Iron Passive
+			for passive in attacker.passives:
+				if passive[0] == "blessed iron":
+					if self_encumb > 0: self_encumb = 0
+					if to_hit < 0: to_hit = 0
+			for passive in enemy.passives:
+				if passive[0] == "blessed iron":
+					if enemy_encumb > 0: enemy_encumb = 0
+
+
 			# TO HIT formula
-			if (d(100) + (4 * (attacker.dex - enemy.dex) ) + (2 * self.to_hit) + self.enchantment > 40 + 1.5 * self_encumb - 1.5 * enemy_encumb) or frozen:
+			if (d(100) + (4 * (attacker.dex - enemy.dex) ) + (2 * to_hit) + self.enchantment > 40 + 1.5 * (self_encumb - enemy_encumb)) or frozen:
 
 				# Shield Block
 				for weapon in enemy.wielding:
@@ -1350,7 +1365,7 @@ class Weapon():
 				elif brand == "frozen": brandhit = d(100) > 80
 				elif brand == "spectral": brandhit = True if len(enemy.spells) > 0 else False
 				elif brand == "silvered":
-					if enemy.name != 'you': brandhit = True if enemy.etype in set(["undead","demon"]) else False
+					if enemy.name != 'you': brandhit = True if enemy.etype in set(["undead","demon","skeleton"]) else False
 					else: brandhit = True if enemy.race in set(["ghoul"]) else False
 				elif brand is not None: brandhit = True
 
@@ -1486,7 +1501,7 @@ class Weapon():
 			# --END------------------------------------
 
 
-		if self.wclass == "spear" or self.wclass == "polearm":
+		if self.wclass == "spear" or self.wclass == "polearm" or self.wclass == "lance":
 			for unit in game.units:
 				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])):
 					self.strike(attacker, unit, False)
@@ -1711,11 +1726,13 @@ class Chest():
 								 ["spear","elven leafblade"],
 								 ["ranger longbow"], ]
 		elif self.type == "wooden":
-			self.pot_weapons = [    ["steel dagger","iron axe","spear","hammer","mace","iron longsword"], 
-									["crude shortbow","iron battleaxe","iron longsword","mace","flail"], 
+			self.pot_weapons = [    ["steel dagger","iron axe","spear","hammer","mace","iron longsword","club","iron shortsword"], 
+									["crude shortbow","iron battleaxe","iron longsword","mace","flail","quarterstaff","iron bastard sword"], 
 									["buckler shield", "wooden broadshield","trollhide shield"], 
 									["iron battleaxe","iron greatsword","warhammer","spiked club","barbed javelin"],
-									["steel plate armor","iron chainmail"], ]
+									["iron plate armor","iron chainmail","ironscale mail","scrap plate armor"],
+									["steel axe","steel longsword","halberd","steel bastard sword","steel shortsword"],
+									["steel greatsword","steel battleaxe","pike","greatflail"] ]
 
 	def open(self):
 
@@ -2343,9 +2360,17 @@ class Game():
 		a_ench = self.player.equipped_armor.enchantment
 		if a_ench >= 0: a_ench = '+' + str(a_ench)
 
+		hpspace =   "                 "
+		for i in range(len(str(self.player.hp))):
+			hpspace = hpspace[:-2]
+
+		manaspace = "                 "
+		for i in range(len(str(self.player.mana))):
+			manaspace = manaspace[:-2]
+
 		print("Level " + str(self.player.level) + " " + self.player.race)
-		print("HP    " + str(self.player.hp)   + "/" + str(self.player.maxhp)   + "               Wielding:" + weapon_string + "             Armor: " + str(a_ench) + ' ' + self.player.equipped_armor.name)
-		print("MANA  " + str(self.player.mana) + "/" + str(self.player.maxmana) + "                 Quivered:" + quivered_string)
+		print("HP    " + str(self.player.hp)   + "/" + str(self.player.maxhp)   + hpspace + "Wielding:" + weapon_string + "             Armor: " + str(a_ench) + ' ' + self.player.equipped_armor.name)
+		print("MANA  " + str(self.player.mana) + "/" + str(self.player.maxmana) + manaspace + "Quivered:" + quivered_string)
 
 		# YOU DIE!!
 		if self.player.hp <= 0:
@@ -2474,7 +2499,7 @@ class Game():
 
 				unit = item_array[i]
 
-				if unit.brand is not None and unit.brand != "plate": print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
+				if unit.brand is not None: print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
 				else: print( item_order[i] + " - +" + str(unit.enchantment) + ' ' + unit.name)
 			print("                                                                     ")
 			print("=======================================================================================")
@@ -2621,12 +2646,18 @@ class Game():
 				# Manage drained
 				if name == "drained": unit.dex += Brands.dict["drained"]["dex_loss"]
 
+				# Manage Iron Blessing
+				if name == "blessed iron":
+					if unit.name == 'you': game.game_log.append("Your iron blessing wears off.")
+					else: game.game_log.append("The " + unit.name + "'s iron blessing wears off.")
+
 				# Manage grotesque
 				if name == "grotesque":
 					unit.hp -= Brands.dict['grotesque']['bonushp']
 					unit.maxhp -= Brands.dict['grotesque']['bonushp']
 					unit.str -= Brands.dict['grotesque']['bonusstr']
-					game.game_log.append("Your body returns to its normal shape.")
+					if unit.name == 'you': game.game_log.append("Your body returns to its normal shape.")
+					else: game.game_log.append("The " + unit.name + "'s body returns to its normal shape.")
 
 				unit.passives.remove([passive[0], passive[1]])
 

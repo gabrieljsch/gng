@@ -35,21 +35,25 @@ class Monsters():
 		"Orc Warboy" : 	   ["o","orc",2,  3,4,3,2,2,1.1, 6, ['slica','choppa','smasha'] , ['bear hide', 'troll hide']],
 		"Orc Archer" :     ["a","orc",2,  3,3,4,2,2,1.0, 6, ['choppa', 'slica'] , ['bear hide', 'troll hide'], ['crude shortbow','iron arrow']],
 		"Orc Warrior" :    ["o","orc",2,  4,4,3,2,3,1.1, 9, ['slica','smasha','choppa'] , ['troll hide','leather armor'], ['trollhide shield']],
-		"Orc Warlock" :    ["W","orc",3,  4,3,3,4,4,1.0, 15, ['toxic slica'] , ['wyvernscale','studded armor'], ['poison breath']],
 		"Orc Berserker" :  ["b","orc",3,  4,5,4,2,3,0.8, 15, ['iron greatsword',['choppa','slica']] , ['berserker mail','studded armor'], ['headbutt']],
 		"Orc Nob" : 	   ["N","orc",4,  5,5,3,2,4,1.1, 15, ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['headbutt']],
-		"Orc Warboss" :    ["O","orc",5,  6,6,4,3,5,1.1, 30, ['boss choppa','ice choppa',['black ballista','big slica']] , ['Orcish dreadplate','scrap plate armor'], ['headbutt','iron bolt']],
+		"Orc Warlock" :    ["W","orc",4,  4,3,3,4,4,1.0, 15, ['toxic slica'] , ['wyvernscale','studded armor'], ['poison breath','raise skeleton']],
+		"Orc Warboss" :    ["O","orc",5,  6,6,4,3,5,1.1, 40, ['boss choppa','ice choppa',['black ballista','big slica']] , ['Orcish dreadplate','scrap plate armor'], ['headbutt','iron bolt']],
 
 		# Uruks
 		"Uruk Warrior" :   ["u","uruk",3,  4,4,3,2,4,1.0, 15, ['hooked longsword','spiked axe','spiked mace'] , ['blackiron plate'], ['blackiron shield']],
 		"Uruk Pikeman" :   ["u","uruk",3,  4,4,3,2,4,1.0, 15, ['uruk-hai pike'] , ['blackiron plate']],
 		"Uruk Bolter" :    ["b","uruk",3,  4,3,4,2,4,0.9, 15, ['hooked shortsword'] , ['blackiron plate'], ['uruk crossbow','steel bolt']],
-		"Uruk Headhunter" :["h","uruk",4,  4,4,4,2,4,1.0, 22, ['hooked greatsword'] , ['blackiron plate'], ['barbed javelin']],
-		"Uruk Berserker" : ["U","uruk",4,  5,4,3,2,4,1.0, 22, ['hooked greatsword'] , ['berserker mail'], ['headbutt']],
-		"Uruk Bodyguard" : ["B","uruk",5,  6,5,3,2,6,1.2, 30, ['uruk-hai pike',['hooked greatsword','blackiron shield','shield hit']] , ['blackiron plate']],
+		"Uruk Headhunter" :["h","uruk",4,  4,4,4,2,4,1.0, 22, ['hooked broadsword'] , ['blackiron plate'], ['barbed javelin']],
+		"Uruk Berserker" : ["U","uruk",4,  5,4,3,2,4,1.0, 22, ['hooked broadsword'] , ['berserker mail'], ['headbutt']],
+		"Uruk Bodyguard" : ["B","uruk",5,  6,5,3,2,6,1.2, 40, ['uruk-hai pike', ['hooked broadsword','blackiron shield']], ['blackiron plate'], ['shield hit']],
 		"Uruk Warlord" :   ["U","uruk",6,  7,6,4,2,6,1.0, 60, ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','headbutt','steel bolt']],
 
 		# Undead
+		"Skeleton" : 	  	 ["s","skeleton",1,  2,2,1,1,2,1.1, 4, ['iron longsword','iron axe','iron shortsword'] , ['tattered garments',]],
+		"Skeleton Archer" :  ["a","skeleton",2,  3,3,2,2,4,1.1, 8, ['boneknife','iron dagger'] , ['tattered garments'],['recurve bow','iron arrow']],
+		"Skeleton Warrior" : ["s","skeleton",2,  4,2,2,2,4,1.2, 8, ['bone cleaver','sawtooth blade','bonemace'] , ['iron chainmail','studded armor'],['buckler shield']],
+
 		"Living Corpse" : 	  ["z","undead",1,  2,2,1,1,3,1.3, 4, ['iron longsword','iron axe','iron dagger'] , ['tattered garments',]],
 		"Undead Legionaire" : ["z","undead",2,  3,3,2,2,4,1.2, 8, ['bone cleaver','iron axe','mace'] , ['iron chainmail','rotted chainmail'],['boneshield']],
 		"Plaguebearer" :      ["p","undead",2,  4,3,1,2,5,1.3, 8, ['bone cleaver','flail','mace'] , ['rotted chainmail'],['vomit']],
@@ -59,33 +63,34 @@ class Monsters():
 
 		# The Black Eye
 		"Black Eye Cultist" :   ["c","man",2,  3,3,3,2,2,1.0, 8, ['mace',['iron dagger','iron dagger']] , ['tainted robe']],
-		"Black Eye Disciple" :  ["b","man",3,  4,3,3,4,3,0.9, 14, ['spiked mace'] , ['tainted robe'],['dark bolt']],
-		"Black Eye Destroyer" : ["D","man",5,  4,3,3,5,6,1.0, 30, ['spiked mace'] , ['tainted robe'], ['dark transformation','bloodreave']],
-		"Abomination" : 		["A","man",5,  6,6,1,1,2,1.6, 30, ['fist smash'] , ['tainted robe']],
+		"Black Eye Disciple" :  ["b","man",3,  4,3,3,4,3,1.0, 14, ['spiked mace'] , ['tainted robe'],['dark bolt']],
+		"Black Eye Destroyer" : ["D","man",5,  4,3,3,5,6,1.0, 40, ['spiked mace'] , ['tainted robe'], ['dark transformation','bloodreave']],
+		"Abomination" : 		["A","man",5,  6,6,1,1,2,1.6, 40, ['fist smash'] , ['tainted robe']],
 		"Black Eye Prophet" :   ["P","man",6,  5,3,3,7,6,1.0, 60, ['spiked mace'] , ['tainted robe'], ['dark transformation','bloodreave']],
 		"Black Eye Chosen" :    ["C","man",7,  7,3,3,6,7,1.0, 100, ['spiked mace'] , ['tainted robe'], ['dark transformation','bloodreave']],
 
 		# Dark Elves
-		"Guild Scout" : 	 ["s","elf",3,  4,3,5,4,3,0.95, 15, [['thornknife','thornknife']] , ['ironscale mail']],
-		"Guild Hunter" : 	 ["h","elf",4,  4,4,6,4,4,0.85, 23, ['sun spear'] , ['ironscale mail'], ['blackwood longbow','iron arrow']],
-		"Guild Praetorian" : ["d","elf",4,  5,4,5,4,4,0.95, 23, ['sun spear',['thornblade','gauntlet shield']] , ['blackscale']],
-		"Guild Dragoon" :    ["D","elf",5,  6,4,5,4,5,0.60, 30, ['sun spear'] , ['blackscale']],
-		"Guild Justicar" :   ["j","elf",5,  6,4,6,4,5,0.85, 30, ['sun spear'] , ['blackscale'], ['gauntlet shield']],
+		"Guild Wardancer" :  ["s","elf",3,  3,3,5,4,3,0.80, 15, [['thornknife','thornknife']] , ['ironscale mail']],
+		"Guild Hunter" : 	 ["h","elf",4,  4,4,6,4,3,0.85, 23, ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
+		"Guild Praetorian" : ["p","elf",4,  5,4,5,4,3,0.95, 23, ['sun spear',['thornblade','gauntlet shield']] , ['blackscale']],
+		"Guild Dragoon" :    ["d","elf",5,  6,4,5,4,4,0.60, 40, ['sunlance','thornblade'] , ['blackscale']],
+		"Guild Justicar" :   ["j","elf",5,  5,4,6,4,4,0.85, 40, ['sun spear',['thornknife','thornknife']] , ['blackscale'], ['gauntlet shield']],
+		"Guild Archon" :   	 ["A","elf",7,  6,6,7,5,4,0.90, 100, ['glaive',['thornblade','thornblade']] , ['blackscale'], ['gauntlet shield']],
 
 		# Demons
-		"Rage Demon" :		  	["r","demon",3,  4,4,4,2,2,0.9, 15, ['bloodletter'] , ['tainted robe','tattered garments','berserker mail']],
-		"Plague Demon" :	  	["p","demon",3,  4,3,3,4,5,1.0, 15, ['filthaxe'] , ['tainted robe','tattered garments']],
+		"Rage Demon" :		  	["r","demon",3,  3,4,4,2,2,0.9, 15, ['bloodletter'] , ['tainted robe','tattered garments']],
+		"Plague Demon" :	  	["p","demon",3,  4,3,3,4,5,1.0, 15, ['iron axe','bone cleaver'] , ['tainted robe','tattered garments'],['boneshield']],
 		"Sloth Demon" :			["s","demon",3,  6,3,2,2,4,1.2, 15, ['flail'] , ['tainted robe','tattered garments']],
-		"Chaos Demon" :			["c","demon",3,  4,3,4,4,5,0.95, 15, ['steel dagger'] , ['tainted robe','tattered garments'], ['blink']],
+		"Chaos Demon" :			["c","demon",3,  4,3,4,4,5,0.95, 15, ['claws'] , ['tainted robe','tattered garments'], ['blink']],
 		"Chosen Rage Demon" : 	["R","demon",6,  6,6,6,2,5,0.85, 60, ['skullsplitter','greatflail'] , ['berserker mail']],
-		"Chosen Plague Demon" : ["P","demon",6,  6,5,4,4,8,1.0, 60, ['filthaxe'] , ['tainted robe']],
+		"Chosen Plague Demon" : ["P","demon",6,  6,5,4,4,8,1.0, 60, ['filthaxe'] , ['tainted robe'],['boneshield']],
 		"Chosen Sloth Demon" : 	["S","demon",6,  9,5,3,2,7,1.1, 60, ['screamflail'] , ['tainted robe']],
-		"Chosen Chaos Demon" :	["C","demon",6,  5,4,5,7,8,0.95, 60, ['steel dagger'] , ['tainted robe'], ['blink']],
+		"Chosen Chaos Demon" :	["C","demon",6,  5,4,5,7,8,0.95, 60, ['bone claws'] , ['tainted robe'], ['blink']],
 
 		# Large Creatures
 		"Ogre" : 		  ["O","ogre",1,  5,4,2,1,1,1.4, 15, ['club','bone club'] , ['ogre hide','scrap plate armor']],
-		"Green Ooze" : 	  ["O","ooze",1,  4,4,2,1,2,1.2, 15, ['jelly slap','acid slap'] , ['ooze skin']],
-		"Giant Spider" :  ["S","spider",2,  4,4,4,2,3,0.7, 30, ['fangs'] , ['spider hide'],['massive stinger']],
+		"Green Ooze" : 	  ["O","ooze",1,  5,3,3,3,2,1.1, 15, ['jelly slap','acid slap'] , ['ooze skin']],
+		"Giant Spider" :  ["S","spider",2,  4,4,4,2,3,0.7, 40, ['fangs'] , ['spider hide'],['massive stinger']],
 		"Cyclops Brute" : ["C","cyclops",3,  6,6,1,3,4,1.1, 60, ['spiked club','greatflail','warhammer'] , ['troll hide','leather armor']],
 		"Cave Troll" : 	  ["T","troll",4,  8,7,2,1,5,1.3, 100, ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
 
@@ -118,7 +123,7 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Orc Warrior'],
  						 	    ['Orc Warrior', 'Orc Berserker'],
  						 	    ['Orc Nob'],
- 						 	    ['Orc Nob'],
+ 						 	    ['Orc Nob','Orc Warlock'],
  						 	    ['Orc Warboss'],
  						 	    ['Orc Nob'],
  			] ),
@@ -139,13 +144,15 @@ class Bands():  # Tier Bonus :   formations
  								['Uruk Bodyguard'],
  			] ),
 
- 		'Dark Elf Guild' :  (-1, [  ['Guild Scout','Guild Scout','Guild Praetorian'], 
-	 								['Guild Scout','Guild Hunter'], 
-	 								['Guild Praetorian'],
+ 		'Dark Elf Guild' :  (-1, [  ['Guild Wardancer','Guild Wardancer','Guild Praetorian'], 
+	 								['Guild Wardancer','Guild Hunter'], 
+	 								['Guild Hunter', 'Guild Praetorian'],
 	 								[],
 	 								['Guild Dragoon','Guild Justicar'],
 	 								['Guild Praetorian'],
 	 								['Guild Justicar','Guild Dragoon'],
+	 								[],
+	 								['Guild Archon']
 		] ),
 
 		'Black Eye Cult' :  (0, [   ['Black Eye Cultist', 'Black Eye Cultist'], 
