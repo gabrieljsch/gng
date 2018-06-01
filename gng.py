@@ -33,7 +33,7 @@ class Player():
 		self.maxmana = 3 * self.int
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["frost breath", "magic missile"], [], []
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["magic missile"], [], []
 
 		# Initialze Equipment
 		self.wielding, self.hands, self.quivered = [], 2, None
@@ -937,6 +937,7 @@ class Player():
 			if type(item) == Weapon:
 				if item.hands > 0: carrying.append(item)
 				if item.wclass not in Weapons.ranged_wclasses: weaps.append(item)
+			if type(item) == Shield: carrying.append(item)
 
 		if map.square_identity(coords) in set(['|', '-', ' ', '#']): return
 
@@ -963,9 +964,14 @@ class Player():
 				# Equip fists
 				unarmed = []
 				if len(carrying) == 0 or (len(carrying) == 1 and self.race == "Hill Troll"):
-					fists = self.give_weapon('fists')
-					unarmed.append(fists)
-					weaps.append(fists)
+					if len(carrying) == 0 and self.race == "Hill Troll": 
+						fists = self.give_weapon('fist smash')
+						unarmed.append(fists)
+						weaps.append(fists)
+					else:
+						fists = self.give_weapon('fists')
+						unarmed.append(fists)
+						weaps.append(fists)
 
 				# Attack with each weapon
 				for item in weaps:
@@ -1568,7 +1574,9 @@ class Weapon():
 
 				for passive in enemy.passives:
 					
-					if passive[0] == status: return damage
+					if passive[0] == status:
+						passive[1] = count
+						return damage
 
 				enemy.passives.append([status, count])
 				enemy.dex -= Brands.dict["drained"]["dex_loss"]
@@ -1712,7 +1720,7 @@ class Chest():
 
 		# Chest contents
 		if self.type == "orcish":
-			self.pot_weapons = [ ["goblin spear","stabba"],
+			self.pot_weapons = [ ["goblin spear","stabba","choppa"],
 								 ["bear hide","ogre hide"],
 								 ["choppa","slica","smasha"],
 								 ["goblin bow","crude shortbow","iron javelin"], 
@@ -1723,16 +1731,16 @@ class Chest():
 		elif self.type == "elven":
 			self.pot_weapons = [ ["spear","elven leafblade","iron javelin"],
 								 ["spear","elven leafblade"],
-								 ["spear","elven leafblade"],
-								 ["ranger longbow"], ]
+								 ["spear","elven leafblade","elven longbow"],
+								 ["elven longbow"], ]
 		elif self.type == "wooden":
 			self.pot_weapons = [    ["steel dagger","iron axe","spear","hammer","mace","iron longsword","club","iron shortsword"], 
 									["crude shortbow","iron battleaxe","iron longsword","mace","flail","quarterstaff","iron bastard sword"], 
-									["buckler shield", "wooden broadshield","trollhide shield"], 
+									["buckler shield", "wooden broadshield","trollhide shield","recurve bow"], 
 									["iron battleaxe","iron greatsword","warhammer","spiked club","barbed javelin"],
 									["iron plate armor","iron chainmail","ironscale mail","scrap plate armor"],
 									["steel axe","steel longsword","halberd","steel bastard sword","steel shortsword"],
-									["steel greatsword","steel battleaxe","pike","greatflail"] ]
+									["steel greatsword","steel battleaxe","pike","greatflail","ranger longbow"] ]
 
 	def open(self):
 
@@ -1760,15 +1768,15 @@ class Chest():
 					brand = None
 					if Weapons.array[item_name][2] > 0:
 						if d(100) + 2 * n > 99: brand = Brands.brands[d(len(Brands.brands)) - 1]
-					game.map.room_filler.place_weapon(item_name, self.loc, d(self.tier) - 1, brand)
+					game.map.room_filler.place_weapon(item_name, self.loc, int((d(self.tier) - 1) / 2), brand)
 
 				# If Armor
 				elif item_name in Armors.array:
-					game.map.room_filler.place_armor(item_name, self.loc, d(self.tier) - 1)
+					game.map.room_filler.place_armor(item_name, self.loc, int((d(self.tier) - 1) / 2))
 
 				#If Shield
 				elif item_name in Shields.array:
-					game.map.room_filler.place_shield(item_name, self.loc, d(self.tier) - 1)
+					game.map.room_filler.place_shield(item_name, self.loc, int((d(self.tier) - 1) / 2))
 
 				self.pot_weapons.remove(tier)
 
@@ -1979,7 +1987,8 @@ class RoomFiller():
 		data = Weapons.array[weapon]
 
 		# Manage Enchantment + Brand
-		spawned_enchantment = data[3] + enchantment
+		try: spawned_enchantment = data[3] + enchantment
+		except: spawned_enchantment = enchantment
 		try: brand = data[7]
 		except: pass
 
@@ -1990,8 +1999,8 @@ class RoomFiller():
 		data = Armors.array[armor]
 
 		# Manage Enchantment + Brand
-		spawned_enchantment = data[2] + enchantment
-		try: brand = data[4]
+		spawned_enchantment = data[4] + enchantment
+		try: brand = data[5]
 		except: pass
 
 		# Create Armor Object
@@ -2558,7 +2567,8 @@ class Game():
 
 			else:
 
-				if unit.brand is not None: print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
+				if unit.brand is not None:
+					print( item_order[i] + " - " + unit.brand + " +" + str(unit.enchantment) + ' ' + unit.name)
 				else:
 					# Positive Encahntment
 					if unit.enchantment >= 0: print( item_order[i] + " - +" + str(unit.enchantment) + ' ' + unit.name)

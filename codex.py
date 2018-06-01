@@ -16,7 +16,7 @@ def md(range, number):
 
 
 class Armors():
-	# self, name, rep,  armor_rating, encumberance, enchantment,  brand(optional)
+	# self, name, rep, aclasas,  armor_rating, encumberance, enchantment,  brand(optional)
 
 	array = {
 
@@ -95,10 +95,10 @@ class CharacterRaces():
 		"Terran" :     [[4,3,3,3,4,1.0, 15], []],
 		"Naga" :       [[4,3,4,4,1,0.9, 22], [("envenom", True), "tail smash"]],
 		"Ghoul" :      [[4,4,4,2,1,1.1,  8], [("feral bite", True)]],
-		"Dragonborn" : [[4,5,2,3,2,1.2, 13], [("flame tongue", True), "tail smash"]],
-		"Black Orc" :  [[5,4,2,2,1,1.3, 15], ["headbutt"]],
-		"Dwarf" : 	   [[6,3,2,3,2,1.3, 10], [("iron blessing", True)]],
-		"Hill Troll" : [[6,5,1,1,1,1.5, 16], []],
+		"Dragonborn" : [[4,5,2,3,2,1.3, 13], [("flame tongue", True), "tail smash"]],
+		"Black Orc" :  [[5,4,2,2,1,1.4, 15], ["headbutt"]],
+		"Dwarf" : 	   [[6,3,2,3,2,1.4, 10], [("iron blessing", True)]],
+		"Hill Troll" : [[6,5,1,1,1,1.6, 16], []],
 	}
 
 
@@ -151,8 +151,8 @@ class Weapons():
 		# Innate Weapons
 		# Hands
 		"fists" : 	   	  	['','fist',0, 0, 3, 9, 0.7, None, 100],
-		"fist smash" : 	  	['','fists',0, 0, 17, -2, 1.6, None, 100],
-		"stone fists" : 	['%','fists',4, 0, 22, -4, 2.3, None, 100],
+		"fist smash" : 	  	['','fists',0, 0, 15, -2, 1.8, None, 100],
+		"stone fists" : 	['%','fists',4, 0, 22, -4, 2.2, None, 100],
 		"claws" : 	   		['','claws',0, 0, 7, 3, 0.85, None, 100],
 		"bone claws" : 	   	['','claws',0, 0, 10, 2, 0.9, None, 100],
 
