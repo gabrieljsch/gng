@@ -62,7 +62,7 @@ class Player():
 
 		# Innate passives
 		if self.race == 'Dragonborn': self.innate_ac += 2
-		if self.race == 'Naga':
+		if self.race == 'Hill Troll':
 			self.innate_ac += 1
 			self.hands = 4
 
