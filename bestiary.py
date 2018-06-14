@@ -157,7 +157,7 @@ class Bands():  # Tier Bonus :   formations
 	 								['Dark Archon']
 		] ),
 
-		'Black Eye Cult' :  (0, [   ['Orc Nob', 'Orc Warlock','Cultist','Cult Disciple'], 
+		'Black Eye Cult' :  (0, [   ['Cultist', 'Cultist','Cultist','Cult Disciple'], 
 	 								['Cultist', 'Cultist','Cultist','Cult Disciple'], 
 	 								['Cult Disciple'],
 	 								[],
