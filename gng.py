@@ -8,7 +8,6 @@ from descriptions import Descriptions
 
 from random import randint, shuffle
 from copy import deepcopy
-from colorama import init
 
 import sys, os
 import termios, fcntl

@@ -191,20 +191,20 @@ class Bands():  # Tier Bonus :   formations
 
  	}
 
- 	# dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
- 	# 			   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
- 	# 			   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
- 	# 			   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
- 	# 			   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 	# 			   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 	# 			   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 	# 			   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 	# 			   }
-
- 	dicto = { 	   1 : ['Black Eye Cult'],
- 				   2 : ['Wolf Den'],
- 				   3 : ['Uruk Warband'],
- 				   4 : ['Uruk Warband'],
- 				   5 : ['Demon Horde'],
+ 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
+ 				   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
+ 				   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
+ 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
+ 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
+ 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
+ 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
+ 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
  				   }
+
+ 	# dicto = { 	   1 : ['Black Eye Cult'],
+ 	# 			   2 : ['Wolf Den'],
+ 	# 			   3 : ['Uruk Warband'],
+ 	# 			   4 : ['Uruk Warband'],
+ 	# 			   5 : ['Demon Horde'],
+ 	# 			   }
 
