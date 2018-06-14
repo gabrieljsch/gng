@@ -1,6 +1,8 @@
 
 from maps import Maps
 
+from random import shuffle
+
 def move_towards(one, other, map):
 
 	x = one.loc[0]
@@ -109,7 +111,7 @@ def smart_move_towards(one, other, game):
 
 
 
-def shortest_path(looker, other, map_arr, game):
+def shortest_path(looker, other, map_arr, game, blockers = True):
 
 	# Make Graph
 
@@ -120,15 +122,19 @@ def shortest_path(looker, other, map_arr, game):
 	for orgx in range(width):
 
 		for orgy in range(height):
-
+			tries = []
 			for x in range(-1,2):
 				for y in range(-1,2):
+					tries.append([x,y])
+			shuffle(tries)
+			for trie in tries:
+				x, y = trie
 
-					adx = x + orgx
-					ady = y + orgy
-					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-						try: a_dict[(orgx,orgy)].append((adx,ady))
-						except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
+				adx = x + orgx
+				ady = y + orgy
+				if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+					try: a_dict[(orgx,orgy)].append((adx,ady))
+					except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
 
 
 	visited = set([])
@@ -147,7 +153,7 @@ def shortest_path(looker, other, map_arr, game):
 
 			for neighbor in a_dict[node]:
 
-				if map_arr[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+']) or neighbor in locs: continue
+				if (map_arr[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
 				
 				new = path[:]
 				new.append(neighbor)
@@ -247,7 +253,7 @@ def los(looker, other, map_arr, game):
 						otherb = True
 
 						for cnode in new:
-							if map_arr[cnode[1]][cnode[0]] in set(['|', '-', '#','+']):
+							if map_arr[cnode[1]][cnode[0]] in set(['|', '-', '#','+','_']):
 								otherb = False
 								break
 
