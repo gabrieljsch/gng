@@ -60,6 +60,7 @@ class Armors():
 		"direwolf pelt" :   ['[','hide',2,0, 0,'spiked'],
 		"bear hide" :   	['[','hide',2,0, 0],
 		"ooze skin" :   	['[','hide',2,-1, 0],
+		"bone skin" :   	['[','hide',2,1, 0,'spiked'],
 		"ogre hide" : 		['[','hide',3,2, 0],
 		"dog hide" : 		['[','hide',3,1, 0],
 		"troll hide" :  	['[','hide',4,2, 0],
@@ -498,7 +499,6 @@ class Weapons():
 
 				if decision == ' ':
 					# Check Space
-					print("mloc",mloc)
 					if not game.map.can_move(mloc, True) or game.map.square_identity(mloc) == '+':
 						attacker.loc = orig_position
 						game.temp_log.append("You can't land there.")
@@ -613,7 +613,6 @@ class Weapons():
 		if attacker.name != 'you':
 			game.units.remove(attacker)
 
-			data = Monsters.array["Abomination"]
 			roomfiller.spawn("Abomination",attacker.loc)
 
 			game.game_log.append("The " + attacker.name + " mutters a chant, he twists into a grotesque shape!")
@@ -623,6 +622,42 @@ class Weapons():
 			attacker.maxhp += Brands.dict[status]['bonushp']
 			attacker.str += Brands.dict[status]['bonusstr']
 			game.game_log.append("Your body twists into a huge, grotesque abomination!")
+		return True
+
+	def split(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		spaces = []
+		for x in range(-1,2):
+			for y in range(-1,2):
+				if attacker.loc[0] + x >= 0 and attacker.loc[1] + y >= 0 and (x != 0 or y != 0): spaces.append((attacker.loc[0] + x, attacker.loc[1] + y))
+		shuffle(spaces)
+
+
+		# Apply Affect + flavor text
+		if attacker.name != 'you':
+
+			if attacker.tier <= 3:
+				ooze = "Lesser Ooze"
+			else:
+				ooze = "Bone Ooze"
+			roomfiller.spawn(ooze,attacker.loc)
+
+			for space in spaces:
+				if game.map.can_move(space) and game.map.square_identity != '+':
+
+					if attacker in game.allies: roomfiller.spawn(ooze,space, True)
+					else: roomfiller.spawn(ooze,space)
+
+					# Flavor Text
+					game.game_log.append("The " + attacker.name + " splits into two smaller jellies!")	
+					return True
+
+			game.game_log.append("The " + attacker.name + " splits into a smaller jelly!")
+			return True
+
+		else:
+			pass
+			# TODO: Implement Player??
 		return True
 
 	def raise_skeleton(name, attacker, enemy, game, map, roomfiller, ability = False):
@@ -721,7 +756,6 @@ class Weapons():
 
 		# Poison Resist
 		resist = enemy.calc_resistances()[2]
-		print(resist)
 		if d(4) <= resist:
 			if enemy.name == 'you':
 				game.game_log.append("You shrug off the cloud of poison gas bellowed by the " + attacker.name + "!")
@@ -818,6 +852,24 @@ class Weapons():
 				return True
 
 		enemy.passives.append([status, count])
+		return True
+
+	def pounce(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Flavor Text
+		if attacker.name == 'you':
+			game.game_log.append("You pounce onto the " + enemy.name + "!")
+		else:
+			game.game_log.append("The " + attacker.name + " pounces on " + enemy.info[0] + "!")
+
+
+		los = ai.los(attacker.loc, enemy.loc, Maps.rooms[game.map.map][0], game )
+		attacker.loc = los[-2]
+
+		# Strike
+		for weapon in attacker.wielding:
+			if weapon.name in Weapons.array and weapon.hands == 0:
+				weapon.strike(attacker, enemy)
 		return True
 
 
@@ -1146,6 +1198,10 @@ class Weapons():
 		"leap" : 				(leap,      			6,1.0,  False, False, 4),
 		# Naga
 		"envenom" : 			(envenom,      			10,2.0,  False, False),
+		# Ooze
+		"split" : 				(split,      			0,1.5,  False, False),
+		# Spider
+		"pounce" : 				(pounce,      			7,1.2,  True, True, 4),
 
 		# Black Eye Spells
 		"dark transformation" : (dark_transformation,   0, 3.0,  False, False),

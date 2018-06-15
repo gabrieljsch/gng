@@ -72,28 +72,35 @@ class Monsters():
 
 		# Dark Elves
 		"Dark Wardancer" :  ["s","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail']],
-		"Dark Hunter" : 	 ["h","elf",5,  4,4,6,4,3,0.85, 40, [0,0,1,0,0,0], ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
+		"Dark Huntress" : 	["h","elf",5,  4,4,6,4,3,0.85, 40, [0,0,1,0,0,0], ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
 		"Dark Praetorian" : ["p","elf",5,  5,4,5,4,3,0.95, 40, [1,0,0,0,0,0], ['sun spear',['thornblade','gauntlet shield']] , ['blackscale']],
 		"Dark Dragoon" :    ["d","elf",6,  6,4,5,4,4,0.60, 60, [1,0,1,1,0,0], ['sunlance','thornblade'] , ['blackscale']],
 		"Dark Justicar" :   ["j","elf",6,  5,4,6,4,4,0.85, 60, [1,0,0,0,0,0], ['sun spear',['thornknife','thornknife']] , ['blackscale','thornmail'], ['gauntlet shield']],
-		"Dark Archon" :   	 ["A","elf",7,  6,6,7,5,4,0.90, 100, [1,1,2,1,1,0], ['glaive',['thornblade','thornblade']] , ['blackscale','thornmail'], ['gauntlet shield']],
+		"Dark Archon" :   	["A","elf",7,  6,6,7,5,4,0.90, 100, [1,1,2,1,1,0], ['glaive',['thornblade','thornblade']] , ['blackscale','thornmail'], ['gauntlet shield']],
 
 		# Demons
-		"Rage Demon" :		  	["r","demon",3,  3,4,4,2,2,0.9, 15, [0,2,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],
-		"Pride Demon" :	  		["p","demon",3,  4,3,3,4,5,1.0, 15, [0,0,0,0,0,2], ['iron axe','bone cleaver'] , ['tainted robes','tattered garments'],['boneshield']],
-		"Sloth Demon" :			["s","demon",3,  6,2,2,2,4,1.2, 15, [2,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
-		"Chaos Demon" :			["c","demon",3,  3,3,4,4,5,0.95, 15, [0,0,0,0,2,0], ['armored limb','horns','vomit'] , ['tainted robes','tattered garments'], ['blink','claws']],
-		"Chosen Rage Demon" : 	["R","demon",6,  6,6,6,2,5,0.85, 60, [0,3,0,0,0,0], ['skullsplitter','greatflail'] , ['berserker mail']],
-		"Chosen Pride Demon" : 	["P","demon",6,  6,5,4,4,8,1.0, 60, [0,0,0,0,0,3], ['filthaxe'] , ['tainted robes'],['boneshield']],
-		"Chosen Sloth Demon" : 	["S","demon",6,  9,4,3,2,7,1.1, 60, [3,0,0,0,0,0], ['screamflail'] , ['tainted robes']],
-		"Chosen Chaos Demon" :	["C","demon",6,  5,4,5,7,8,0.95, 60, [0,0,0,0,3,0], ['bone claws'] , ['tainted robes'], ['blink']],
+		"Reaverfiend" :			["r","demon",3,  3,4,4,2,2,0.9, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],	
+		"Skulltracker" :  		["b","demon",3,  4,3,3,4,5,1.0, 15, [0,0,0,0,0,2], ['iron axe','bone cleaver'] , ['tainted robes','tattered garments'],['boneshield']],
+		"Maw Hulk" :			["m","demon",3,  6,2,2,2,4,1.2, 15, [2,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
+		"Chaos Spawn" :			["c","demon",3,  3,3,4,4,5,0.95, 15, [0,0,0,0,2,0], ['armored limb','horns','vomit'] , ['tainted robes','tattered garments'], ['blink','claws']],
+		"Chosen Reaverfiend" : 	["R","demon",6,  6,6,6,2,5,0.85, 60, [0,3,0,0,0,0], ['skullsplitter','greatflail'] , ['berserker mail']],
+		"Chosen Skulltracker" : ["B","demon",6,  6,5,4,4,8,1.0, 60, [0,0,0,0,0,3], ['filthaxe'] , ['tainted robes'],['boneshield']],
+		"Chosen Maw Hulk" : 	["M","demon",6,  9,4,3,2,7,1.1, 60, [3,0,0,0,0,0], ['screamflail'] , ['tainted robes']],
+		"Chosen Chaos Spawn" :	["C","demon",6,  5,4,5,7,8,0.95, 60, [0,0,0,0,3,0], ['bone claws'] , ['tainted robes'], ['blink']],
+
+		# Oozes
+		"Green Ooze" : 	  ["G","ooze",3,  5,3,3,3,2,1.3, 15, [0,0,3,0,3,0], ['acid slap'] , ['ooze skin'],['split']],
+		"Bone Ooze" : 	  ["B","ooze",3,  5,3,3,3,2,1.4, 15, [0,0,0,0,3,3], ['jelly slap'] , ['bone skin'],['split']],
+		"Lesser Ooze" :   ["z","ooze",1,  2,2,1,1,2,1.2, 8,  [0,0,1,0,1,1], ['jelly slap'] , ['ooze skin']],
+
+		# Spiders
+		"Spiderling" : 		 ["s","spider",1,  1,2,4,1,1,0.7, 40, [0,0,2,0,0,0], ['fangs'] , ['spider hide']],
+		"Giant Wolfspider" : ["w","spider",3,  4,4,4,4,3,0.8, 40, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['massive stinger','pounce']],
 
 		# Large Creatures
-		"Ogre" : 		  ["O","ogre",1,  5,4,2,1,1,1.4, 15, [0,0,0,0,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
-		"Green Ooze" : 	  ["Z","ooze",1,  5,3,3,3,2,1.1, 15, [0,0,3,0,0,0], ['jelly slap','acid slap'] , ['ooze skin']],
-		"Giant Spider" :  ["S","spider",2,  4,4,4,2,3,0.7, 40, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['massive stinger']],
-		"Cyclops Brute" : ["C","cyclops",3,  6,6,1,3,4,1.1, 60, [0,0,0,0,0,1], ['spiked club','greatflail','warhammer'] , ['troll hide','leather armor']],
-		"Cave Troll" : 	  ["T","troll",4,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
+		"Ogre" : 		  	 ["O","ogre",1,  5,4,2,1,1,1.4, 15, [0,0,0,0,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
+		"Cyclops Brute" : 	 ["C","cyclops",3,  6,6,1,3,4,1.1, 60, [0,0,0,0,0,1], ['spiked club','greatflail','warhammer'] , ['troll hide','leather armor']],
+		"Cave Troll" : 	  	 ["T","troll",4,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
 
 		# Dragons
 		"Fire Dragon" :  ["D","fire dragon",10,  12,8,7,6,8,1.1, 500, [0,2,0,0,0,0], ['dragon fangs','dragon tail'] , ['fire dragonscales']],
@@ -147,7 +154,7 @@ class Bands():  # Tier Bonus :   formations
  			] ),
 
  		'Dark Elf Guild' :  (-2, [  ['Dark Wardancer','Dark Wardancer','Dark Praetorian'], 
-	 								['Dark Wardancer','Dark Hunter'], 
+	 								['Dark Wardancer','Dark Huntress'], 
 	 								['Dark Praetorian'],
 	 								[],
 	 								['Dark Dragoon','Dark Justicar'],
@@ -170,19 +177,32 @@ class Bands():  # Tier Bonus :   formations
 	 								['Cult Prophet']
 			] ),
 
- 		'Demon Horde' : (0, [   ['Rage Demon','Chaos Demon','Pride Demon','Sloth Demon'], 
- 								['Rage Demon','Chaos Demon','Pride Demon','Sloth Demon'], 
- 								['Rage Demon','Chaos Demon','Pride Demon','Sloth Demon'],
- 								['Rage Demon','Chaos Demon','Pride Demon','Sloth Demon'], 
- 								['Pride Demon','Sloth Demon','Chaos Demon','Rage Demon'],
- 								['Sloth Demon','Rage Demon','Rage Demon','Rage Demon'],
+ 		'Demon Horde' : (0, [   ['Reaverfiend','Chaos Spawn','Skulltracker','Maw Hulk'], 
+ 								['Reaverfiend','Chaos Spawn','Bloodtracker','Maw Hulk'], 
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Maw Hulk'],
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','SMaw Hulk'], 
+ 								['Skulltracker','Maw Hulk','Chaos Spawn','Rage Spawn'],
+ 								['Sloth Spawn','Reaverfiend','Reaverfiend','Reaverfiend'],
  								[],
- 								['Chosen Rage Demon','Chosen Pride Demon','Chosen Sloth Demon','Chosen Chaos Demon'],
+ 								['Chosen Reaverfiend','Chosen Skulltracker','Chosen Maw Hulk','Chosen Chaos Spawn'],
  								[],
- 								['Chosen Sloth Demon','Chosen Rage Demon','Chosen Pride Demon','Chosen Chaos Demon'],
+ 								['Chosen Maw Hulk','Chosen Reaverfiend','Chosen Skulltracker','Chosen Chaos Spawn'],
  			] ),
 
- 		'Wandering Monster' : (0, [	['Ogre','Green Ooze','Giant Spider','Cyclops Brute','Cave Troll']	
+ 		'Jelly Band' :  (-2, [  ['Green Ooze', 'Bone Ooze'], 
+	 							['Green Ooze', 'Bone Ooze'], 
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[]
+	 		] ),
+
+ 		'Wandering Monster' : (0, [	['Ogre','Green Ooze','Giant Wolfspider','Cyclops Brute','Cave Troll']	
  			] ),
 
  		'Dragon Nest' : (0, [	['Fire Dragon','Frost Dragon','Bone Dragon']	
@@ -194,14 +214,14 @@ class Bands():  # Tier Bonus :   formations
  	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
  				   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
  				   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
- 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
- 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
- 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde'],
+ 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Jelly Band'],
+ 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
+ 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
+ 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
+ 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
  				   }
 
- 	# dicto = { 	   1 : ['Black Eye Cult'],
+ 	# dicto = { 	   1 : ['Wolf Den'],
  	# 			   2 : ['Wolf Den'],
  	# 			   3 : ['Uruk Warband'],
  	# 			   4 : ['Uruk Warband'],

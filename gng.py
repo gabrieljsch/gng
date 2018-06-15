@@ -265,6 +265,10 @@ class Player():
 			game.units.remove(enemy)
 			if enemy in game.allies: game.allies.remove(enemy)
 
+			# Ooze Passive
+			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
+
+
 			# Drop Loot
 			enemy.drop_booty()
 
@@ -1142,11 +1146,14 @@ class Monster():
 				los = ai.los(self.loc, enemy.loc, Maps.rooms[game.map.map][0], game )
 				if los is not None:
 
-					# Shift around spells
-					if len(self.spells) >= 2: shuffle(self.spells)
+					# # Shift around spells
+					# if len(self.spells) >= 2: shuffle(self.spells)
 
 					# Zap with spells
 					for spell in self.spells:
+
+						# Can't cast These 
+						if spell == 'split': break
 
 						# Check for mana
 						if self.mana >= Weapons.spells[spell][1]:
@@ -1284,7 +1291,7 @@ class Weapon():
 		print("Swing speed:", self.speed)
 		print("")
 		print(Descriptions.wclass[self.wclass][0])
-		print("Being a " + self.wclass + ', ' + Descriptions.wclass[self.wclass][1].lower())
+		if self.wclass not in ["fists","fist"]: print("Being a " + self.wclass + ', ' + Descriptions.wclass[self.wclass][1].lower())
 		if self.brand is not None:
 			print("")
 			print(Descriptions.brand[self.brand])
@@ -1440,6 +1447,9 @@ class Weapon():
 						game.game_log.append("The " + attacker.name + " dies from the spikes!")
 						game.units.remove(attacker)
 						if attacker in game.allies: game.allies.remove(attacker)
+
+						# Ooze Passive
+						if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
 
 						# Drop Loot
 						attacker.drop_booty()
@@ -2271,8 +2281,8 @@ class Game():
 		# Manage Constants
 
 		# CHANGE RACE
-		self.race = "Naga"
-		self.pclass = "Mage"
+		self.race = "Dragonborn"
+		self.pclass = "Warrior"
 
 		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -2837,6 +2847,9 @@ class Game():
 			game.game_log.append("The " + unit.name + " dies from its wounds!")
 			game.units.remove(unit)
 			if unit in game.allies: game.allies.remove(unit)
+
+			# Ooze Passive
+			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
 
 			# Drop Loot
 			unit.drop_booty()

@@ -5,6 +5,9 @@ class Descriptions():
 
 	wclass = {
 		# Weapons
+		# Augmented Innate
+		"fists" : ["A weapon carried in the hand to increase punching power."],
+
 		# Blunt
 		"hammer" : ["A blunt weapon with a flat head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor."],
 		"warhammer" : ["A large blunt weapon with a double-sided flat head and a sturdy handle.","TThis weapon does bonus damage against enemies wearing plate armor and has a chance to stun the target."],
@@ -62,6 +65,7 @@ class Descriptions():
 		"scale" : "Medium armor fashioned from the tough scales of a creature.",
 		"chainmail" : "Tough armor fashioned from interwoven metal rings.",
 		"plate" : "Extremely tough armor made of metal. Vulnerable to blunt weaponry.",
+
 	}
 
 	brand = {
