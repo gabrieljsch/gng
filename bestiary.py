@@ -94,8 +94,16 @@ class Monsters():
 		"Lesser Ooze" :   ["z","ooze",1,  2,2,1,1,2,1.2, 8,  [0,0,1,0,1,1], ['jelly slap'] , ['ooze skin']],
 
 		# Spiders
-		"Spiderling" : 		 ["s","spider",1,  1,2,4,1,1,0.7, 40, [0,0,2,0,0,0], ['fangs'] , ['spider hide']],
-		"Giant Wolfspider" : ["w","spider",3,  4,4,4,4,3,0.8, 40, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['massive stinger','pounce']],
+		"Spiderling" : 		 ["s","spider",1,  1,2,4,1,1,0.7, 4, [0,0,2,0,0,0], ['fangs'] , ['spiderling skin']],
+		"Giant Wolfspider" : ["w","spider",3,  4,4,4,4,2,0.8, 14, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['massive stinger','pounce']],
+		"Fateweaver" : 		 ["f","spider",3,  3,3,4,4,2,0.8, 15, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
+		"Armored Crawler" :  ["A","spider",5,  4,4,4,4,2,0.8, 40, [0,0,3,0,0,2], ['fangs'] , ['armored spider plates'],[]],
+		"Black Widower" :    ["W","spider",5,  4,4,4,4,2,0.8, 40, [0,0,4,0,1,0], ['spider fangs'] , ['armored spider plates'],[]],
+		"Broodmother" :  	 ["B","spider",5,  6,2,2,5,1,1.5, 40, [0,0,2,0,0,0], ['fangs'] , ['armored spider plates'],[]],
+		"Lich Crawler" : 	 ["l","spider",6,  5,5,3,4,5,0.8, 60, [3,0,2,0,0,0], ['lich fangs'] , ['spider hide'],['pounce']],
+		"Tomb Lurker" : 	 ["t","spider",6,  4,7,6,4,2,0.7, 60, [0,0,3,0,3,0], ['spider fangs'] , ['spider hide'],['massive stinger','pounce']],
+		"Spider Queen" : 	 ["Q","spider",7,  7,6,5,4,5,0.9, 100, [0,0,4,0,3,0], ['spider fangs','blood fangs'] , ['armored spider plates'],['massive stinger','pounce']],
+
 
 		# Large Creatures
 		"Ogre" : 		  	 ["O","ogre",1,  5,4,2,1,1,1.4, 15, [0,0,0,0,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
@@ -202,6 +210,23 @@ class Bands():  # Tier Bonus :   formations
 	 							[]
 	 		] ),
 
+ 		'Spider Cave' :  (+3, [  ['Spiderling'], 
+	 							['Spiderling'], 
+	 							['Spiderling'],
+	 							['Spiderling'],
+	 							['Spiderling','Spiderling','Giant Wolfspider'],
+	 							[],
+	 							['Giant Wolfspider'],
+	 							[],
+	 							['Fateweaver','Giant Wolfspider','Fateweaver'],
+	 							['Armored Crawler','Broomother','Black Widower'],
+	 							[],
+	 							['Armored Crawler','Black Widower','Broodmother'],
+	 							['Lich Crawler','Tomb Lurker'],
+	 							[],
+	 							['Spider Queen']
+	 		] ),
+
  		'Wandering Monster' : (0, [	['Ogre','Green Ooze','Giant Wolfspider','Cyclops Brute','Cave Troll']	
  			] ),
 
@@ -211,20 +236,20 @@ class Bands():  # Tier Bonus :   formations
 
  	}
 
- 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
- 				   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party'],
- 				   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde'],
- 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Jelly Band'],
- 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
- 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
- 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
- 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band'],
+ 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'],
+ 				   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'],
+ 				   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Spider Cave'],
+ 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Jelly Band','Spider Cave'],
+ 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
+ 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
+ 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
+ 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
  				   }
 
- 	# dicto = { 	   1 : ['Wolf Den'],
- 	# 			   2 : ['Wolf Den'],
- 	# 			   3 : ['Uruk Warband'],
- 	# 			   4 : ['Uruk Warband'],
- 	# 			   5 : ['Demon Horde'],
+ 	# dicto = { 	   1 : ['Spider Cave'],
+ 	# 			   2 : ['Spider Cave'],
+ 	# 			   3 : ['Spider Cave'],
+ 	# 			   4 : ['Spider Cave'],
+ 	# 			   5 : ['Spider Cave'],
  	# 			   }
 

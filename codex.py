@@ -57,6 +57,7 @@ class Armors():
 
 		# Skins and Hides
 		"wolf pelt" : 		['[','hide',1,0, 0],
+		"spiderling skin" : ['[','hide',1,-2, 0],
 		"direwolf pelt" :   ['[','hide',2,0, 0,'spiked'],
 		"bear hide" :   	['[','hide',2,0, 0],
 		"ooze skin" :   	['[','hide',2,-1, 0],
@@ -91,11 +92,12 @@ class Armors():
 		"steel chainmail" :  [']','chainmail',8,6, 0],
 
 		# Plate Armors
-		"blackiron plate" :   [']','plate',7,6, 0],
-		"scrap plate armor" : [']','plate',8,11, 0],
-		"iron plate armor" :  [']','plate',8,8, 0],
-		"steel plate armor" : [']','plate',10,9, 0],
-		"Orcish dreadplate" : [']','plate',12,18, 0],
+		"blackiron plate" :   	  [']','plate',7,6, 0],
+		"armored spider plates" : [']','plate',7,4, 0],
+		"scrap plate armor" : 	  [']','plate',8,11, 0],
+		"iron plate armor" :  	  [']','plate',8,8, 0],
+		"steel plate armor" : 	  [']','plate',10,9, 0],
+		"Orcish dreadplate" : 	  [']','plate',12,18, 0],
 
 		# Legendary Armor
 		"God-Frame" :     [']','plate',13,13, d(3)],
@@ -192,6 +194,7 @@ class Weapons():
 		# Fangs
 		"fangs" : 	      	['','fangs',0, 0, 7, 0, 0.8, None, 90],
 		"blood fangs" : 	['','fangs',0, 0, 8, 0, 0.8, "vampiric", 85],
+		"spider fangs" :	['','fangs',0, 0, 8, -1, 0.9, "envenomed", 90],
 		"lich fangs" : 		['','fangs',0, 0, 10, 0, 1.2, "frozen", 85],
 		"demon fangs" : 	['','fangs',0, 0, 10, 0, 0.9, "hellfire", 90],
 		"dragon fangs" : 	['','fangs',0, 0, 15, 0, 1.3, None, 90],

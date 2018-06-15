@@ -2001,7 +2001,7 @@ class Chest():
 
 			# Chance for brand
 			brand = None
-			if d(100) + 2 * i > 96: brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1]
+			if d(100) + 2 * self.tier > 96: brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1]
 
 			ammo = self.pot_ammo[min(len(self.pot_ammo) - 1, d(self.tier) - 1)]
 			if ammo in Weapons.array: number = 2 * self.tier
