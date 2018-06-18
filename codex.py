@@ -55,6 +55,7 @@ class Armors():
 		"necromancer robes" : ['[','red','robes',2,1, d(2)],
 		"elfrobe" :			  ['[','gold','robes',4,1, d(2)],
 		"battle-cleric robes":['[','yellow','robes',5,3, 0],
+		"ironkeep robes":	  ['[','bone','robes',6,6, 0],
 
 		# Skins and Hides
 		"wolf pelt" : 		['[','grey','hide',1,0, 0],
@@ -96,8 +97,8 @@ class Armors():
 		"blackiron plate" :   	  [']','grey','plate',7,6, 0],
 		"armored spider plates" : [']','steel','plate',7,4, 0],
 		"scrap plate armor" : 	  [']','brown','plate',8,11, 0],
-		"iron plate armor" :  	  [']','grey','plate',8,8, 0],
-		"steel plate armor" : 	  [']','steel','plate',10,9, 0],
+		"iron plate" :  	  	  [']','grey','plate',8,8, 0],
+		"steel plate" : 	  	  [']','steel','plate',10,9, 0],
 		"Orcish dreadplate" : 	  [']','darkred','plate',12,18, 0],
 
 		# Legendary Armor
@@ -200,6 +201,7 @@ class Weapons():
 		"fist" : 	   	  	['','bone','fist',0, 0, 3, 9, 0.7, None, 100],
 		"fist smash" : 	  	['','bone','fists',0, 0, 15, -2, 1.8, None, 100],
 		"stone fists" : 	['%','grey','fists',4, 0, 22, -4, 2.2, None, 100],
+		"foehammers" : 		['%','steel','fists',4, 0, 18, -3, 2.2, 'hellfire', 100],
 		"claws" : 	   		['','bone','claws',0, 0, 7, 3, 0.85, None, 100],
 		"bone claws" : 	   	['','bone','claws',0, 0, 10, 2, 0.9, None, 100],
 
@@ -242,6 +244,7 @@ class Weapons():
 
 		# Staves
 		"oak staff" :	 ['/','brown','staff',1, 0, 5, 4, 1.0],
+		"iron staff" :	 ['/','grey','staff',1, 0, 8, 1, 1.3],
 		"warped staff" : ['/','darkbrown','staff',1, 0, 7, 2, 1.1],
 		"quarterstaff" : ['/','brown','staff',2, 0, 10, 2, 1.1],
 
@@ -250,6 +253,7 @@ class Weapons():
 		"pike" :	['/','grey','pike',2, 0, 10, 0, 1.2],
 		"halberd" : ['/','grey','polearm',2, 0, 12, -2, 1.15],
 		"lance" :   ['/','grey','lance',2, 0, 11, -1, 1],
+		"bardiche" :['/','steel','polearm',2, 0, 13, -2, 1.4],
 
 		# Blades
 		"iron dagger" :        ['!','grey','dagger',1, 0, 5, 3, 0.75],
@@ -302,7 +306,7 @@ class Weapons():
 		"screamflail" :   	['!','red','flail',1, 0, 11, -4, 1.4,"infernal"],
 
 		# Dark Elf Weapons
-		"thornknife" : ['!','darkgreen','knife',1, 0, 6, 2, 0.7],
+		"thornknife" : ['!','darkgreen','knife',1, 0, 5, 3, 0.65],
 		"thornblade" : ['!','darkgreen','sword',1, 0, 8, 0, 0.9],
 		"sun spear" :  ['/','fire','spear',1, 0, 9, 0, 1.2, "flaming"],
 		"sunlance" :   ['/','fire','lance',2, 0, 10, 0, 1.3, "flaming"],
@@ -320,14 +324,15 @@ class Weapons():
 		"bonemace" : 	   ['%','bone','mace',1, 0, 10, 0, 1.5],
 
 		# Top-tier
-		"gorktooth choppa" :  ['&','darkred','axe',1, 0, 10, -1, 1.2,'hellfire'],
-		"khopesh"			: ['!','steel','sword',1, 0, 12, -2, 1.3],
-		"witchhunter blade" : ['!','steel','sword',1, 0, 10, 3, 1.0,"antimagic"],
-		"claymore" :     	  ['!','steel','greatsword',2, 0, 16, -3, 1.3],
-		"glaive" :      	  ['/','steel','polearm',2, 0, 14, -2, 1.2],
-		"executioner's axe" : ['&','darkred','greataxe',2, 0, 17, -2, 1.5],
-		"gorkjaw choppa" :    ['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
-		"dwarven broadaxe" :  ['&','gold','greataxe',2, 0, 18, -4, 1.6],
+		"gorktooth choppa" :  	['&','darkred','axe',1, 0, 10, -1, 1.2,'hellfire'],
+		"khopesh"			: 	['!','steel','sword',1, 0, 12, -2, 1.3],
+		"witchhunter blade" : 	['!','steel','sword',1, 0, 10, 3, 1.0,"antimagic"],
+		"claymore" :     	  	['!','steel','greatsword',2, 0, 16, -3, 1.3],
+		"glaive" :      	  	['/','steel','polearm',2, 0, 14, -2, 1.2],
+		"executioner's axe" : 	['&','darkred','greataxe',2, 0, 17, -2, 1.5],
+		"gorkjaw choppa" :    	['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
+		"dwarven broadaxe" :  	['&','gold','greataxe',2, 0, 18, -4, 1.6],
+		"crusader greatsword" : ['!','steel','greatsword',2, 0, 14, -1, 1.3,'flaming'],
 
 
 		# Ranged Weapons

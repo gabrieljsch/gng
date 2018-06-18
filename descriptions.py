@@ -21,7 +21,7 @@ class Colors():
 		'magenta' : ('rgb', (255,0,255)),
 		'salmon' : ('rgb', (250,128,114)),
 		'darkred' : ('rgb', (139,0,0)),
-		'bronze' : ('rgb', (80,50,20)),
+		'bronze' : ('rgb', (205,127,50)),
 		'bone' : ('rgb', (238,232,170)),
 		'steel' : ('rgb', (119,136,153)),
 	}

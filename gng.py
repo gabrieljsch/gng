@@ -276,10 +276,8 @@ class Player():
 			# Remove from units
 			verb = 'slay' if attacker.name == 'you' else 'slays'
 			game.game_log.append( attacker.info[0][0].upper() + attacker.info[0][1:] + " " + verb + " the "  + str(enemy.name) + " with " + attacker.info[1] + " " + means + "!")
-			print(len(game.units))
 			game.units.remove(enemy)
 			if enemy in game.allies: game.allies.remove(enemy)
-			print(len(game.units))
 
 			# Ooze Passive
 			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
@@ -502,12 +500,15 @@ class Player():
 	def check_level_up(self):
 
 		# See if enough xp for a level up
-		if self.xp >= self.xp_levels:
-
-			game.game_log.append("You've leveled up!")
+		while self.xp >= self.xp_levels:
 
 			# Increment Level
 			self.level += 1
+			try:
+				for band in Bands.dicto[self.level]:
+					try: game.bands.remove(band)
+					except: game.bands.append(band)
+			except: pass
 
 			# Gain HP/mana
 			bonushp = d(self.con)
@@ -520,7 +521,8 @@ class Player():
 			self.racial_level_bonuses()
 
 
-			print("You've leveled up!")
+			print("You've leveled up to level " + str(self.level) + "!")
+			game.game_log.append("You've leveled up to level " + str(self.level) + "!")
 			self.xp -= self.xp_levels
 			self.xp_levels = 2 * self.xp_levels
 
@@ -875,7 +877,7 @@ class Player():
  			return self.wielding[-1]
 
 	def calc_AC(self):
-		return d(int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2 + 1/2)) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 4)  + self.innate_ac
+		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2)  + self.innate_ac
 
 	def atk_mv(self, map, coords):
 
@@ -1037,7 +1039,7 @@ class Monster():
 		return sd
 
 	def calc_AC(self):
-				return d(int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2  + 1/2)) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 4)
+		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2)
 
 	def drop_booty(self):
 		self.equipped_armor.loc = self.loc
@@ -1075,7 +1077,7 @@ class Monster():
 
 		# Manage Enchantment
 		spawned_enchantment = data[4]
-		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
+		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(int(max(1, self.tier / 2))) - 1
 
 		# Manage Brand + Probability
 		try: brand = data[8]
@@ -1093,7 +1095,7 @@ class Monster():
 
 		# Manage Enchantment
 		spawned_enchantment = data[5]
-		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
+		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(int(max(1, self.tier / 2))) - 1
 		try: brand = data[6]
 		except:
 			if d(100) > 99 - self.tier: brand = Brands.armor_brands[d(len(Brands.armor_brands)) - 1]
@@ -1107,7 +1109,7 @@ class Monster():
 
 		# Manage Enchantment + brand
 		spawned_enchantment = data[5]
-		if d(10) + (1.5 * self.tier) > 10: spawned_enchantment += d(self.tier)
+		if d(10) + (1.5 * self.tier) > 10: spawned_enchantment += d(int(max(1, self.tier / 2))) - 1
 		try: brand = data[6]
 		except: brand = None
 
@@ -1968,7 +1970,7 @@ class Chest():
 								["crude shortbow","iron battleaxe","iron longsword","mace","flail","quarterstaff","iron bastard sword"], 
 								["buckler shield", "wooden broadshield","trollhide shield","recurve bow"], 
 								["iron battleaxe","iron greatsword","warhammer","spiked club","barbed javelin","longbow"],
-								["iron plate armor","iron chainmail","ironscale mail","scrap plate armor"],
+								["iron plate","iron chainmail","ironscale mail","scrap plate armor"],
 								["steel axe","steel longsword","halberd","steel bastard sword","steel shortsword"],
 								["steel greatsword","steel battleaxe","pike","greatflail","ranger longbow"] ]
 			self.color = "brown"
@@ -2244,7 +2246,8 @@ class RoomFiller():
 
 		# Tier and Band pick
 		etier = min(self.tier, len(Bands.dicto))
-		tier_group = Bands.dicto[ etier ]
+		print(game.bands)
+		tier_group = game.bands
 		band = tier_group[d(len(tier_group)) -1]
 
 		# Bonuses and actual bands
@@ -2260,7 +2263,7 @@ class RoomFiller():
 			# Choose which units to spawn
 			if len(group) > 0:
 
-				unit = min(len(group) - 1, max( 0, d(etier) - i - bonus))
+				unit = min(len(group) - 1, max( 0, d(etier) - i - bonus - 1))
 				# unit = min(len(group) - 1, d(self.tier)  - min(groups.index(group), bonus + etier) - 1)
 
 				picked = False
@@ -2363,6 +2366,7 @@ class Game():
 		self.map = Map(self.player, 'starting_room')
 		self.state = 'ongoing'
 		self.room = 0
+		self.bands = Bands.dicto[1]
 
 		# Initiate Regen
 		self.hregen, self.mregen, self.prev_valid_turn = 0, 0, True

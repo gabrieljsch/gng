@@ -62,13 +62,19 @@ class Monsters():
 		"Undead Hulk" :   	  ["H","bone","undead",4,  7,4,1,3,5,1.7, 24, [0,0,0,0,0,0], ['fist smash'] , ['tattered garments','rotted chainmail','flayed skins']],
 
 		# The Black Eye
-		"Cultist" :   	   		["c","blue","man",2,  3,3,3,1,1,1.0, 8, [0,0,0,0,0,0],  ['mace',['hand axe','iron dagger']] , ['tainted robes']],
+		"Cultist" :   	   		["c","purple","man",2,  3,3,3,1,1,1.0, 8, [0,0,0,0,0,0],  ['mace',['hand axe','iron dagger']] , ['tainted robes']],
 		"Cult Disciple" :  		["d","blue","man",3,  3,3,3,3,3,1.0, 14, [0,0,0,0,0,0], ['sawtooth blade','flail'] , ['tainted robes'],['dark bolt']],
 		"Cult Husk" :  			["h","bone","undead",3,  4,3,2,1,1,1.3, 14, [1,1,1,1,1,0], ['iron bastard sword','bearded greataxe'] , ['tainted robes']],
 		"Cult Gravewhisperer" : ["g","orange","man",4,  4,3,3,4,5,1.0, 22, [0,0,0,0,0,0], ['warped staff'] , ['tainted robes'], ['raise skeleton']],
 		"Abomination" :    		["A","bone","undead",5,  6,6,1,1,2,1.6, 40, [0,0,0,0,0,0], ['fist smash'] , ['tainted robes']],
-		"Cult Destroyer" : 		["D","darkred","man",5,  5,3,3,7,6,1.0, 60, [0,0,0,0,0,0], ['spiked mace'] , ['tainted robes'], ['dark transformation','bloodreave','deathmark']],
-		"Cult Prophet" :   		["P","purple","man",7,  7,3,3,6,7,1.0, 100, [0,0,0,0,0,0], ['warped staff'] , ['tainted robes'], ['raise skeleton','bloodreave','deathmark']],
+		"Cult Destroyer" : 		["D","darkred","man",6,  5,3,3,7,6,1.0, 60, [0,0,0,0,0,0], ['spiked mace'] , ['tainted robes'], ['dark transformation','bloodreave','deathmark']],
+		"Cult Prophet" :   		["P","magenta","man",7,  7,3,3,6,7,1.0, 100, [0,0,0,0,0,0], ['warped staff'] , ['tainted robes'], ['raise skeleton','bloodreave','deathmark']],
+
+		# Ironkeep Warsquad
+		"Ironkeep Knight" : 	["k","steel","man",5,  6,4,3,4,4,1.3, 40, [0,0,0,0,0,0], [['steel longsword','steel kite shield'],'halberd'], ['steel plate']],
+		"Iron Priest" : 		["p","bronze","man",6,  6,4,2,6,4,1.2, 40, [0,0,0,0,0,0], [['spiked mace','iron staff'],'warhammer'], ['iron chainmail']],
+		"Ironkeep Confessor" : 	["c","steel","man",7,  5,7,5,5,4,1.1, 40, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes']],
+		"Iron Dreadnought" :	["D","grey","machine",8,  8,8,2,1,1,1.4, 40, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
 
 		# Dark Elves
 		"Dark Wardancer" :  ["s","orange","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail']],
@@ -111,9 +117,9 @@ class Monsters():
 		"Cave Troll" : 	  	 ["T","orange","troll",4,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
 
 		# Dragons
-		"Fire Dragon" :  ["D","red","fire dragon",10,  12,8,7,6,8,1.1, 500, [0,2,0,0,0,0], ['dragon fangs','dragon tail'] , ['fire dragonscales']],
-		"Frost Dragon" : ["D","cyan","frost dragon",10,  14,7,6,4,7,1.2, 500, [2,0,0,0,0,0], ['dragon fangs','dragon tail'] , ['frost dragonscales'], ['frost breath']],
-		"Bone Dragon" :  ["D","grey","bone dragon",10,  13,8,5,5,10,1.0, 500, [0,0,4,0,0,0], ['dragon fangs','dragon tail','horns'] , ['bone dragonscales']],
+		"Fire Dragon" :  ["D","red","fire dragon",10,  12,8,7,6,8,1.1, 500, [0,2,0,0,0,0], ['dragon fangs'] , ['fire dragonscales'], ['dragon tail']],
+		"Frost Dragon" : ["D","cyan","frost dragon",10,  14,7,6,4,7,1.2, 500, [2,0,0,0,0,0], ['dragon fangs'] , ['frost dragonscales'], ['frost breath','dragon tail']],
+		"Dracolich" :  	 ["D","bone","bone dragon",12,  14,8,6,5,10,1.0, 500, [0,0,4,0,0,0], ['dragon fangs'] , ['bone dragonscales'],['dragon tail','horns']],
 		}
 
 class Bands():  # Tier Bonus :   formations
@@ -210,6 +216,19 @@ class Bands():  # Tier Bonus :   formations
 	 							[]
 	 		] ),
 
+ 		'Ironkeep Warsquad' :  (1, [    ['Ironkeep Knight'], 
+	 									['Ironkeep Knight'], 
+	 									['Iron Priest'],
+	 									[],
+	 									['Ironkeep Confessor','Iron Dreadnought'],
+	 									[],
+	 									['Ironkeep Knight'],
+	 									[],
+	 									[],
+	 									[],
+	 									[]
+	 		] ),
+
  		'Spider Cave' :  (+3, [ ['Spiderling'], 
 	 							['Spiderling'], 
 	 							['Spiderling'],
@@ -236,14 +255,28 @@ class Bands():  # Tier Bonus :   formations
 
  	}
 
- 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'],
- 				   2 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'],
- 				   3 : ['Orc Band','Undead Horde','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Spider Cave'],
- 				   4 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Wolf Den','Kobold Party','Demon Horde','Jelly Band','Spider Cave'],
- 				   5 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
- 				   6 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
- 				   7 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
- 				   8 : ['Orc Band','Undead Horde','Uruk Warband','Dark Elf Guild','Black Eye Cult','Wandering Monster','Demon Horde','Jelly Band','Spider Cave'],
+ 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'
+ 						],
+ 				   2 : [
+ 				   		],
+ 				   3 : ['Black Eye Cult','Demon Horde'
+ 				   		],
+ 				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band'
+ 				   		],
+ 				   5 : [
+ 				   		'Wolf Den','Kobold Party'],
+ 				   6 : [
+ 				   		],
+ 				   7 : ['Ironkeep Warsquad'
+ 				   		],
+ 				   8 : [
+ 				   		],
+ 				   9 : [
+ 				   		],
+ 				   10 : ['Dragon Nest'
+ 				   		],
+ 				   11 : [
+ 				   		],
  				   }
 
  	# dicto = { 	   1 : ['Dragon Nest'],
