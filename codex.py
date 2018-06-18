@@ -31,7 +31,8 @@ def rinput(question):
 	print("")
 	print(question)
 	inp, outp, err = select.select([sys.stdin], [], [])
-	decision = sys.stdin.read()
+	try: decision = sys.stdin.read()
+	except: print("Python interpreter could not keep up.")
 
 	# Reset the terminal:
 	termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
@@ -48,61 +49,61 @@ class Armors():
 	array = {
 
 		# Garments and Robes
-		"tattered garments" : ['[','garments',1,0, 0],
-		"wool robes" : 		  ['[','robes',2,0, 0],
-		"tainted robes" : 	  ['[','robes',4,0, -d(3)],
-		"necromancer robes" : ['[','robes',2,1, d(2)],
-		"elfrobe" :			  ['[','robes',4,1, d(2)],
-		"battle-cleric robes":['[','robes',5,3, 0],
+		"tattered garments" : ['[','grey','garments',1,0, 0],
+		"wool robes" : 		  ['[','darkbrown','robes',2,0, 0],
+		"tainted robes" : 	  ['[','darkred','robes',4,0, -d(3)],
+		"necromancer robes" : ['[','red','robes',2,1, d(2)],
+		"elfrobe" :			  ['[','gold','robes',4,1, d(2)],
+		"battle-cleric robes":['[','yellow','robes',5,3, 0],
 
 		# Skins and Hides
-		"wolf pelt" : 		['[','hide',1,0, 0],
-		"spiderling skin" : ['[','hide',1,-2, 0],
-		"direwolf pelt" :   ['[','hide',2,0, 0,'spiked'],
-		"bear hide" :   	['[','hide',2,0, 0],
-		"ooze skin" :   	['[','hide',2,-1, 0],
-		"bone skin" :   	['[','hide',2,1, 0,'spiked'],
-		"ogre hide" : 		['[','hide',3,2, 0],
-		"dog hide" : 		['[','hide',3,1, 0],
-		"troll hide" :  	['[','hide',4,2, 0],
-		"spider hide" : 	['[','hide',4,1, 0],
-		"flayed skins" : 	['[','hide',5,1, 0], 
-		"cave troll hide" : ['[','hide',6,4, 0],
+		"wolf pelt" : 		['[','grey','hide',1,0, 0],
+		"spiderling skin" : ['[','bone','hide',1,-2, 0],
+		"direwolf pelt" :   ['[','grey','hide',2,0, 0,'spiked'],
+		"bear hide" :   	['[','brown','hide',2,0, 0],
+		"ooze skin" :   	['[','green','hide',2,-1, 0],
+		"bone skin" :   	['[','bone','hide',2,1, 0,'spiked'],
+		"ogre hide" : 		['[','yellow','hide',3,2, 0],
+		"dog hide" : 		['[','tan','hide',3,1, 0],
+		"troll hide" :  	['[','yellow','hide',4,2, 0],
+		"spider hide" : 	['[','tan','hide',4,1, 0],
+		"flayed skins" : 	['[','darkred','hide',5,1, 0], 
+		"cave troll hide" : ['[','grey','hide',6,4, 0],
 
 		# Hide Armors
-		"leather armor" : 	['[','hide',4,2, 0],
-		"hide armor" : 		['[','hide',5,3, 0],
-		"studded armor" : 	['[','hide',7,5, 0],
+		"leather armor" : 	['[','tan','hide',4,2, 0],
+		"hide armor" : 		['[','tan','hide',5,3, 0],
+		"studded armor" : 	['[','darkbrown','hide',7,5, 0],
 
 		# Scale Armors
-		"ironscale mail" : ['[','scale',2,3, d(2)],
-		"drakescale" :     ['[','scale',2,4, d(3)],
-		"wyvernscale" :    ['[','scale',3,4, d(4)],
-		"blackscale" : 	   ['[','scale',6,1, 0],
+		"ironscale mail" : ['[','steel','scale',2,3, d(2)],
+		"drakescale" :     ['[','cyan','scale',2,4, d(3)],
+		"wyvernscale" :    ['[','magenta','scale',3,4, d(4)],
+		"blackscale" : 	   ['[','darkred','scale',6,1, 0],
 		# Dragonscales
-		"fire dragonscales" :  ['[','scale',8,5, d(4),'tempered'],
-		"frost dragonscales" : ['[','scale',9,7, d(4),'icy'],
-		"bone dragonscales" :  ['[','scale',6,4, d(4),'spiked'],
+		"fire dragonscales" :  ['[','red','scale',8,5, d(4),'tempered'],
+		"frost dragonscales" : ['[','cyan','scale',9,7, d(4),'icy'],
+		"bone dragonscales" :  ['[','bone','scale',6,4, d(4),'spiked'],
 
 		# Chainmail Armors
-		"rotted chainmail" : [']','chainmail',4,2, 0],
-		"thornmail": 		 [']','chainmail',4,1, 0,'spiked'],
-		"berserker mail" :   [']','chainmail',5,3, 0],
-		"iron chainmail" :   [']','chainmail',6,5, 0],
-		"steel chainmail" :  [']','chainmail',8,6, 0],
+		"rotted chainmail" : [']','brown','chainmail',4,2, 0],
+		"thornmail": 		 [']','darkred','chainmail',4,1, 0,'spiked'],
+		"berserker mail" :   [']','red','chainmail',5,3, 0],
+		"iron chainmail" :   [']','grey','chainmail',6,5, 0],
+		"steel chainmail" :  [']','steel','chainmail',8,6, 0],
 
 		# Plate Armors
-		"blackiron plate" :   	  [']','plate',7,6, 0],
-		"armored spider plates" : [']','plate',7,4, 0],
-		"scrap plate armor" : 	  [']','plate',8,11, 0],
-		"iron plate armor" :  	  [']','plate',8,8, 0],
-		"steel plate armor" : 	  [']','plate',10,9, 0],
-		"Orcish dreadplate" : 	  [']','plate',12,18, 0],
+		"blackiron plate" :   	  [']','grey','plate',7,6, 0],
+		"armored spider plates" : [']','steel','plate',7,4, 0],
+		"scrap plate armor" : 	  [']','brown','plate',8,11, 0],
+		"iron plate armor" :  	  [']','grey','plate',8,8, 0],
+		"steel plate armor" : 	  [']','steel','plate',10,9, 0],
+		"Orcish dreadplate" : 	  [']','darkred','plate',12,18, 0],
 
 		# Legendary Armor
-		"God-Frame" :     [']','plate',13,13, d(3)],
-		"Kain's Pact" :   ['[','robes',6,0, d(6)],
-		"Bloodshell" : 	  ['[','plate',9,4, d(6), 'spiked'],
+		"God-Frame" :     [']','gold','plate',13,13, d(3)],
+		"Kain's Pact" :   ['[','darkred','robes',6,0, d(6)],
+		"Bloodshell" : 	  ['[','red','plate',9,4, d(6), 'spiked'],
 		}
 
 class Shields():
@@ -111,17 +112,17 @@ class Shields():
 		# self,rep    name, hands, armor_rating, encumberance, enchantment, brand
 
 		# Innate
-		"armored limb" : 	  ['}',0,3,0,0],
+		"armored limb" : 	  ['}','bone',0,3,0,0],
 
-		"buckler shield" : 	  ['}',1,3,1,0],
-		"trollhide shield" :  ['}',1,4,2,0],
-		"gauntlet shield" :   ['}',1,4,0,0],
-		"boneshield" :		  ['}',1,5,4,0],
-		"wooden broadshield" :['}',1,5,3,0],
-		"bronze aegis" :      ['}',1,5,1,1],
-		"blackiron shield" :  ['}',1,6,4,0],
-		"steel kite shield" : ['}',1,8,5,0],
-		"tower shield" :  	  ['}',1,12,6,0],
+		"buckler shield" : 	  ['}','brown',1,3,1,0],
+		"trollhide shield" :  ['}','orange',1,4,2,0],
+		"gauntlet shield" :   ['}','steel',1,4,0,0],
+		"boneshield" :		  ['}','bone',1,5,4,0],
+		"wooden broadshield" :['}','brown',1,5,3,0],
+		"bronze aegis" :      ['}','bronze',1,5,1,1],
+		"blackiron shield" :  ['}','grey',1,6,4,0],
+		"steel kite shield" : ['}','steel',1,8,5,0],
+		"tower shield" :  	  ['}','darkbrown',1,12,6,0],
 		}
 
 
@@ -142,25 +143,40 @@ class Brands():
 
 	armor_brands = ["spiked","tempered","icy"]
 
+	colors = {
+		"flaming": "fire",
+		"frozen": "cyan",
+		"silvered": "steel",
+		"envenomed": "darkgreen",
+		"hellfire": "orange",
+		"infernal": "darkred",
+		"vampiric": "red",
+		"antimagic": "magenta",
+
+		"spiked": "bone",
+		"tempered": "red",
+		"icy": "cyan",
+	}
+
 
 class Ammos():
 	#                   rep, wclass, damage
 	array = {
 		# Arrows/Bolts
-		"iron arrow" :     ['(', 'arrow', 1],
-		"steel arrow" :    ['(', 'arrow', 2],
-		"thornarrow" : 	   ['(', 'arrow', 1,'envenomed'],
-		"iron bolt" : 	   ['(', 'bolt', 1],
-		"steel bolt" : 	   ['(', 'bolt', 2],
+		"iron arrow" :     ['(','grey', 'arrow', 1],
+		"steel arrow" :    ['(','steel', 'arrow', 2],
+		"thornarrow" : 	   ['(','darkgreen', 'arrow', 1,'envenomed'],
+		"iron bolt" : 	   ['(','grey', 'bolt', 1],
+		"steel bolt" : 	   ['(','steel', 'bolt', 2],
 
 		# Javelins
-		"iron javelin" :   ['/', 'javelin', 5],
-		"winged javelin" : ['/', 'javelin', 5],
-		"barbed javelin" : ['/', 'javelin', 6],
+		"iron javelin" :   ['/','grey', 'javelin', 5],
+		"winged javelin" : ['/','gold', 'javelin', 5],
+		"barbed javelin" : ['/','darkred', 'javelin', 6],
 
 		# Other
-		"throwing axe" :   ['/', 'throwing axe', 6],
-		"throwing knife" : ['/', 'throwing knife', 3],
+		"throwing axe" :   ['/','grey', 'throwing axe', 6],
+		"throwing knife" : ['/','grey', 'throwing knife', 3],
 	}
 
 	thrown_amclasses = set(["javelin","throwing axe","throwing knife"])
@@ -181,165 +197,165 @@ class Weapons():
 
 		# Innate Weapons
 		# Hands
-		"fists" : 	   	  	['','fist',0, 0, 3, 9, 0.7, None, 100],
-		"fist smash" : 	  	['','fists',0, 0, 15, -2, 1.8, None, 100],
-		"stone fists" : 	['%','fists',4, 0, 22, -4, 2.2, None, 100],
-		"claws" : 	   		['','claws',0, 0, 7, 3, 0.85, None, 100],
-		"bone claws" : 	   	['','claws',0, 0, 10, 2, 0.9, None, 100],
+		"fist" : 	   	  	['','bone','fist',0, 0, 3, 9, 0.7, None, 100],
+		"fist smash" : 	  	['','bone','fists',0, 0, 15, -2, 1.8, None, 100],
+		"stone fists" : 	['%','grey','fists',4, 0, 22, -4, 2.2, None, 100],
+		"claws" : 	   		['','bone','claws',0, 0, 7, 3, 0.85, None, 100],
+		"bone claws" : 	   	['','bone','claws',0, 0, 10, 2, 0.9, None, 100],
 
 		# Head
-		"horns" :  	   	  	['','horns',0, 0, 7, 0, 0.9, None, 55],
-		"headbutt" :   	  	['','head',0, 0, 8, -1, 0.9, None, 30],
+		"horns" :  	   	  	['','bone','horns',0, 0, 7, 0, 0.9, None, 55],
+		"headbutt" :   	  	['','darkred','head',0, 0, 8, -1, 0.9, None, 30],
 
 		# Fangs
-		"fangs" : 	      	['','fangs',0, 0, 7, 0, 0.8, None, 90],
-		"blood fangs" : 	['','fangs',0, 0, 8, 0, 0.8, "vampiric", 85],
-		"spider fangs" :	['','fangs',0, 0, 8, -1, 0.9, "envenomed", 90],
-		"lich fangs" : 		['','fangs',0, 0, 10, 0, 1.2, "frozen", 85],
-		"demon fangs" : 	['','fangs',0, 0, 10, 0, 0.9, "hellfire", 90],
-		"dragon fangs" : 	['','fangs',0, 0, 15, 0, 1.3, None, 90],
+		"fangs" : 	      	['','bone','fangs',0, 0, 7, 0, 0.8, None, 90],
+		"blood fangs" : 	['','darkred','fangs',0, 0, 8, 0, 0.8, "vampiric", 85],
+		"spider fangs" :	['','darkgreen','fangs',0, 0, 8, -1, 0.9, "envenomed", 90],
+		"lich fangs" : 		['','cyan','fangs',0, 0, 10, 0, 1.2, "frozen", 85],
+		"demon fangs" : 	['','red','fangs',0, 0, 10, 0, 0.9, "hellfire", 90],
+		"dragon fangs" : 	['','bone','fangs',0, 0, 15, 0, 1.3, None, 90],
 
 		# Tail
-		"massive stinger" : ['','stinger',0, d(3), 8, -1, 0.9, "envenomed", 40],
-		"tail smash" : 	  	['','tail',0, 0, 6, 2, 0.8, None, 30],
-		"dragon tail" : 	['','tail',0, 0, 8, 1, 0.8, None, 25],
-		"acid slap" : 	  	['','appendage',0, d(2), 6, 1, 1.1, "envenomed", 90],
-		"jelly slap" : 		['','appendage',0, d(2), 9, 1, 1.1, None, 95],
-		"shield hit" : 	  	['','shield',0, 0, 5, 5, 1.0, None, 15],
+		"massive stinger" : ['','green','stinger',0, d(3), 8, -1, 0.9, "envenomed", 40],
+		"tail smash" : 	  	['','tan','tail',0, 0, 6, 2, 0.8, None, 30],
+		"dragon tail" : 	['','darkred','tail',0, 0, 8, 1, 0.8, None, 25],
+		"acid slap" : 	  	['','green','appendage',0, d(2), 6, 1, 1.1, "envenomed", 90],
+		"jelly slap" : 		['','purple','appendage',0, d(2), 9, 1, 1.1, None, 95],
+		"shield hit" : 	  	['','steel','shield',0, 0, 5, 5, 1.0, None, 15],
 
 		# Ranged Innate
-		"vomit" :      ['','vomit',0, 0, 6, 0, 1.2, None, 40],
+		"vomit" :      ['','grey','darkgreen',0, 0, 6, 0, 1.2, None, 40],
 
 
 
 	# Basic Weapons
 
 		# Blunt
-		"hammer" :       ['%','hammer',1, 0, 10, 0, 1.2],
-		"warhammer" :    ['%','warhammer',2, 0, 15, -4, 1.4],
-		"club" : 	     ['%','club',1, 0, 9, -1, 1.1],
-		"spiked club" :  ['%','greatclub',2, 0, 16, -4, 1.7],
-		"flail" : 		 ['%','flail',1, 0, 10, -3, 1.3],
-		"greatflail" : 	 ['%','flail',2, 0, 17, -6, 1.5],
-		"mace" : 		 ['%','mace',1, 0, 9, 0, 1.2],
-		"spiked mace" :  ['%','mace',1, 0, 10, -1, 1.25],
+		"hammer" :       ['%','grey','hammer',1, 0, 10, 0, 1.2],
+		"warhammer" :    ['%','steel','warhammer',2, 0, 15, -4, 1.4],
+		"club" : 	     ['%','brown','club',1, 0, 9, -1, 1.1],
+		"spiked club" :  ['%','darkbrown','greatclub',2, 0, 16, -4, 1.7],
+		"flail" : 		 ['%','grey','flail',1, 0, 10, -3, 1.3],
+		"greatflail" : 	 ['%','grey','flail',2, 0, 17, -6, 1.5],
+		"mace" : 		 ['%','yellow','mace',1, 0, 9, 0, 1.2],
+		"spiked mace" :  ['%','yellow','mace',1, 0, 10, -1, 1.25],
 
 		# Staves
-		"oak staff" :	 ['/','staff',1, 0, 5, 4, 1.0],
-		"warped staff" : ['/','staff',1, 0, 7, 2, 1.1],
-		"quarterstaff" : ['/','staff',2, 0, 10, 2, 1.1],
+		"oak staff" :	 ['/','brown','staff',1, 0, 5, 4, 1.0],
+		"warped staff" : ['/','darkbrown','staff',1, 0, 7, 2, 1.1],
+		"quarterstaff" : ['/','brown','staff',2, 0, 10, 2, 1.1],
 
 		# Polearms
-		"spear" :	['/','spear',1, 0, 8, 0, 1],
-		"pike" :	['/','pike',2, 0, 10, 0, 1.2],
-		"halberd" : ['/','polearm',2, 0, 12, -2, 1.15],
-		"lance" :   ['/','lance',2, 0, 11, -1, 1],
+		"spear" :	['/','brown','spear',1, 0, 8, 0, 1],
+		"pike" :	['/','grey','pike',2, 0, 10, 0, 1.2],
+		"halberd" : ['/','grey','polearm',2, 0, 12, -2, 1.15],
+		"lance" :   ['/','grey','lance',2, 0, 11, -1, 1],
 
 		# Blades
-		"iron dagger" :        ['!','dagger',1, 0, 5, 3, 0.75],
-		"steel dagger" : 	   ['!','dagger',1, 0, 6, 4, 0.8],
-		"iron longsword" :     ['!','sword',1, 0, 7, 1, 1.0],
-		"steel longsword" :    ['!','sword',1, 0, 9, 1, 1.0],
-		"iron shortsword" :    ['!','sword',1, 0, 6, 2, 0.9],
-		"steel shortsword" :   ['!','sword',1, 0, 8, 3, 0.9],
-		"iron bastard sword" : ['!','bastard sword',2, 0, 11, -1, 1.2],
-		"steel bastard sword" :['!','bastard sword',2, 0, 13, -1, 1.1],
-		"iron greatsword" :    ['!','greatsword',2, 0, 11, -2, 1.2],
-		"steel greatsword" :   ['!','greatsword',2, 0, 13, -2, 1.2],
+		"iron dagger" :        ['!','grey','dagger',1, 0, 5, 3, 0.75],
+		"steel dagger" : 	   ['!','steel','dagger',1, 0, 6, 4, 0.8],
+		"iron longsword" :     ['!','grey','sword',1, 0, 7, 1, 1.0],
+		"steel longsword" :    ['!','steel','sword',1, 0, 9, 1, 1.0],
+		"iron shortsword" :    ['!','grey','sword',1, 0, 6, 2, 0.9],
+		"steel shortsword" :   ['!','steel','sword',1, 0, 8, 3, 0.9],
+		"iron bastard sword" : ['!','grey','bastard sword',2, 0, 11, -1, 1.2],
+		"steel bastard sword" :['!','steel','bastard sword',2, 0, 13, -1, 1.1],
+		"iron greatsword" :    ['!','grey','greatsword',2, 0, 11, -2, 1.2],
+		"steel greatsword" :   ['!','steel','greatsword',2, 0, 13, -2, 1.2],
 
 		# Axes
-		"hand axe" : 		['&','axe',1, 0, 7, 0, 0.9],
-		"iron axe" : 	    ['&','axe',1, 0, 8, -1, 1.1],
-		"bearded axe" : 	['&','axe',1, 0, 7, 1, 1.1],
-		"bearded greataxe" :['&','greataxe',2, 0, 11, -3, 1.1],
-		"iron battleaxe" :  ['&','greataxe',2, 0, 12, -3, 1.3],
-		"steel axe" : 	    ['&','axe',1, 0, 10, -1, 1.1],
-		"steel battleaxe" : ['&','greataxe',2, 0, 14, -3, 1.3],
+		"hand axe" : 		['&','grey','axe',1, 0, 7, 0, 0.9],
+		"iron axe" : 	    ['&','grey','axe',1, 0, 8, -1, 1.1],
+		"bearded axe" : 	['&','steel','axe',1, 0, 7, 1, 1.1],
+		"bearded greataxe" :['&','grey','greataxe',2, 0, 11, -3, 1.1],
+		"iron battleaxe" :  ['&','grey','greataxe',2, 0, 12, -3, 1.3],
+		"steel axe" : 	    ['&','steel','axe',1, 0, 10, -1, 1.1],
+		"steel battleaxe" : ['&','steel','greataxe',2, 0, 14, -3, 1.3],
 
 
 		# Orcish Weapons
-		"goblin spear": ['/','spear',1, 0, 7, 3, 1],
-		"bone club" :   ['%','club',1, 0, 9, -2, 1.2],
-		"smasha": 		['%','hammer',1, 0, 10, -2, 1.2],
-		"skull smasha": ['%','warhammer',2, 0, 17, -5, 1.5],
-		"stabba" :      ['!','knife',1, 0, 6, 2, 0.85],
-		"slica" :       ['!','sword',1, 0, 8, 0, 1],
-		"big slica" :   ['!','greatsword',2, 0, 11, -1, 1.2],
-		"choppa" :      ['&','axe',1, 0, 8, -1, 1.1],
-		"big choppa" :  ['&','greataxe',2, 0, 13, -3, 1.3],
-		"boss choppa" : ['&','greataxe',2, 0, 16, -4, 1.5],
+		"goblin spear": ['/','brown','spear',1, 0, 7, 3, 1],
+		"bone club" :   ['%','bone','club',1, 0, 9, -2, 1.2],
+		"smasha": 		['%','brown','hammer',1, 0, 10, -2, 1.2],
+		"skull smasha": ['%','darkbrown','warhammer',2, 0, 17, -5, 1.5],
+		"stabba" :      ['!','grey','knife',1, 0, 6, 2, 0.85],
+		"slica" :       ['!','grey','sword',1, 0, 8, 0, 1],
+		"big slica" :   ['!','grey','greatsword',2, 0, 11, -1, 1.2],
+		"choppa" :      ['&','grey','axe',1, 0, 8, -1, 1.1],
+		"big choppa" :  ['&','grey','greataxe',2, 0, 13, -3, 1.3],
+		"boss choppa" : ['&','grey','greataxe',2, 0, 16, -4, 1.5],
 
-		"toxic slica":  ['!','sword',1, 0, 9, 0, 1, "envenomed"],
-		"ice choppa":   ['&','greataxe',2, 0, 13, -2, 1.4, "frozen"],
+		"toxic slica":  ['!','darkgreen','sword',1, 0, 9, 0, 1, "envenomed"],
+		"ice choppa":   ['&','cyan','greataxe',2, 0, 13, -2, 1.4, "frozen"],
 
 		# Uruk Weapons
-		"hooked longsword" :     ['!','sword',1, 0, 9, 1, 1.1],
-		"hooked shortsword" :    ['!','sword',1, 0, 8, 2, 1.0],
-		"spiked axe"  : 		 ['&','axe',1, 0, 10, -2, 1.2],
-		"hooked broadsword" :    ['!','greatsword',2, 0, 16, -3, 1.25],
-		"uruk-hai pike" :    	 ['/','pike', 2, 0, 12, -1, 1.2],
+		"hooked longsword" :     ['!','grey','sword',1, 0, 9, 1, 1.1],
+		"hooked shortsword" :    ['!','grey','sword',1, 0, 8, 2, 1.0],
+		"spiked axe"  : 		 ['&','grey','axe',1, 0, 10, -2, 1.2],
+		"hooked broadsword" :    ['!','grey','greatsword',2, 0, 16, -3, 1.25],
+		"uruk-hai pike" :    	 ['/','darkbrown','pike', 2, 0, 12, -1, 1.2],
 
 		# Demon Weapons
-		"bloodletter" :     ['!','demon sword',1, 0, 9, -2, 1.0],
-		"skullsplitter" :   ['!','greataxe',2, 0, 16, -5, 1.6],
-		"filthaxe" :   		['!','axe',1, 0, 9, -3, 1.3,"envenomed"],
-		"screamflail" :   	['!','flail',1, 0, 11, -4, 1.4,"infernal"],
+		"bloodletter" :     ['!','darkred','demon sword',1, 0, 9, -2, 1.0],
+		"skullsplitter" :   ['!','darkred','greataxe',2, 0, 16, -5, 1.6],
+		"filthaxe" :   		['!','darkgreen','axe',1, 0, 9, -3, 1.3,"envenomed"],
+		"screamflail" :   	['!','red','flail',1, 0, 11, -4, 1.4,"infernal"],
 
 		# Dark Elf Weapons
-		"thornknife" : ['!','knife',1, 0, 6, 2, 0.7],
-		"thornblade" : ['!','sword',1, 0, 8, 0, 0.9],
-		"sun spear" :  ['/','spear',1, 0, 9, 0, 1.2, "flaming"],
-		"sunlance" :   ['/','lance',2, 0, 10, 0, 1.3, "flaming"],
+		"thornknife" : ['!','darkgreen','knife',1, 0, 6, 2, 0.7],
+		"thornblade" : ['!','darkgreen','sword',1, 0, 8, 0, 0.9],
+		"sun spear" :  ['/','fire','spear',1, 0, 9, 0, 1.2, "flaming"],
+		"sunlance" :   ['/','fire','lance',2, 0, 10, 0, 1.3, "flaming"],
 
 		# Elvish Weapons
-		"elven wooddagger":  ['!','dagger', 1, 0, 7, 6, 0.65],
-		"elven leafblade" :  ['!','bastard sword', 2, 0, 13, 0, 0.95],
-		"elven broadspear" : ['/','spear', 2, 0, 12, 2, 0.95],
-		"elven longstaff" :  ['/','staff',1, 0, 8, 6, 0.9],
+		"elven wooddagger":  ['!','gold','dagger', 1, 0, 7, 6, 0.65],
+		"elven leafblade" :  ['!','gold','bastard sword', 2, 0, 13, 0, 0.95],
+		"elven broadspear" : ['/','gold','spear', 2, 0, 12, 2, 0.95],
+		"elven longstaff" :  ['/','gold','staff',1, 0, 8, 6, 0.9],
 
 		# Bone Weapons
-		"boneknife" :      ['!','knife',1, 0, 7, 3, 1.0],
-		"bone cleaver" :   ['!','sword',1, 0, 9, 2, 1.2],
-		"sawtooth blade" : ['!','sword',1, 0, 10, -1, 1.2],
-		"bonemace" : 	   ['%','mace',1, 0, 10, 0, 1.5],
+		"boneknife" :      ['!','bone','knife',1, 0, 7, 3, 1.0],
+		"bone cleaver" :   ['!','bone','sword',1, 0, 9, 2, 1.2],
+		"sawtooth blade" : ['!','bone','sword',1, 0, 10, -1, 1.2],
+		"bonemace" : 	   ['%','bone','mace',1, 0, 10, 0, 1.5],
 
 		# Top-tier
-		"gorktooth choppa" :  ['&','axe',1, 0, 10, -1, 1.2,'hellfire'],
-		"khopesh"			: ['!','sword',1, 0, 12, -2, 1.3],
-		"witchhunter blade" : ['!','sword',1, 0, 10, 3, 1.0,"antimagic"],
-		"claymore" :     	  ['!','greatsword',2, 0, 16, -3, 1.3],
-		"glaive" :      	  ['/','polearm',2, 0, 14, -2, 1.2],
-		"executioner's axe" : ['&','greataxe',2, 0, 17, -2, 1.5],
-		"gorkjaw choppa" :    ['&','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
-		"dwarven broadaxe" :  ['&','greataxe',2, 0, 18, -4, 1.6],
+		"gorktooth choppa" :  ['&','darkred','axe',1, 0, 10, -1, 1.2,'hellfire'],
+		"khopesh"			: ['!','steel','sword',1, 0, 12, -2, 1.3],
+		"witchhunter blade" : ['!','steel','sword',1, 0, 10, 3, 1.0,"antimagic"],
+		"claymore" :     	  ['!','steel','greatsword',2, 0, 16, -3, 1.3],
+		"glaive" :      	  ['/','steel','polearm',2, 0, 14, -2, 1.2],
+		"executioner's axe" : ['&','darkred','greataxe',2, 0, 17, -2, 1.5],
+		"gorkjaw choppa" :    ['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
+		"dwarven broadaxe" :  ['&','gold','greataxe',2, 0, 18, -4, 1.6],
 
 
 		# Ranged Weapons
 
 		# Thrown
-		"iron javelin" : 	  ['/','javelin',1, 0, 3, 0, 1.2],
-		"barbed javelin" : 	  ['/','javelin',1, 0, 4, -1, 1.3],
-		"throwing axe" : 	  ['%','throwing axe',1, 0, 3, -1, 1.3],
-		"throwing knife" : 	  ['%','throwing knife',1, 0, 3, 0, 0.9],
+		"iron javelin" : 	  ['/','grey','javelin',1, 0, 3, 0, 1.2],
+		"barbed javelin" : 	  ['/','darkred','javelin',1, 0, 4, -1, 1.3],
+		"throwing axe" : 	  ['%','grey','throwing axe',1, 0, 3, -1, 1.3],
+		"throwing knife" : 	  ['%','grey','throwing knife',1, 0, 3, 0, 0.9],
 
-		"winged javelin" : 	  ['/','javelin',1, 0, 3, 3, 0.8],
+		"winged javelin" : 	  ['/','gold','javelin',1, 0, 3, 3, 0.8],
 
 
 		# Projectile
-		"goblin bow" :        [')','bow',2, 0, 5, -4, 1.3],
-		"crude shortbow" :    [')','bow',2, 0, 6, -4, 1.35],
-		"shortbow" : 		  [')','bow',2, 0, 6, -1, 1.4],
-		"recurve bow " : 	  [')','bow',2, 0, 7, -1, 1.4],
-		"blackwood longbow" : [')','bow',2, 0, 7, 1, 1.4],
-		"longbow" :    		  [')','bow',2, 0, 8, 0, 1.7],
+		"goblin bow" :        [')','yellow','bow',2, 0, 5, -4, 1.3],
+		"crude shortbow" :    [')','brown','bow',2, 0, 6, -4, 1.35],
+		"shortbow" : 		  [')','brown','bow',2, 0, 6, -1, 1.4],
+		"recurve bow " : 	  [')','darkbrown','bow',2, 0, 7, -1, 1.4],
+		"blackwood longbow" : [')','darkbrown','bow',2, 0, 7, 1, 1.4],
+		"longbow" :    		  [')','brown','bow',2, 0, 8, 0, 1.7],
 
-		"elven longbow" :     [')','bow',2, 0, 8, 1, 1.3],
+		"elven longbow" :     [')','gold','bow',2, 0, 8, 1, 1.3],
 
-		"uruk crossbow" :     [')','crossbow',2, 0, 10, 0, 2],
+		"uruk crossbow" :     [')','darkred','crossbow',2, 0, 10, 0, 2],
 
-		"ranger longbow" :    [')','bow',2, 0, 10, 1, 1.6],
-		"dwarven crossbow" :  [')','crossbow',2, 0, 12, 0, 2],
-		"black ballista" : 	  [')','bow',3, 0, 12, 0, 2.6],
+		"ranger longbow" :    [')','darkbrown','bow',2, 0, 10, 1, 1.6],
+		"dwarven crossbow" :  [')','gold','crossbow',2, 0, 12, 0, 2],
+		"black ballista" : 	  [')','red','bow',3, 0, 12, 0, 2.6],
 
 
 
@@ -347,17 +363,17 @@ class Weapons():
 # ------------------------------------------------------------------
 
 		# Legendary Weapons
-		"The Glaive of Gore" :    	  ['/','polearm',     2, d(5), 16, 0, 1.2],
-		"The Singing Spear of Dorn" : ['/','god spear',   1, d(5), 12, 3, 0.75, 'flaming'],
-		"The Black Axe of Borke" :    ['&','god axe',     2, -10, 28, -5, 1.6, 'vampiric'],
-		"Bloodreaver" :          	  ['!','demon sword', 1, -6, 24, -3, 1, 'vampiric'],
-		"Nighthunter" :     	  	  ['%','bastard sword',  2, d(5), 16, 6, 1.2, 'silvered'],
-		"Dawn" :        	  	  	  ['%','sword',  	  1, d(5), 12, 2, 1.0, 'flaming'],
-		"Longclaw" :              	  ['!','greatsword',  2, d(5), 18, 5, 1.1],
-		"God-Cleaver" : 		 	  ['!','god sword',   2, d(5), 22, -10, 1.4, 'hellfire'],
-		"Worldshaper" :     	 	  ['%','god hammer',  2, d(5), 25, -12, 1.6, 'frozen'],
+		"The Glaive of Gore" :    	  ['/','darkred','polearm',     2, d(5), 16, 0, 1.2],
+		"The Singing Spear of Dorn" : ['/','fire','god spear',   1, d(5), 12, 3, 0.75, 'flaming'],
+		"The Black Axe of Borke" :    ['&','red','god axe',     2, -10, 28, -5, 1.6, 'vampiric'],
+		"Bloodreaver" :          	  ['!','darkred','demon sword', 1, -6, 24, -3, 1, 'vampiric'],
+		"Nighthunter" :     	  	  ['%','magenta','bastard sword',  2, d(5), 16, 6, 1.2, 'silvered'],
+		"Dawn" :        	  	  	  ['%','fire','sword',  	  1, d(5), 12, 2, 1.0, 'flaming'],
+		"Longclaw" :              	  ['!','gold','greatsword',  2, d(5), 18, 5, 1.1],
+		"God-Cleaver" : 		 	  ['!','gold','god sword',   2, d(5), 22, -10, 1.4, 'hellfire'],
+		"Worldshaper" :     	 	  ['%','purple','god hammer',  2, d(5), 25, -12, 1.6, 'frozen'],
 
-		"Talon" : 					  [')','god bow',     2, d(5), 14, 4, 1.3],
+		"Talon" : 					  [')','gold','god bow',     2, d(5), 14, 4, 1.3],
 		}
 
 	legendary_weapons = ["The Glaive of Gore","The Singing Spear of Dorn","The Black Axe of Borke","Nighthunter",
@@ -461,7 +477,7 @@ class Weapons():
 				mloc = attacker.loc
 
 				# Choose Direction
-				if orig_position != attacker.loc: length = len(ai.shortest_path(attacker.loc, orig_position, Maps.rooms[game.map.map][0], game, False))
+				if orig_position != attacker.loc: length = len(ai.shortest_path(attacker.loc, orig_position, map, game, False)) - 1
 				else: length = 0
 
 				print("Distance:", str(length) + '/' + str(Weapons.spells['leap'][5]))
@@ -494,8 +510,8 @@ class Weapons():
 
 				if game.map.square_identity(mloc) in ['|','#','-']:
 					if attacker.name == 'you': print("You cannot go there.")
-				elif len(ai.shortest_path(mloc, orig_position, Maps.rooms[game.map.map][0], game, False)) - 1 >= Weapons.spells['leap'][5]:
-					length = len(ai.shortest_path(attacker.loc, orig_position, Maps.rooms[game.map.map][0], game, False))
+				elif len(ai.shortest_path(mloc, orig_position, map, game, False)) - 1 > Weapons.spells['leap'][5]:
+					length = len(ai.shortest_path(attacker.loc, orig_position, map, game, False)) - 1
 					print("That space is out of range.")
 				else:
 					attacker.loc = mloc
@@ -789,7 +805,7 @@ class Weapons():
 
 		# Weapons
 		for item in attacker.wielding:
-			if item.name in Weapons.array and item.hands > 0:
+			if item.wclass in Weapons.weapon_classes and item.hands > 0:
 				if item.wclass not in Weapons.ranged_wclasses and item.brand != brand:
 					item.brand = brand
 					coated = True
@@ -859,6 +875,12 @@ class Weapons():
 
 	def pounce(name, attacker, enemy, game, map, roomfiller, ability = False):
 
+		# Condition
+		los = ai.los(attacker.loc, enemy.loc, Maps.rooms[game.map.map][0], game )
+		if len(los) <= 2:
+			if attacker.name == 'you': game.temp_log.append("You're too close to do that!")
+			return False
+
 		# Flavor Text
 		if attacker.name == 'you':
 			game.game_log.append("You pounce onto the " + enemy.name + "!")
@@ -866,12 +888,11 @@ class Weapons():
 			game.game_log.append("The " + attacker.name + " pounces on " + enemy.info[0] + "!")
 
 
-		los = ai.los(attacker.loc, enemy.loc, Maps.rooms[game.map.map][0], game )
 		attacker.loc = los[-2]
 
 		# Strike
 		for weapon in attacker.wielding:
-			if weapon.name in Weapons.array and weapon.hands == 0:
+			if weapon.wclass in Weapons.weapon_classes and weapon.hands == 0:
 				weapon.strike(attacker, enemy)
 		return True
 
@@ -1041,7 +1062,7 @@ class Weapons():
 
 		# Traits
 		damage = max(0, int(md(4, max(2, 3/2 + 1/2 * attacker.int) + attacker.calc_mdamage()  - enemy.equipped_armor.mdefense)))
-		self_dam = d(int(damage / 3))
+		self_dam = d(max(1, int(damage / 3)))
 
 		# Flavor Text
 		if attacker.name == 'you':

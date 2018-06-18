@@ -101,7 +101,7 @@ def move_towards(one, other, map):
 def smart_move_towards(one, other, game):
 
 
-	path = shortest_path((one.loc[0], one.loc[1]), (other.loc[0], other.loc[1]), Maps.rooms[game.map.map][0], game)
+	path = shortest_path((one.loc[0], one.loc[1]), (other.loc[0], other.loc[1]), game.map, game)
 
 	if path is not None: one.loc = path[1]
 
@@ -115,26 +115,28 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 
 	# Make Graph
 
-	a_dict = {}
+# # -----------------------------------------------------------------------------------------
+	a_dict = game.map.graph
 
-	height, width = len(map_arr), len(map_arr[0])
+# 	height, width = len(map_arr), len(map_arr[0])
 
-	for orgx in range(width):
+# 	for orgx in range(width):
 
-		for orgy in range(height):
-			tries = []
-			for x in range(-1,2):
-				for y in range(-1,2):
-					tries.append([x,y])
-			shuffle(tries)
-			for trie in tries:
-				x, y = trie
+# 		for orgy in range(height):
+# 			tries = []
+# 			for x in range(-1,2):
+# 				for y in range(-1,2):
+# 					tries.append([x,y])
+# 			shuffle(tries)
+# 			for trie in tries:
+# 				x, y = trie
 
-				adx = x + orgx
-				ady = y + orgy
-				if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-					try: a_dict[(orgx,orgy)].append((adx,ady))
-					except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
+# 				adx = x + orgx
+# 				ady = y + orgy
+# 				if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+# 					try: a_dict[(orgx,orgy)].append((adx,ady))
+# 					except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
+# 	# -----------------------------------------------------------------------------------------
 
 
 	visited = set([])
@@ -153,7 +155,8 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 
 			for neighbor in a_dict[node]:
 
-				if (map_arr[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
+				# Exception Squares
+				if (game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
 				
 				new = path[:]
 				new.append(neighbor)
@@ -172,33 +175,34 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 
 def los(looker, other, map_arr, game):
 
-	a_dict = {}
+
+	a_dict = game.map.graph
 
 
-	height = len(map_arr)
-	width = len(map_arr[0])
+	# height = len(map_arr)
+	# width = len(map_arr[0])
 
 
-	for orgx in range(width):
+	# for orgx in range(width):
 
-		for orgy in range(height):
+	# 	for orgy in range(height):
 
 
-			for x in range(-1,2):
+	# 		for x in range(-1,2):
 				
 
-				adx = x + orgx
-				ady = orgy
-				if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-					try: a_dict[(orgx,orgy)].append((adx,ady))
-					except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
+	# 			adx = x + orgx
+	# 			ady = orgy
+	# 			if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+	# 				try: a_dict[(orgx,orgy)].append((adx,ady))
+	# 				except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
 
-			for y in range(-1,2):
-				adx = orgx
-				ady = y + orgy
-				if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-						try: a_dict[(orgx,orgy)].append((adx,ady))
-						except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
+	# 		for y in range(-1,2):
+	# 			adx = orgx
+	# 			ady = y + orgy
+	# 			if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+	# 					try: a_dict[(orgx,orgy)].append((adx,ady))
+	# 					except: a_dict[(orgx,orgy)] = [ (adx,ady) ]
 
 	visited = set([])
 	queue = [[looker]]

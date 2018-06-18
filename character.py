@@ -12,20 +12,20 @@ def md(range, number):
 
 
 class CharacterInfo():
-	# 		(17)    con, st, dex, inte, cha, mspeed, reg,  resistances(fr,fi,po,ac,sh,ex)   class equipment,   innate weapons (power, ability)
+	# 		(17)    con, st, dex, inte, cha, mspeed, reg, color, resistances(fr,fi,po,ac,sh,ex)   class equipment,   innate weapons (power, ability)
 
 	races = {
-		"Cytherean" :  [[2,2,4,5,3,0.9, 12, [0,0,0,0,3,3]], [("wraithwalk",True)]],
-		"Gnome" :      [[2,3,6,4,3,0.7, 11, [0,0,0,0,0,0]], [("tripmine",True)]],
-		"Hobbit" :     [[2,3,5,3,6,0.8, 11, [1,1,1,1,1,1]], [("leap", True)]],
-		"Elf" : 	   [[3,3,5,4,3,1.0,  9, [0,0,0,0,0,0]], [("wild equilibrium",True)]],
-		"Terran" :     [[4,3,3,3,5,1.0, 14, [0,0,0,0,0,0]], []],
-		"Naga" :       [[4,3,4,4,1,0.9, 22, [0,0,3,0,0,0]], [("envenom",True), "tail smash"]],
-		"Ghoul" :      [[4,4,4,2,1,1.1,  6, [0,0,0,3,0,0]], [("feral bite",True)]],
-		"Dragonborn" : [[4,5,2,3,2,1.3, 14, [0,2,0,0,0,0]], [("flame tongue",True), "tail smash"]],
-		"Black Orc" :  [[5,4,2,2,2,1.3, 15, [2,0,0,0,0,0]], [("green blood",True),"headbutt"]],
-		"Dwarf" : 	   [[6,3,2,3,3,1.4, 10, [0,0,0,0,0,2]], [("iron grit",True)]],
-		"Hill Troll" : [[6,5,1,1,1,1.6, 16, [0,0,0,0,0,0]], []],
+		"Cytherean" :  [[2,2,4,5,3,0.9, 12, [0,0,0,0,3,3], "cyan"], [("wraithwalk",True)]],
+		"Gnome" :      [[2,3,6,4,3,0.7, 11, [0,0,0,0,0,0], "salmon"], [("tripmine",True)]],
+		"Hobbit" :     [[2,3,5,3,6,0.8, 11, [1,1,1,1,1,1], "brown"], [("leap", True)]],
+		"Elf" : 	   [[3,3,5,4,3,1.0,  9, [0,0,0,0,0,0], "blue"], [("wild equilibrium",True)]],
+		"Terran" :     [[4,3,3,3,5,1.0, 14, [0,0,0,0,0,0], "tan"], []],
+		"Naga" :       [[4,3,4,4,1,0.9, 22, [0,0,3,0,0,0], "green"], [("envenom",True), "tail smash"]],
+		"Ghoul" :      [[4,4,4,2,1,1.1,  6, [0,0,0,3,0,0], "darkred"], [("feral bite",True)]],
+		"Dragonborn" : [[4,5,2,3,2,1.3, 14, [0,2,0,0,0,0], "gold"], [("flame tongue",True), "tail smash"]],
+		"Black Orc" :  [[5,4,2,2,2,1.3, 15, [2,0,0,0,0,0], "grey"], [("green blood",True),"headbutt"]],
+		"Dwarf" : 	   [[6,3,2,3,3,1.4, 10, [0,0,0,0,0,2], "yellow"], [("iron grit",True)]],
+		"Hill Troll" : [[6,5,1,1,1,1.6, 16, [0,0,0,0,0,0], "steel"], []],
 	}
 
 	race_starting_equipment = {
@@ -102,9 +102,9 @@ class CharacterInfo():
 		"Hill Troll" : [["club","hide armor"],
 						["club","hide armor"],
 						["crude shortbow","iron dagger","iron arrow","bear hide"],
-						["iron dagger","bear hide","iron javelin"],
-						["iron dagger","wolf pelt",("poison breath",False)],
-						["iron dagger","wolf pelt",("dark bolt",False)]],
+						["iron shortsword","bear hide","iron javelin"],
+						["iron shortsword","wolf pelt",("poison breath",False)],
+						["iron shortsword","wolf pelt",("dark bolt",False)]],
 	}
 
 	class_list = ["Warrior","Paladin","Ranger","Rogue","Mage","Warlock"]

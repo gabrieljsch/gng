@@ -4,7 +4,7 @@ import ai
 from bestiary import Monsters, Bands
 from codex import Weapons, Ammos, Brands, Armors, Shields
 from character import CharacterInfo
-from descriptions import Descriptions
+from descriptions import Descriptions, Colors
 
 from random import randint, shuffle
 from copy import deepcopy
@@ -12,12 +12,23 @@ from copy import deepcopy
 import sys, os
 import termios, fcntl
 import select
+from sty import fg, bg, ef, rs
+
+
+
+def color(statement, color):
+	fg.color = color
+	print(fg.color + str(statement) + fg.rs)
 
 
 
 class Player():
 
 	def __init__(self, statsheet, innate_equipment, game):
+
+		# # Test Colors
+		# color("hello mothafucka", Colors.array['brown'])
+		# color("hello mothafucka", Colors.array['darkbrown'])
 
 		# Initialize Location, Time
 		self.loc, self.time = (2,5), 0
@@ -30,6 +41,9 @@ class Player():
 
 		# Initialize Resistances
 		self.frostr, self.firer, self.poisonr, self.acidr, self.shockr, self.expr = statsheet[7]
+
+		# Initiaize Color
+		self.color = statsheet[8]
 
 		# Class bonus
 		if CharacterInfo.class_progression[self.pclass][0] == 'con': self.con += 1
@@ -60,22 +74,22 @@ class Player():
 		for item in CharacterInfo.race_starting_equipment[game.race][CharacterInfo.class_list.index(game.pclass)]:
 			if item in Ammos.array:
 				data = Ammos.array[item]
-				if data[1] in Ammos.thrown_amclasses: number = 6
+				if data[2] in Ammos.thrown_amclasses: number = 6
 				else: number = 20
-				self.inventory.append(Ammo(item,data[0],data[1],number,data[2],None))
+				self.inventory.append(Ammo(item,data[0],data[1],data[2], number,data[3],None))
 				self.quivered = self.inventory[-1]
 			elif item in Weapons.array: self.give_weapon(item)
 			elif item in Shields.array:
 				data = Shields.array[item]
-				try: brand = data[5]
+				try: brand = data[6]
 				except: brand = None
-				self.wielding.append(Shield(item,data[0],data[1],data[2],data[3],data[4],None,brand))
-				self.hands -= data[1]
+				self.wielding.append(Shield(item,data[0],data[1],data[2],data[3],data[4],data[5],None,brand))
+				self.hands -= data[2]
 			elif item in Armors.array:
 				data = Armors.array[item]
-				try: brand = data[5]
+				try: brand = data[6]
 				except: brand = None
-				self.equipped_armor = Armor(item,data[0],data[1],data[2],data[3],data[4],None,brand)
+				self.equipped_armor = Armor(item,data[0],data[1],data[2],data[3],data[4],data[5],None,brand)
 			elif type(item) == tuple:
 				if item[1]: self.abilities.append(item[0])
 				else: self.spells.append(item[0])
@@ -163,7 +177,7 @@ class Player():
 			if self.quivered.wclass in Ammos.thrown_amclasses:
 				thrown = True
 				# Create Throwing platform
-				item = self.give_weapon(self.quivered.name)
+				item = self.give_weapon(self.quivered.sname)
 
 
 
@@ -262,8 +276,10 @@ class Player():
 			# Remove from units
 			verb = 'slay' if attacker.name == 'you' else 'slays'
 			game.game_log.append( attacker.info[0][0].upper() + attacker.info[0][1:] + " " + verb + " the "  + str(enemy.name) + " with " + attacker.info[1] + " " + means + "!")
+			print(len(game.units))
 			game.units.remove(enemy)
 			if enemy in game.allies: game.allies.remove(enemy)
+			print(len(game.units))
 
 			# Ooze Passive
 			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
@@ -807,7 +823,8 @@ class Player():
 		already_in = False
 		if type(item) == Ammo:
 			for thing in self.inventory:
-				if type(thing) == Ammo and thing.name == item.name and thing.brand == item.brand:
+				print(thing.sname, item.sname)
+				if type(thing) == Ammo and thing.sname == item.sname and thing.brand == item.brand:
 					thing.number += item.number
 					already_in = True
 					break
@@ -842,23 +859,23 @@ class Player():
 		data = Weapons.array[weapon]
 
 		# Manage Brand + Probability
-		try: brand = data[7]
+		try: brand = data[8]
 		except: brand = None
-		try: prob = data[8]
+		try: prob = data[9]
 		except: prob = None
 
-		self.hands -= data[2]
+		self.hands -= data[3]
 
 		# Create Weapon Object
-		if data[1] in Weapons.ranged_wclasses and data[2] > 0:
-			self.inventory.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, brand, prob))
+		if data[1] in Weapons.ranged_wclasses and data[3] > 0:
+			self.inventory.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],None, brand, prob))
 			return self.inventory[-1]
 		else:
- 			self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, brand, prob))
+ 			self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob))
  			return self.wielding[-1]
 
 	def calc_AC(self):
-		return self.equipped_armor.armor_rating + self.equipped_armor.enchantment + self.innate_ac
+		return d(int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2 + 1/2)) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 4)  + self.innate_ac
 
 	def atk_mv(self, map, coords):
 
@@ -874,9 +891,11 @@ class Player():
 		if map.square_identity(coords) == '+':
 			if map.adjacent[coords] is None:
 				game.map.new_room(coords)
+				self.time += 1
 				return '+'
 			else:
 				game.map.change_room(map.adjacent[coords])
+				self.time += 1
 				return '+'
 
 		# Check if square is occupied for ATTACK
@@ -891,7 +910,7 @@ class Player():
 						fists = self.give_weapon('fist smash')
 						weaps.append(fists)
 					else:
-						fists = self.give_weapon('fists')
+						fists = self.give_weapon('fist')
 						weaps.append(fists)
 
 				# Attack with each weapon
@@ -964,10 +983,13 @@ class Player():
 
 class Monster():
 
-	def __init__(self,      name, char, etype, tier,    con, st, dex, int, cha, mspeed, xp,   resistances,  pot_weapons, pot_armor,  loc, other_items = None):
+	def __init__(self,      name, char, color, etype, tier,    con, st, dex, int, cha, mspeed, xp,   resistances,  pot_weapons, pot_armor,  loc, other_items = None):
 
 		# Initialize Representation
-		self.rep, self.name, self.info, self.etype, self.tier = char, name, ('the ' + name, 'its'), etype, tier
+		self.rep, self.info, self.color, self.etype, self.tier = char, ('the ' + name, 'its'), color, etype, tier
+
+		fg.color = Colors.array[self.color]
+		self.name, self.namestring = fg.color + name + fg.rs, name
 
 		# Initialize Health
 		bonushp = md(6,self.tier)
@@ -1015,7 +1037,7 @@ class Monster():
 		return sd
 
 	def calc_AC(self):
-		return self.equipped_armor.armor_rating + self.equipped_armor.enchantment
+				return d(int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2  + 1/2)) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 4)
 
 	def drop_booty(self):
 		self.equipped_armor.loc = self.loc
@@ -1041,7 +1063,7 @@ class Monster():
 
 			for item in game.items:
 				if item.loc == self.loc and type(item) == Ammo:
-					if item.name == self.quivered.name and item.brand == self.quivered.brand:
+					if item.sname == self.quivered.sname and item.brand == self.quivered.brand:
 						item.number += self.quivered.number
 						return
 			self.quivered.loc = self.loc
@@ -1052,61 +1074,61 @@ class Monster():
 		data = Weapons.array[weapon]
 
 		# Manage Enchantment
-		spawned_enchantment = data[3]
+		spawned_enchantment = data[4]
 		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
 
 		# Manage Brand + Probability
-		try: brand = data[7]
+		try: brand = data[8]
 		except:
-			if d(100) > 99 - self.tier and data[2] > 0: brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1]
+			if d(100) > 99 - self.tier and data[3] > 0: brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1]
 			else: brand = None
-		try: prob = data[8]
+		try: prob = data[9]
 		except: prob = None
 
 		# Create Weapon Object
-		self.wielding.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], None, brand, prob))
+		self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], spawned_enchantment, data[5], data[6], data[7], None, brand, prob))
 
 	def give_armor(self, armor):
 		data = Armors.array[armor]
 
 		# Manage Enchantment
-		spawned_enchantment = data[4]
+		spawned_enchantment = data[5]
 		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(self.tier - 1)
-		try: brand = data[5]
+		try: brand = data[6]
 		except:
 			if d(100) > 99 - self.tier: brand = Brands.armor_brands[d(len(Brands.armor_brands)) - 1]
 			else: brand = None
 
 		# Create Armor Object
-		self.equipped_armor = Armor(armor, data[0], data[1], data[2], data[3], spawned_enchantment, None, brand)
+		self.equipped_armor = Armor(armor, data[0], data[1], data[2], data[3], data[4], spawned_enchantment, None, brand)
 
 	def give_shield(self, shield):
 		data = Shields.array[shield]
 
 		# Manage Enchantment + brand
-		spawned_enchantment = data[4]
+		spawned_enchantment = data[5]
 		if d(10) + (1.5 * self.tier) > 10: spawned_enchantment += d(self.tier)
-		try: brand = data[5]
+		try: brand = data[6]
 		except: brand = None
 
 		# Create Shield Object
-		self.wielding.append(Shield(shield, data[0], data[1], data[2], data[3], spawned_enchantment, None, brand))
+		self.wielding.append(Shield(shield, data[0], data[1], data[2], data[3], data[4],spawned_enchantment, None, brand))
 
 	def give_ammo(self, ammo):
 		data = Ammos.array[ammo]
 
 		# Manage Enchantment + Brand
-		try: brand = data[3]
+		try: brand = data[4]
 		except: brand = None
 		if brand is None:
-			if d(100) > 99 - self.tier and data[2] > 0: brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1]
+			if d(100) > 99 - self.tier and data[3] > 0: brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1]
 
 		# Manage Number
-		if data[1] in Ammos.thrown_amclasses: number = 4 + 2 * self.tier
+		if data[2] in Ammos.thrown_amclasses: number = 4 + 2 * self.tier
 		else: number = 10 + 5 * self.tier
 
 		# Create Ammo Object
-		self.quivered = Ammo(ammo, data[0], data[1], number, data[2], None, brand)
+		self.quivered = Ammo(ammo, data[0], data[1], data[2], number, data[3], None, brand)
 
 
 	def turn(self):
@@ -1210,7 +1232,7 @@ class Monster():
 		if self.quivered is not None:
 			if self.quivered.wclass in Ammos.thrown_amclasses:
 				thrown = True
-				item = self.give_weapon(self.quivered.name)
+				item = self.give_weapon(self.quivered.sname)
 
 		# Make Ranged attacks
 		for item in self.wielding:
@@ -1257,10 +1279,13 @@ class Monster():
 
 class Weapon():
 
-	def __init__(self,  name, rep, wclass, hands, enchantment, damage, to_hit, speed,   loc, brand = None, probability = None):
+	def __init__(self,  name, rep, color, wclass, hands, enchantment, damage, to_hit, speed,   loc, brand = None, probability = None):
 
 		# Initialize Weapon Stats
-		self.name, self.rep, self.wclass, self.hands, self.enchantment, self.damage, self.to_hit, self.speed, self.loc, self.brand, self.probability = name, rep, wclass, hands, enchantment, damage, to_hit, speed, loc, brand, probability
+		self.rep, self.color, self.wclass, self.hands, self.enchantment, self.damage, self.to_hit, self.speed, self.loc, self.brand, self.probability = rep, color, wclass, hands, enchantment, damage, to_hit, speed, loc, brand, probability
+
+		fg.color = Colors.array[self.color]
+		self.name, self.sname= fg.color + name + fg.rs, name
 
 		# Spell Damage
 		self.mdamage = 1 if wclass in ['staff'] else 0
@@ -1277,13 +1302,10 @@ class Weapon():
 
 	def details(self):
 
-		brand = '' if self.brand is None else self.brand + ' '
-		if self.enchantment >= 0: ench = '+' + str(self.enchantment)
-		else: ench = str(self.enchantment)
 		if self.to_hit >= 0: thit = '+' + str(self.to_hit)
 		else: thit = str(self.to_hit)
 
-		print(brand + str(ench),self.name.upper(),' (' + self.wclass + ')')
+		print(self.string(),' (' + self.wclass + ')')
 		print("")
 		print("This weapon is " + str(self.hands) + "-handed.")
 		print("Base damage:", str(self.damage) + ',', "Base to-hit:", thit)
@@ -1297,9 +1319,11 @@ class Weapon():
 			print(Descriptions.brand[self.brand])
 
 	def string(self):
+
 		if self.brand is not None:
-			if self.enchantment >= 0: return (self.brand + " +" + str(self.enchantment) + ' ' + self.name)
-			else: return (self.brand + ' ' + str(self.enchantment) + ' ' + self.name)
+			fg.bcolor = Colors.array[Brands.colors[self.brand]]
+			if self.enchantment >= 0: return (fg.bcolor + self.brand + fg.rs + " +" + str(self.enchantment) +' ' + self.name)
+			else: return (fg.bcolor + self.brand + fg.rs + ' ' + str(self.enchantment) + ' ' + self.name)
 		else:
 			# Positive Encahntment
 			if self.enchantment >= 0: return ("+" + str(self.enchantment) + ' ' + self.name)
@@ -1321,7 +1345,7 @@ class Weapon():
 		if d(100) > (100 - self.probability):
 
 			# Calc Encumberance
-			self_encumb, enemy_encumb = attacker.equipped_armor.encumberance - attacker.equipped_armor.enchantment, enemy.equipped_armor.encumberance - enemy.equipped_armor.enchantment
+			self_encumb, enemy_encumb = attacker.equipped_armor.encumberance, enemy.equipped_armor.encumberance
 
 			for item in attacker.wielding:
 				if type(item) == Shield: self_encumb += item.encumberance
@@ -1345,16 +1369,16 @@ class Weapon():
 				if self.hands > 0 and self.wclass in Weapons.ranged_wclasses or self.wclass in Ammos.thrown_amclasses:
 					already_in = False
 					for item in enemy.inventory:
-						if type(item) == Ammo and attacker.quivered.name == item.name and attacker.quivered.brand == item.brand:
+						if type(item) == Ammo and attacker.quivered.sname == item.sname and attacker.quivered.brand == item.brand:
 							item.number += 1
 							already_in = True
 							break
 					# Quivereds are same lol
 					if enemy.quivered is not None:
-						if attacker.quivered.name == enemy.quivered.name and attacker.quivered.brand == enemy.quivered.brand:
+						if attacker.quivered.sname == enemy.quivered.sname and attacker.quivered.brand == enemy.quivered.brand:
 							enemy.quivered.number += 1
 							already_in = True
-					if not already_in: enemy.inventory.append(Ammo(attacker.quivered.name,attacker.quivered.rep,attacker.quivered.wclass,1,attacker.quivered.damage,None,attacker.quivered.brand))
+					if not already_in: enemy.inventory.append(Ammo(attacker.quivered.sname,attacker.quivered.rep,attacker.quivered.color,attacker.quivered.wclass,1,attacker.quivered.damage,None,attacker.quivered.brand))
 
 				# Shield Block
 
@@ -1449,7 +1473,7 @@ class Weapon():
 						if attacker in game.allies: game.allies.remove(attacker)
 
 						# Ooze Passive
-						if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
+						if 'split' in attacker.spells: Weapons.spells["split"][0]("split", attacker, attacker, game, Maps.rooms[game.map.map][0], game.map.room_filler)
 
 						# Drop Loot
 						attacker.drop_booty()
@@ -1739,8 +1763,11 @@ class Weapon():
 
 class Armor():
 
-	def __init__(self, name, rep,  aclass, armor_rating, encumberance, enchantment, loc, brand = None):
-		self.name, self.rep, self.aclass, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, aclass, armor_rating, encumberance, enchantment, loc, brand
+	def __init__(self, name, rep, color,   aclass, armor_rating, encumberance, enchantment, loc, brand = None):
+		self.rep, self.color, self.aclass, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = rep, color, aclass, armor_rating, encumberance, enchantment, loc, brand
+
+		fg.color = Colors.array[self.color]
+		self.name = fg.color + name + fg.rs
 
 		# Initialize Resistances
 		self.frostr, self.firer, self.poisonr, self.acidr, self.shockr, self.expr = 0, 0, 0, 0, 0, 0
@@ -1766,13 +1793,10 @@ class Armor():
 
 	def details(self):
 
-		brand = '' if self.brand is None else self.brand + ' '
-		if self.enchantment >= 0: ench = '+' + str(self.enchantment)
-		else: ench = str(self.enchantment)
 		if self.encumberance > 0: encum = '-' + str(self.encumberance)
 		else: encum = '+' + str(abs(self.encumberance))
 
-		print(brand + str(ench),self.name.upper(),' (' + self.aclass + ')')
+		print(self.string(),' (' + self.aclass + ')')
 		print("")
 		print("Base armor rating:", str(self.armor_rating) + ',', "Base encumberance:", encum)
 		print("")
@@ -1782,9 +1806,12 @@ class Armor():
 			print(Descriptions.brand[self.brand])
 
 	def string(self):
+
 		if self.brand is not None:
-			if self.enchantment >= 0: return (self.brand + " +" + str(self.enchantment) + ' ' + self.name)
-			else: return (self.brand + ' ' + str(self.enchantment) + ' ' + self.name)
+			fg.bcolor = Colors.array[Brands.colors[self.brand]]
+
+			if self.enchantment >= 0: return (fg.bcolor + self.brand + fg.rs + " +" + str(self.enchantment) + ' ' + self.name)
+			else: return (fg.bcolor + self.brand + fg.rs + ' ' + str(self.enchantment) + ' ' + self.name)
 		else:
 			# Positive Encahntment
 			if self.enchantment >= 0: return ("+" + str(self.enchantment) + ' ' + self.name)
@@ -1792,22 +1819,22 @@ class Armor():
 
 class Shield():
 
-	def __init__(self, name, rep, hands, armor_rating, encumberance, enchantment, loc, brand = None):
-		self.name, self.rep, self.hands, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = name, rep, hands, armor_rating, encumberance, enchantment, loc, brand
+	def __init__(self, name, rep, color, hands, armor_rating, encumberance, enchantment, loc, brand = None):
+		self.rep, self.color, self.hands, self.armor_rating, self.encumberance, self.enchantment, self.loc, self.brand = rep, color, hands, armor_rating, encumberance, enchantment, loc, brand
 		self.wclass = "shield"
+
+		fg.color = Colors.array[self.color]
+		self.name = fg.color + name + fg.rs
 
 		# Magic Damage
 		self.mdamage = 0
 
 	def details(self):
 
-		brand = '' if self.brand is None else self.brand + ' '
-		if self.enchantment >= 0: ench = '+' + str(self.enchantment)
-		else: ench = str(self.enchantment)
 		if self.encumberance >= 0: encum = '-' + str(self.encumberance)
 		else: encum = '+' + str(abs(self.encumberance))
 
-		print(brand + str(ench),self.name.upper())
+		print(self.string())
 		print("")
 		print("This shield is " + str(self.hands) + "-handed.")
 		print("Base armor rating:", str(self.armor_rating) + ',', "Base encumberance:", encum)
@@ -1816,9 +1843,12 @@ class Shield():
 			print(Descriptions.brand[self.brand])
 
 	def string(self):
+
 		if self.brand is not None:
-			if self.enchantment >= 0: return (self.brand + " +" + str(self.enchantment) + ' ' + self.name)
-			else: return (self.brand + ' ' + str(self.enchantment) + ' ' + self.name)
+			fg.bcolor = Colors.array[Brands.colors[self.brand]]
+
+			if self.enchantment >= 0: return (fg.bcolor + self.brand + fg.rs + " +" + str(self.enchantment) + ' ' + self.name)
+			else: return (fg.bcolor + self.brand + fg.rs + ' ' + str(self.enchantment) + ' ' + self.name)
 		else:
 			# Positive Encahntment
 			if self.enchantment >= 0: return ("+" + str(self.enchantment) + ' ' + self.name)
@@ -1826,17 +1856,20 @@ class Shield():
 
 class Ammo():
 
-	def __init__(self, name, rep, wclass, number, damage, loc, brand = None):
-		self.name, self.rep, self.wclass, self.damage, self.number, self.loc, self.brand = name, rep, wclass, damage, number, loc, brand
+	def __init__(self, name, rep, color, wclass, number, damage, loc, brand = None):
+		self.rep, self.color, self.wclass, self.damage, self.number, self.loc, self.brand = rep, color, wclass, damage, number, loc, brand
+
+		fg.color = Colors.array[self.color]
+		self.name, self.sname = fg.color + name + fg.rs, name
 
 	def details(self):
 		brand = '' if self.brand is None else self.brand + ' '
 
-		print(brand + self.name.upper(),' (' + self.wclass + ')')
+		print(self.string(),' (' + self.wclass + ')')
 		print("")
 		if self.wclass in Ammos.thrown_amclasses: 
-			data = Weapons.array[self.name]
-			weap = Weapon(self.name, data[0], data[1], data[2], data[3], data[4], data[5], data[6], None, None, None)
+			data = Weapons.array[self.sname]
+			weap = Weapon(self.name, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],None, None, None)
 			print("Base damage:",self.damage + weap.damage)
 			print("Range:",weap.range)
 		else:
@@ -1849,13 +1882,17 @@ class Ammo():
 			print(Descriptions.brand[self.brand])
 
 	def string(self):
-		if self.brand is not None: return(self.brand + ' ' + self.name + ' (' + str(self.number) + ')')
+		fg.color = Colors.array[self.color]
+
+		if self.brand is not None:
+			fg.bcolor = Colors.array[Brands.colors[self.brand]]
+			return (fg.bcolor + self.brand + fg.rs + ' ' + self.name + ' (' + str(self.number) + ')')
 		else: return (self.name + ' (' + str(self.number) + ')')
 
 class Trap():
 
 	def __init__(self, damage, type, loc):
-		self.damage, self.type, self.loc, self.rep = damage, type, loc,'*'
+		self.damage, self.type, self.loc, self.rep, self.color = damage, type, loc,'*','darkred'
 
 	def trip(self):
 		if self.type == 'mine':
@@ -1911,6 +1948,7 @@ class Chest():
 								 ["gorktooth choppa","ranger longbow"],
 								 ["claymore","khopesh","gorkjaw choppa","executioner axe","dwarven "],
 								 ["witchhunter blade","glaive","dwarven crossbow"], 	]
+			self.color = "gold"
 		
 		elif self.type == "elven":
 			self.pot_weapons = [ ["elven wooddagger","elven leafblade"],
@@ -1918,11 +1956,13 @@ class Chest():
 								 ["elven leafblade","winged javelin"],
 								 ["elven broadspear","elven longbow"],
 								 ["elven longstaff"], 	]
+			self.color = "gold"
 		elif self.type == "dark elven":
 			self.pot_weapons = [ ["thornblade","thornknife"],
 								 ["thornarrow"],
 								 ["blackwood longbow","ironscale mail"],
 								 ["sun spear","sunlance"], 	]
+			self.color = "darkred"
 		elif self.type == "wooden":
 			self.pot_weapons = [["steel dagger","iron axe","spear","hammer","mace","iron longsword","club","iron shortsword"], 
 								["crude shortbow","iron battleaxe","iron longsword","mace","flail","quarterstaff","iron bastard sword"], 
@@ -1931,6 +1971,7 @@ class Chest():
 								["iron plate armor","iron chainmail","ironscale mail","scrap plate armor"],
 								["steel axe","steel longsword","halberd","steel bastard sword","steel shortsword"],
 								["steel greatsword","steel battleaxe","pike","greatflail","ranger longbow"] ]
+			self.color = "brown"
 		elif self.type == "orcish":
 			self.pot_weapons = [ ["goblin spear","stabba","choppa"],
 								 ["bear hide","ogre hide"],
@@ -1940,6 +1981,7 @@ class Chest():
 								 ["scrap plate armor","berserker mail","troll hide"], 
 								 ["toxic slica"],
 								 ["ice choppa","boss choppa"], 	]
+			self.color = "darkgreen"
 
 		self.pot_ammo = ["iron arrow","iron bolt","iron javelin","steel arrow","steel bolt","thornarrow"]
 
@@ -1979,7 +2021,7 @@ class Chest():
 
 						# Chance for brand
 						brand = None
-						if Weapons.array[item_name][2] > 0:
+						if Weapons.array[item_name][3] > 0:
 							if d(100) + self.tier > 97: brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1]
 						game.map.room_filler.place_weapon(item_name, self.loc, int((d(self.tier) - 1) / 2), brand)
 
@@ -2032,6 +2074,33 @@ class Map():
 
 		self.filled = False
 
+		self.construct_graph()
+
+	def construct_graph(self):
+		self.graph = {}
+		height = len(self.map_array)
+		width = len(self.map_array[0])
+
+
+		for orgx in range(width):
+
+			for orgy in range(height):
+
+				for x in range(-1,2):
+
+					adx = x + orgx
+					ady = orgy
+					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+						try: self.graph[(orgx,orgy)].append((adx,ady))
+						except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
+
+				for y in range(-1,2):
+					adx = orgx
+					ady = y + orgy
+					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+							try: self.graph[(orgx,orgy)].append((adx,ady))
+							except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
+
 
 	def fill(self):
 		self.room_filler = RoomFiller(self.player.level, (15,2), self.map)
@@ -2052,13 +2121,17 @@ class Map():
 
 		# Place items
 		for item in game.items:
+			# try:
+			# 	print(item.name, item.loc)
+			# except: print(item.loc)
 			y, x = item.loc[0], item.loc[1]
-			self.map_array[x][y] = item.rep
-
+			fg.color = Colors.array[item.color]
+			self.map_array[x][y] = fg.color + item.rep + fg.rs
 		# Place each unit on the map
 		for unit in game.units[::-1]:
 			y, x = unit.loc[0], unit.loc[1]
-			self.map_array[x][y] = unit.rep
+			fg.color = Colors.array[unit.color]
+			self.map_array[x][y] = fg.color + unit.rep + fg.rs
 
 		# Display the map
 		for line in self.map_array: print("        " + self.parse(line))
@@ -2066,6 +2139,8 @@ class Map():
 	def change_room(self, new_room):
 
 		room, newloc = new_room[0], new_room[1]
+		self.objects = []
+
 
 		# Store units
 		for unit in game.units[1:]:
@@ -2073,7 +2148,8 @@ class Map():
 				self.objects.append(unit)
 			if unit in game.allies: self.allies.append(unit)
 
-		for item in game.items: self.objects.append(item)
+		for item in game.items:
+			self.objects.append(item)
 
 		# Clear units
 		game.units, game.allies, game.items = [game.player], [], []
@@ -2129,7 +2205,6 @@ class Map():
 		try: self.square_identity(loc)
 		except: return False
 		if self.square_identity(loc) in unallowed:
-			print("False")
 			return False
 		if leap: units = game.units[1:]
 		for unit in units:
@@ -2212,11 +2287,11 @@ class RoomFiller():
 
 	def spawn(self, monster_name, loc, ally = False):
 		data = Monsters.array[monster_name]
-		try: other_items = data[13]
+		try: other_items = data[14]
 		except: other_items = None
 
 		# Spawn Unit
-		unit = Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], loc, other_items)
+		unit = Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], loc, other_items)
 		game.units.append(unit)
 		if ally: game.allies.append(unit)
 
@@ -2224,44 +2299,44 @@ class RoomFiller():
 		data = Weapons.array[weapon]
 
 		# Manage Enchantment + Brand
-		spawned_enchantment = data[3] + enchantment
-		try: brand = data[7]
+		spawned_enchantment = data[4] + enchantment
+		try: brand = data[8]
 		except: pass
 
 		# Create Weapon Object
-		game.items.append(Weapon(weapon, data[0], data[1], data[2], spawned_enchantment, data[4], data[5], data[6], loc, brand))
+		game.items.append(Weapon(weapon, data[0], data[1], data[2], data[3], spawned_enchantment, data[5], data[6], data[7], loc, brand))
 
 	def place_armor(self, armor, loc, enchantment = 0, brand = None):
 		data = Armors.array[armor]
 
 		# Manage Enchantment + Brand
-		spawned_enchantment = data[4] + enchantment
-		try: brand = data[5]
+		spawned_enchantment = data[5] + enchantment
+		try: brand = data[6]
 		except: pass
 
 		# Create Armor Object
-		game.items.append(Armor(armor, data[0], data[1], data[2], data[3], data[4], loc, brand))
+		game.items.append(Armor(armor, data[0], data[1], data[2], data[3], data[4], data[5], loc, brand))
 
 	def place_shield(self, armor, loc, enchantment = 0, brand = None):
 		data = Shields.array[armor]
 
 		# Manage Enchantment
-		spawned_enchantment = data[4] + enchantment
-		try: brand = data[5]
+		spawned_enchantment = data[5] + enchantment
+		try: brand = data[6]
 		except: pass
 
 		#Create Shield Object
-		game.items.append(Shield(armor, data[0], data[1], data[2], data[3], data[4], loc, brand))
+		game.items.append(Shield(armor, data[0], data[1], data[2], data[3], data[4], data[5], loc, brand))
 
 	def place_ammo(self, ammo, loc, number, brand = None):
 		data = Ammos.array[ammo]
 
 		# Manage Enchantment
-		try: brand = data[3]
+		try: brand = data[4]
 		except: pass
 
 		#Create Shield Object
-		game.items.append(Ammo(ammo, data[0], data[1], number, data[2], loc, brand))
+		game.items.append(Ammo(ammo, data[0], data[1], data[2], number, data[3], loc, brand))
 
 	def place_chest(self, type, tier, loc):
 		game.items.append(Chest(type, tier, loc))
@@ -2281,8 +2356,8 @@ class Game():
 		# Manage Constants
 
 		# CHANGE RACE
-		self.race = "Dragonborn"
-		self.pclass = "Warrior"
+		self.race = "Hobbit"
+		self.pclass = "Rogue"
 
 		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -2342,7 +2417,6 @@ class Game():
 
 		def action(move):
 			x, y = self.player.loc[0], self.player.loc[1]
-
 
 
 			# Base Case
@@ -2511,7 +2585,7 @@ class Game():
 		# Manage Game Log
 		self.game_log.append("                                                                     ")
 
-		log_select = self.game_log[((len(Maps.rooms[game.map.map][0]) - 26) + len(self.temp_log)):]
+		log_select = self.game_log[((len(Maps.rooms[game.map.map][0]) - 24) + len(self.temp_log)):]
 		print("=======================================================================================")
 		print("                                                                     ")
 
@@ -2578,10 +2652,18 @@ class Game():
 					game.game_log.append("You refuse to die!")
 					self.player.hp = 1
 
+		if self.player.hp < self.player.maxhp / 3.2:
+			fg.color = Colors.array['red']
+		elif self.player.hp < self.player.maxhp / 1.6:
+			fg.color = Colors.array['yellow']
+		else:
+			fg.color = Colors.array['green']
+		fg.lightblue = Colors.array['lightblue']
+
 
 		print("Level " + str(self.player.level) + " " + self.player.race + " " + self.player.pclass)
-		print("HP    " + str(self.player.hp)   + "/" + str(self.player.maxhp)   + hpspace + "Wielding:" + weapon_string + "         Armor: " + self.player.equipped_armor.string())
-		print("MANA  " + str(self.player.mana) + "/" + str(self.player.maxmana) + manaspace + "Quivered:" + quivered_string)
+		print("HP    " + fg.color + str(self.player.hp)+ "/" + str(self.player.maxhp) + fg.rs   + hpspace + "Wielding:" + weapon_string + "         Armor: " + self.player.equipped_armor.string())
+		print("MANA  " + fg.lightblue + str(self.player.mana) + "/" + str(self.player.maxmana) + fg.rs +  manaspace + "Quivered:" + quivered_string)
 
 		# YOU DIE!!
 		if self.player.hp <= 0:
@@ -2600,8 +2682,10 @@ class Game():
 					if wielding == "" and item.hands > 0: wielding += item.name
 					elif item.hands > 0: wielding += (", a " + item.name)
 
-				if len(wielding) == 0: game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name)
-				else: game.game_log.append("You see a " + unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
+				article = ' an ' if unit.namestring[0].lower() in ['a','e','i','o','u'] else ' a '
+
+				if len(wielding) == 0: game.game_log.append("You see" + article + unit.name  + ", wearing " + unit.equipped_armor.name)
+				else: game.game_log.append("You see" + article + unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
 				self.seen.add(unit)
 
 		fd = sys.stdin.fileno()
@@ -2771,7 +2855,6 @@ class Game():
 			count = passive[1]
 
 
-
 			# Decrement Count
 			passive[1] -= 1
 			if passive[1] <= 0 or purge:
@@ -2808,37 +2891,39 @@ class Game():
 					unit.hp -= damage
 
 					if type(unit) == Player:
-						game.game_log.append("Venom stings you for " + str(damage) + " damage!")
+						game.game_log.append(fg.green + "Venom " + fg.rs + "stings you for " + str(damage) + " damage!")
 					else:
-						game.game_log.append("Venom stings the " + str(unit.name) + " for " + str(damage) + " damage!")
+						game.game_log.append(fg.green + "Venom " + fg.rs + "stings the " + str(unit.name) + " for " + str(damage) + " damage!")
 
 				# Manage aflame
 				if name == "aflame":
 
-					damage = max(1, int(unit.con / 2))
+					damage = max(1, int(unit.con))
 					unit.hp -= damage
 
+					fg.color = Colors.array['fire']
+
 					if type(unit) == Player:
-						game.game_log.append("Fire burns you for " + str(damage) + " damage!")
+						game.game_log.append(fg.color + "Fire " + fg.rs + "burns you for " + str(damage) + " damage!")
 					else:
-						game.game_log.append("Fire burns the " + str(unit.name) + " for " + str(damage) + " damage!")
+						game.game_log.append(fg.color + "Fire " + fg.rs + "burns the " + str(unit.name) + " for " + str(damage) + " damage!")
 
 				# Manage Frozen
 				if name == "frozen":
 					unit.time += unit.mspeed
 					if type(unit) == Player:
-						game.game_log.append("You are frozen!")
+						game.game_log.append("You are " + fg.cyan + "frozen" + fg.rs + "!")
 					else:
-						game.game_log.append("The " + str(unit.name) + " is frozen and cannot move!")
+						game.game_log.append("The " + str(unit.name) + " is " + fg.cyan + "frozen" + fg.rs + " and cannot move!")
 
 
 				# Stunned
 				if name == "stunned":
 					unit.time += unit.mspeed
 					if type(unit) == Player:
-						game.game_log.append("You are stunned!")
+						game.game_log.append("You are " + fg.magenta +"stunned" + fg.rs + "!")
 					else:
-						game.game_log.append("The " + str(unit.name) + " is stunned!")
+						game.game_log.append("The " + str(unit.name) + " is "+ fg.magenta +"stunned" + fg.rs + "!")
 
 
 
@@ -2849,7 +2934,7 @@ class Game():
 			if unit in game.allies: game.allies.remove(unit)
 
 			# Ooze Passive
-			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
+			if 'split' in unit.spells: Weapons.spells["split"][0]("split", unit, unit, game, Maps.rooms[game.map.map][0], game.map.room_filler)
 
 			# Drop Loot
 			unit.drop_booty()

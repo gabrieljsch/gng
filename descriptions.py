@@ -1,5 +1,34 @@
 
 
+class Colors():
+
+	array = {
+		'red' : ('rgb', (255, 10, 10)),
+		'orange' : ('rgb', (255, 150, 50)),
+		'fire' : ('rgb', (255,69,0)),
+		'green' : ('rgb', (50, 205, 50)),
+		'darkgreen' : ('rgb', (0,128,0)),
+		'yellow' : ('rgb', (255,255,0)),
+		'gold' : ('rgb', (212,175,55)),
+		'cyan' : ('rgb', (0,255,255)),
+		'blue' : ('rgb', (0,0,255)),
+		'lightblue' : ('rgb', (65,105,225)),
+		'brown' : ('rgb', (139,69,19)),
+		'darkbrown' : ('rgb', (84,42,14)),
+		'tan' : ('rgb', (205,133,63)),
+		'grey' : ('rgb', (105,105,105)),
+		'purple' : ('rgb', (128,0,128)),
+		'magenta' : ('rgb', (255,0,255)),
+		'salmon' : ('rgb', (250,128,114)),
+		'darkred' : ('rgb', (139,0,0)),
+		'bronze' : ('rgb', (80,50,20)),
+		'bone' : ('rgb', (238,232,170)),
+		'steel' : ('rgb', (119,136,153)),
+	}
+
+
+
+
 
 class Descriptions():
 
