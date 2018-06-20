@@ -825,7 +825,6 @@ class Player():
 		already_in = False
 		if type(item) == Ammo:
 			for thing in self.inventory:
-				print(thing.sname, item.sname)
 				if type(thing) == Ammo and thing.sname == item.sname and thing.brand == item.brand:
 					thing.number += item.number
 					already_in = True
@@ -2280,10 +2279,12 @@ class RoomFiller():
 						if spawn_location in fsquares: continue
 					except: pass
 
-					if game.map.square_identity(spawn_location) not in ['|', '-', ' ', '#','+','@','_'] and spawn_location != game.player.loc and spawn_location not in spawned:
-						picked = True
-						prev_loc = spawn_location
-						spawned.add(prev_loc)
+					try:
+						if game.map.square_identity(spawn_location) not in ['|', '-', ' ', '#','+','@','_'] and spawn_location != game.player.loc and spawn_location not in spawned:
+							picked = True
+							prev_loc = spawn_location
+							spawned.add(prev_loc)
+					except: pass
 
 
 				self.spawn(group[unit] , spawn_location)
@@ -2359,8 +2360,8 @@ class Game():
 		# Manage Constants
 
 		# CHANGE RACE
-		self.race = "Hobbit"
-		self.pclass = "Rogue"
+		self.race = "Black Orc"
+		self.pclass = "Warrior"
 
 		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')

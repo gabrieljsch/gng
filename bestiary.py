@@ -47,7 +47,7 @@ class Monsters():
 		"Uruk Headhunter" :["h","steel","uruk",4,  4,4,4,2,4,1.0, 22, [0,0,0,0,0,0], ['hooked broadsword'] , ['blackiron plate'], ['barbed javelin']],
 		"Uruk-hai" : 	   ["u","red","uruk",4,  5,4,3,2,4,1.0, 22, [2,0,2,0,2,0], ['hooked broadsword'] , ['berserker mail'], ['headbutt']],
 		"Uruk Bodyguard" : ["u","purple","uruk",5,  6,5,3,2,6,1.2, 40, [0,0,0,0,0,0], ['uruk-hai pike', ['hooked broadsword','blackiron shield']], ['blackiron plate'], ['shield hit']],
-		"Uruk Warlord" :   ["U","dark_red","uruk",6,  7,6,4,2,6,1.0, 60, [0,0,0,0,0,0], ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','headbutt','steel bolt']],
+		"Uruk Warlord" :   ["U","darkred","uruk",6,  7,6,4,2,6,1.0, 60, [0,0,0,0,0,0], ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','headbutt','steel bolt']],
 
 		# Undead
 		"Skeleton" : 	  	 ["s","bone","skeleton",1,  2,2,1,1,2,1.1, 4, [0,0,5,0,0,0], ['iron longsword','iron axe','iron shortsword'] , ['tattered garments']],
@@ -264,7 +264,7 @@ class Bands():  # Tier Bonus :   formations
  				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band'
  				   		],
  				   5 : [
- 				   		'Wolf Den','Kobold Party'],
+ 				   		'Wolf Den','Kobold Party'], #-
  				   6 : [
  				   		],
  				   7 : ['Ironkeep Warsquad'
@@ -273,7 +273,7 @@ class Bands():  # Tier Bonus :   formations
  				   		],
  				   9 : [
  				   		],
- 				   10 : ['Dragon Nest'
+ 				   10: ['Dragon Nest'
  				   		],
  				   11 : [
  				   		],
