@@ -123,6 +123,8 @@ class Player():
 	def racial_bonuses(self, game):
 
 		# Innate bonuses
+		if self.race == 'Black Orc':
+			self.innate_ac += 1
 		if self.race == 'Dragonborn':
 			self.innate_ac += 2
 		if self.race == 'Hill Troll':
@@ -2125,9 +2127,11 @@ class Map():
 			# try:
 			# 	print(item.name, item.loc)
 			# except: print(item.loc)
-			y, x = item.loc[0], item.loc[1]
-			fg.color = Colors.array[item.color]
-			self.map_array[x][y] = fg.color + item.rep + fg.rs
+			try:
+				y, x = item.loc[0], item.loc[1]
+				fg.color = Colors.array[item.color]
+				self.map_array[x][y] = fg.color + item.rep + fg.rs
+			except: game.items.remove(item)
 		# Place each unit on the map
 		for unit in game.units[::-1]:
 			y, x = unit.loc[0], unit.loc[1]

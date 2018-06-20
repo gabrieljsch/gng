@@ -100,7 +100,7 @@ class Monsters():
 		"Lesser Ooze" :   ["z","green","ooze",1,  2,2,1,1,2,1.2, 8,  [0,0,1,0,1,1], ['jelly slap'] , ['ooze skin']],
 
 		# Spiders
-		"Spiderling" : 		 ["s","tan","spider",1,  1,2,4,1,1,0.7, 4, [0,0,2,0,0,0], ['fangs'] , ['spiderling skin']],
+		"Spiderling" : 		 ["s","tan","spider",1,  1,1,4,1,1,0.7, 4, [0,0,2,0,0,0], ['fangs'] , ['spiderling skin']],
 		"Giant Wolfspider" : ["w","brown","spider",3,  4,4,4,4,2,0.8, 14, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
 		"Fateweaver" : 		 ["f","bone","spider",3,  3,3,4,4,2,0.8, 15, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
 		"Armored Crawler" :  ["A","steel","spider",5,  4,4,4,4,2,0.8, 40, [0,0,3,0,0,2], ['fangs'] , ['armored spider plates'],[]],
