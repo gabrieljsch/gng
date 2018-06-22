@@ -212,7 +212,7 @@ def los(looker, other, map_arr, game):
 	for unit in game.units:
 		if other != (unit.loc[0], unit.loc[1]): locs.add((unit.loc[0], unit.loc[1]))
 
-	while len(queue) > 0:
+	while queue:
 
 		path = queue.pop(0)
 		node = path[-1]
@@ -220,7 +220,9 @@ def los(looker, other, map_arr, game):
 		if node not in visited:
 			for neighbor in a_dict[node]:
 
-				if neighbor in locs: continue
+				# Exception Squares
+				if game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', '+','_']) or neighbor in locs: continue
+
 				
 				new = path[:]
 				new.append(neighbor)
@@ -252,16 +254,7 @@ def los(looker, other, map_arr, game):
 								boole = False
 								break
 
-					if boole:
-
-						otherb = True
-
-						for cnode in new:
-							if map_arr[cnode[1]][cnode[0]] in set(['|', '-', '#','+','_']):
-								otherb = False
-								break
-
-						if otherb: return new
+					if boole: return new
 
 			visited.add(node)
 

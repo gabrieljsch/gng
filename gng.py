@@ -58,11 +58,14 @@ class Player():
 		self.mana = 4 + 4 * self.int
 		self.maxmana = 4 + 4 * self.int
 
+		# Mount
+		self.rider, self.mount = None, None
+
 		# Inventory, Spells
 		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], [], []
 
 		# Initialze Equipment
-		self.wielding, self.hands, self.quivered = [], 2, None
+		self.wielding, self.hands, self.total_hands, self.quivered = [], 2, 2, None
 
 		# Innate Equipment
 		for equipment in innate_equipment:
@@ -147,7 +150,7 @@ class Player():
 
 				decision = rinput("Quiver What?")
 
-				if decision in game.item_order and game.item_order.index(decision) < len(ammo):
+				if decision in game.item_order and game.item_order.index(decision) < len(ammo) and Weapons.array[ammo[game.item_order.index(decision)].sname][3] <= self.total_hands:
 
 					# Quiver Item
 					self.quivered = ammo[game.item_order.index(decision)]
@@ -226,8 +229,8 @@ class Player():
 						unit = units_in_range[game.item_order.index(decision)]
 						self.time += item.speed
 
-						# ATTACK
-						item.strike(self, unit)
+						# Attack
+						item.strike(self, unit)#, wtypeeff)
 						self.well_being_statement(unit, self, item.name, game)
 
 						# Remove throwing weapon
@@ -280,6 +283,12 @@ class Player():
 			game.game_log.append( attacker.info[0][0].upper() + attacker.info[0][1:] + " " + verb + " the "  + str(enemy.name) + " with " + attacker.info[1] + " " + means + "!")
 			game.units.remove(enemy)
 			if enemy in game.allies: game.allies.remove(enemy)
+
+			# Mounts
+			if enemy.rider is not None:
+				enemy.rider.mount = None
+			elif enemy.mount is not None:
+				enemy.mount.unit.rider = None
 
 			# Ooze Passive
 			if 'split' in enemy.spells: Weapons.spells["split"][0]("split", enemy, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler)
@@ -594,11 +603,7 @@ class Player():
 		if type(item) == Weapon or type(item) == Shield:
 
 			# Carrying
-			total_hands = self.hands
-			carrying = []
-			for thing in self.wielding:
-				total_hands += thing.hands
-				if thing.hands > 0: carrying.append(thing)
+			carrying = [thing  for thing in self.wielding if thing.hands > 0]
 
 			# Ranged weapons require all hands
 			if item.wclass in Weapons.ranged_wclasses:
@@ -616,7 +621,7 @@ class Player():
 				return
 
 			# Not enough total hands
-			if item.hands > total_hands or item.hands > 1 and item.wclass != 'bastard sword' and self.race in ['Gnome','Hobbit']:
+			if item.hands > self.total_hands or item.hands > 1 and item.wclass != 'bastard sword' and self.race in ['Gnome','Hobbit']:
 				game.temp_log.append("You cannot wield that weapon!")
 				return
 
@@ -624,7 +629,7 @@ class Player():
 			if self.hands < item.hands or len(carrying) == 2:
 
 				# Already carrying something
-				if len(carrying) == 2 and item.hands < total_hands:
+				if len(carrying) == 2 and item.hands < self.total_hands:
 
 					# Equipped string UI
 					equipped = ""
@@ -991,6 +996,9 @@ class Monster():
 		# Initialize Representation
 		self.rep, self.info, self.color, self.etype, self.tier = char, ('the ' + name, 'its'), color, etype, tier
 
+		# Mount?
+		self.mount, self.rider = None, None
+
 		fg.color = Colors.array[self.color]
 		self.name, self.namestring = fg.color + name + fg.rs, name
 
@@ -1018,10 +1026,15 @@ class Monster():
 		# Give innate weapons / shields
 		if other_items is not None:
 			for item in other_items:
+				print(item, type(item))
 				if item in Ammos.array: self.give_ammo(item)
 				elif item in Weapons.array: self.give_weapon(item)
 				elif item in Shields.array: self.give_shield(item)
 				elif item in Weapons.spells: self.spells.append(item)
+				elif item in Monsters.array:
+					ally = True if self in game.allies else False
+					self.mount = Mount(game.map.room_filler,self,item,ally)
+					self.mount.unit.rider = self
 
 		# Give Weapon and Armor
 		items = pot_weapons[d(len(pot_weapons)) - 1]
@@ -1200,12 +1213,22 @@ class Monster():
 									if spell_fun(spell, self, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler):
 										self.time += Weapons.spells[spell][2]
 										self.mana -= Weapons.spells[spell][1]
+
+										if self.mount is not None:
+											self.mount.unit.loc = self.loc
+										if self.rider is not None:
+											self.rider.loc = self.loc
 										return
 							# No target
 							else:
 								if spell_fun(spell, self, enemy, game, Maps.rooms[game.map.map][0], game.map.room_filler):
 									self.time += Weapons.spells[spell][2]
 									self.mana -= Weapons.spells[spell][1]
+
+									if self.mount is not None:
+										self.mount.unit.loc = self.loc
+									if self.rider is not None:
+										self.rider.loc = self.loc
 									return
 
 
@@ -1277,6 +1300,11 @@ class Monster():
 					item.trip()
 			self.time += self.mspeed
 
+			if self.mount is not None:
+				self.mount.unit.loc = self.loc
+			if self.rider is not None:
+				self.rider.loc = self.loc
+
 
 
 
@@ -1333,6 +1361,13 @@ class Weapon():
 			else: return (str(self.enchantment) + ' ' + self.name)
 
 	def strike(self, attacker, enemy, wtypeeff = True):
+
+			
+		if enemy.rider is not None:
+			if d(10) >= 7:
+				self.strike(attacker, enemy.rider, wtypeeff)
+				return
+
 
 		brand, wclass, to_hit = self.brand, self.wclass, self.to_hit
 		ename = enemy.name if enemy.name == 'you' else "the " + enemy.name
@@ -1430,11 +1465,15 @@ class Weapon():
 				# Apply Brands and resistances
 				if brand == "envenomed": brandhit = d(100) > 50 and d(4) > poisonr
 				elif brand == "flaming": brandhit = d(100) > 60 and d(4) > firer
+				elif brand == "electrified": brandhit = d(100) > 40 and d(4) > shockr
 				elif brand == "infernal": brandhit = d(100) > 65
 				elif brand == "frozen": brandhit = d(100) > 80 and d(4) > frostr
 				elif brand == "antimagic": brandhit = True if len(enemy.spells) > 0 else False
+				elif brand == "holy":
+					if enemy.name != 'you': brandhit = True if enemy.etype in ["demon","abomination"] else False
+					else: brandhit = True if enemy.race in ["demonkin"] else False
 				elif brand == "silvered":
-					if enemy.name != 'you': brandhit = True if enemy.etype in ["undead","demon","skeleton"] else False
+					if enemy.name != 'you': brandhit = True if enemy.etype in ["undead","skeleton","abomination"] else False
 					else: brandhit = True if enemy.race in ["ghoul"] else False
 				elif brand is not None: brandhit = True
 				elif brand is None: brandhit = False
@@ -1474,6 +1513,12 @@ class Weapon():
 						game.game_log.append("The " + attacker.name + " dies from the spikes!")
 						game.units.remove(attacker)
 						if attacker in game.allies: game.allies.remove(attacker)
+
+						# Mounts
+						if attacker.rider is not None:
+							attacker.rider.mount = None
+						elif attacker.mount is not None:
+							attacker.mount.unit.rider = None
 
 						# Ooze Passive
 						if 'split' in attacker.spells: Weapons.spells["split"][0]("split", attacker, attacker, game, Maps.rooms[game.map.map][0], game.map.room_filler)
@@ -1679,9 +1724,18 @@ class Weapon():
 			if brand == "silvered":
 				damage *= 1.5
 
+			# Manage Holy
+			if brand == "holy":
+				damage *= 1.8
+
 			# Manage Antimagic
 			if brand == "antimagic":
-				damage *= 1.5
+				damage *= 1.7
+
+			# Manage Electrified
+			if brand == "electrified":
+				if attacker.name == 'you': damage += md(attacker.level,2)
+				else: damage += md(attacker.tier,2)
 
 			# Manage Frozen=
 			if brand == "frozen":
@@ -1715,11 +1769,23 @@ class Weapon():
 			else:
 				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var + " for " + str(damage) + " damage!")
 
+		elif brand == "holy":
+			if type(attacker) == Monster:
+				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its holy"  + name + " and smites " + ename +  " down!")
+			else:
+				game.game_log.append("You " + verb + " smite the " + attackee_var+ " with your holy "+ str(wclass) + " for " + str(damage) + " damage!")
+
 		elif brand == "silvered":
 			if type(attacker) == Monster:
 				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its "  + name + ", its silver burns " + ename +  "!")
 			else:
 				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var+ ", the silver burns for " + str(damage) + " damage!")
+
+		elif brand == "electrified":
+			if type(attacker) == Monster:
+				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its "  + name + " and shocks " + ename +  "!")
+			else:
+				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var+ " and shock it for " + str(damage) + " damage!")
 
 		elif brand == "antimagic":
 			if type(attacker) == Monster:
@@ -1856,6 +1922,12 @@ class Shield():
 			# Positive Encahntment
 			if self.enchantment >= 0: return ("+" + str(self.enchantment) + ' ' + self.name)
 			else: return (str(self.enchantment) + ' ' + self.name)
+
+class Mount():
+
+	def __init__(self, roomfiller, rider, mount, ally):
+		roomfiller.spawn(mount, rider.loc, ally, rider)
+		self.unit = game.units[-1]
 
 class Ammo():
 
@@ -2091,19 +2163,13 @@ class Map():
 
 				for x in range(-1,2):
 
-					adx = x + orgx
-					ady = orgy
-					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-						try: self.graph[(orgx,orgy)].append((adx,ady))
-						except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
+					for y in range(-1,2):
 
-				for y in range(-1,2):
-					adx = orgx
-					ady = y + orgy
-					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+						adx = x + orgx
+						ady = y + orgy
+						if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
 							try: self.graph[(orgx,orgy)].append((adx,ady))
 							except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
-
 
 	def fill(self):
 		self.room_filler = RoomFiller(self.player.level, (15,2), self.map)
@@ -2135,8 +2201,18 @@ class Map():
 		# Place each unit on the map
 		for unit in game.units[::-1]:
 			y, x = unit.loc[0], unit.loc[1]
+
 			fg.color = Colors.array[unit.color]
-			self.map_array[x][y] = fg.color + unit.rep + fg.rs
+			if unit.rider is not None:
+				fg.color = Colors.array[unit.rider.color]
+				bg.color = Colors.array[unit.color]
+				self.map_array[x][y] = fg.color + bg.color + unit.rider.rep + rs.all
+			elif unit.mount is not None:
+				bg.color = Colors.array[unit.mount.unit.color]
+				self.map_array[x][y] = fg.color + bg.color + unit.rep + rs.all 
+			else:
+				self.map_array[x][y] = fg.color + unit.rep + fg.rs 
+				
 
 		# Display the map
 		for line in self.map_array: print("        " + self.parse(line))
@@ -2293,15 +2369,20 @@ class RoomFiller():
 
 				self.spawn(group[unit] , spawn_location)
 
-	def spawn(self, monster_name, loc, ally = False):
+	def spawn(self, monster_name, loc, ally = False, mount_unit = None):
 		data = Monsters.array[monster_name]
 		try: other_items = data[14]
 		except: other_items = None
 
 		# Spawn Unit
 		unit = Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], loc, other_items)
+		print("spawned", monster_name)
 		game.units.append(unit)
 		if ally: game.allies.append(unit)
+
+		# if mount_unit is not None:
+		# 	mount_unit.rider = game.units[-1]
+		# 	game.units[-1].mount = mount_unit
 
 	def place_weapon(self, weapon, loc, enchantment = 0, brand = None):
 		data = Weapons.array[weapon]
@@ -2364,8 +2445,8 @@ class Game():
 		# Manage Constants
 
 		# CHANGE RACE
-		self.race = "Black Orc"
-		self.pclass = "Warrior"
+		self.race = "Hobbit"
+		self.pclass = "Rogue"
 
 		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -2384,6 +2465,10 @@ class Game():
 
 		# item order
 		self.item_order = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+	def start_screen(self):
+		pass
 
 
 	def run(self):
@@ -2684,7 +2769,7 @@ class Game():
 
 		# See Monster
 		for unit in self.units[1:]:
-			if unit not in self.seen:
+			if unit not in self.seen and unit.rider is None:
 
 				wielding = ""
 				for item in unit.wielding[::-1]:
@@ -2693,8 +2778,12 @@ class Game():
 
 				article = ' an ' if unit.namestring[0].lower() in ['a','e','i','o','u'] else ' a '
 
-				if len(wielding) == 0: game.game_log.append("You see" + article + unit.name  + ", wearing " + unit.equipped_armor.name)
-				else: game.game_log.append("You see" + article + unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
+				if len(wielding) == 0:
+					if unit.mount is not None: game.game_log.append("You see" + article + unit.name   + " riding a " + unit.mount.unit.name + ", wearing " + unit.equipped_armor.name)
+					else: game.game_log.append("You see" + article + unit.name  + ", wearing " + unit.equipped_armor.name)
+				else:
+					if unit.mount is not None:game.game_log.append("You see" + article + unit.name  + " riding a " + unit.mount.unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
+					else: game.game_log.append("You see" + article + unit.name + ", wearing " + unit.equipped_armor.name + ", wielding a " + wielding)
 				self.seen.add(unit)
 
 		fd = sys.stdin.fileno()
@@ -2944,6 +3033,12 @@ class Game():
 
 			# Ooze Passive
 			if 'split' in unit.spells: Weapons.spells["split"][0]("split", unit, unit, game, Maps.rooms[game.map.map][0], game.map.room_filler)
+
+			# Mounts
+			if unit.rider is not None:
+				unit.rider.mount = None
+			elif unit.mount is not None:
+				unit.mount.unit.rider = None
 
 			# Drop Loot
 			unit.drop_booty()

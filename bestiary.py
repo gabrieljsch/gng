@@ -26,18 +26,23 @@ class Monsters():
 		"Goblin" : 		   	   ["g","yellow","goblin",1,  2,2,3,1,1,0.9, 4, [0,0,0,0,0,0], ['stabba','goblin spear','club','bone club'] , ['wolf pelt','bear hide']],
 		"Goblin Archer" :      ["a","yellow","goblin",1,  2,1,4,1,1,0.85, 4, [0,0,0,0,0,0], ['stabba'] , ['wolf pelt','bear hide'], ['goblin bow','iron arrow']],
 		"Goblin Skirmisher":   ["g","yellow","goblin",1,  3,2,3,1,1,0.85, 6, [0,0,0,0,0,0], ['slica','choppa','bone club'] , ['bear hide'], ['buckler shield'], ['iron javelin']],
-		"Goblin Spiderrider" : ["s","brown","goblin",2,  4,2,4,1,3,0.6, 8, [0,0,0,0,0,0], ['goblin spear',['slica','buckler shield']], ['spider hide'], ['buckler shield']],
 		"Witch Goblin" :       ["w","magenta","goblin",2,  3,3,3,3,3,0.9, 8, [0,0,1,0,0,0], ['bone club'] , ['troll hide'], ['poison breath']],
+		"Goblin Spiderrider" : ["s","yellow","goblin",2,  4,2,4,1,3,0.8, 8, [0,0,0,0,0,0], ['goblin spear',['slica','buckler shield']], ['spider hide'], ['buckler shield','Giant Wolfspider']],
 		"Goblin Nob" : 	       ["n","yellow","goblin",2,  4,3,2,1,2,1.0, 8, [0,0,0,0,0,0], ['smasha','choppa'] , ['troll hide','spider hide']],
 		"Goblin Chief" :   	   ["G","purple","goblin",3,  5,4,4,2,3,0.95, 15, [0,0,0,0,0,0], ['big choppa','big slica','skull smasha'] , ['berserker mail','leather armor']],
+
 
 		# Orcs
 		"Orc Warboy" : 	   ["o","green","orc",2,  3,4,3,2,2,1.1, 6, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide']],
 		"Orc Archer" :     ["a","green","orc",2,  3,3,4,2,2,1.0, 6, [0,0,0,0,0,0], ['choppa', 'slica'] , ['bear hide', 'troll hide'], ['crude shortbow','iron arrow']],
+		"Warg" : 	   	   ["w","darkbrown","beast",2,  4,4,2,2,1,0.9, 8, [1,0,0,0,0,0], ['fangs'] , ['warg pelt']],
+		"Feral Warg" : 	   ["w","darkbrown","beast",3,  4,5,3,2,1,0.9, 15, [1,0,0,0,0,0], ['fangs'] , ['warg pelt']],
 		"Orc Warrior" :    ["o","darkgreen","orc",2,  4,4,3,2,3,1.1, 9, [0,0,0,0,0,0], ['slica','smasha','choppa'] , ['troll hide','leather armor'], ['trollhide shield']],
 		"Orc Berserker" :  ["b","red","orc",3,  4,5,4,2,3,0.8, 15, [1,1,1,0,1,0], ['iron greatsword',['choppa','slica']] , ['berserker mail','studded armor'], ['headbutt']],
+		"Orc Warg-rider" : ["o","green","orc",2,  3,4,3,2,2,1.1, 15, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide'], ['Warg']],
 		"Orc Nob" : 	   ["N","darkgreen","orc",4,  5,5,3,2,4,1.2, 15, [0,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['headbutt','green blood']],
 		"Orc Warlock" :    ["W","magenta","orc",4,  4,3,3,4,4,1.0, 15, [0,0,3,0,0,0], ['toxic slica','oak staff'] , ['wyvernscale','studded armor'], ['poison breath','raise skeleton','green blood']],
+		"Nob Warg-rider" : ["N","darkgreen","orc",4,  5,5,3,2,4,1.2, 15, [0,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['Feral Warg','green blood']],
 		"Orc Warboss" :    ["O","darkred","orc",5,  6,6,4,3,5,1.2, 40, [0,0,0,0,0,3], ['boss choppa','ice choppa',['black ballista','big slica']] , ['Orcish dreadplate','scrap plate armor'], ['headbutt','iron bolt','green blood']],
 
 		# Uruks
@@ -77,12 +82,12 @@ class Monsters():
 		"Iron Dreadnought" :	["D","grey","machine",8,  8,8,2,1,1,1.4, 40, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
 
 		# Dark Elves
-		"Dark Wardancer" :  ["s","orange","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail']],
-		"Dark Huntress" : 	["h","orange","elf",5,  4,4,6,4,3,0.85, 40, [0,0,1,0,0,0], ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
-		"Dark Praetorian" : ["p","orange","elf",5,  5,4,5,4,3,0.95, 40, [1,0,0,0,0,0], ['sun spear',['thornblade','gauntlet shield']] , ['blackscale']],
-		"Dark Dragoon" :    ["d","orange","elf",6,  6,4,5,4,4,0.60, 60, [1,0,1,1,0,0], ['sunlance','thornblade'] , ['blackscale']],
-		"Dark Justicar" :   ["j","orange","elf",6,  5,4,6,4,4,0.85, 60, [1,0,0,0,0,0], ['sun spear',['thornknife','thornknife']] , ['blackscale','thornmail'], ['gauntlet shield']],
-		"Dark Archon" :   	["A","orange","elf",7,  6,6,7,5,4,0.90, 100, [1,1,2,1,1,0], ['glaive',['thornblade','thornblade']] , ['blackscale','thornmail'], ['gauntlet shield']],
+		"Dark Wardancer" :  ["s","purple","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail']],
+		"Dark Huntress" : 	["h","purple","elf",5,  4,4,6,4,3,0.85, 40, [0,0,1,0,0,0], ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
+		"Dark Praetorian" : ["p","purple","elf",5,  5,4,5,4,3,0.95, 40, [1,0,0,0,0,0], ['sun spear',['thornblade','gauntlet shield']] , ['blackscale']],
+		"Dark Dragoon" :    ["d","magenta","elf",6,  5,4,5,4,4,0.85, 60, [1,0,1,1,0,0], ['sunlance','thornblade'] , ['blackscale'],['Tortured Warsteed']],
+		"Dark Justicar" :   ["j","magenta","elf",6,  5,4,6,4,4,0.85, 60, [1,0,0,0,0,0], ['sun spear',['thornknife','thornknife']] , ['blackscale','thornmail'], ['gauntlet shield']],
+		"Dark Archon" :   	["A","darkred","elf",7,  6,6,7,5,4,0.90, 100, [1,1,2,1,1,0], ['glaive',['thornblade','thornblade']] , ['blackscale','thornmail'], ['gauntlet shield']],
 
 		# Demons
 		"Reaverfiend" :			["r","red","demon",3,  3,4,4,2,2,0.9, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],	
@@ -111,15 +116,29 @@ class Monsters():
 		"Spider Queen" : 	 ["Q","purple","spider",7,  7,6,5,4,5,0.9, 100, [0,0,4,0,3,0], ['spider fangs','blood fangs'] , ['armored spider plates'],['massive stinger','pounce']],
 
 
-		# Large Creatures
-		"Ogre" : 		  	 ["O","orange","ogre",1,  5,4,2,1,1,1.4, 15, [0,0,0,0,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
-		"Cyclops Brute" : 	 ["C","orange","cyclops",3,  6,6,1,3,4,1.1, 60, [0,0,0,0,0,1], ['spiked club','greatflail','warhammer'] , ['troll hide','leather armor']],
-		"Cave Troll" : 	  	 ["T","orange","troll",4,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
+		# Ogres
+		"Ogre" : 		  	 ["O","orange","ogre",2,  5,4,2,1,1,1.4, 15, [0,0,0,0,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
+		"Ogre Berserker" : 	 ["O","red","ogre",5,  6,7,3,1,1,1.3, 15, [2,2,5,2,0,1], ['club','bone club'] , ['ogre hide','scrap plate armor']],
+
+		# Cyclops
+		"Cyclops Brute" : 	 ["C","bronze","cyclops",3,  6,6,1,3,4,1.2, 60, [0,0,0,0,0,1], ['spiked club','greatflail','warhammer'] , ['troll hide','leather armor']],
+		"Cyclops Hurler" : 	 ["C","blue","cyclops",6,  7,6,3,5,5,1.1, 60, [0,0,0,0,0,1], ['spiked club'] , ['studded armor','leather armor'],['large boulder']],
+
+		# Troll
+		"Cave Troll" : 	  	 ["T","bone","troll",6,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ['spiked club','stone fists'] , ['cave troll hide','scrap plate armor']],
+		"Wartroll" : 	  	 ["T","darkred","troll",8,  9,9,3,1,5,1.5, 100, [1,1,0,0,0,1], ['spiked club','trollhammer'] , ['iron plate','scrap plate armor']],
 
 		# Dragons
 		"Fire Dragon" :  ["D","red","fire dragon",10,  12,8,7,6,8,1.1, 500, [0,2,0,0,0,0], ['dragon fangs'] , ['fire dragonscales'], ['dragon tail']],
 		"Frost Dragon" : ["D","cyan","frost dragon",10,  14,7,6,4,7,1.2, 500, [2,0,0,0,0,0], ['dragon fangs'] , ['frost dragonscales'], ['frost breath','dragon tail']],
 		"Dracolich" :  	 ["D","bone","bone dragon",12,  14,8,6,5,10,1.0, 500, [0,0,4,0,0,0], ['dragon fangs'] , ['bone dragonscales'],['dragon tail','horns']],
+
+
+		# Mounts
+		"Tortured Warsteed" :  ["D","darkred","horse",3,  3,2,3,1,8,0.7, 15, [2,2,0,0,0,0], ['hooves'] , ['horse hide']],
+
+		# Unique Enemies
+		"Dane Ronald Erickson, Bachelor’s of Science 2018" :  ["D","yellow","troll",4,  8,7,2,1,5,1.3, 100, [1,1,0,0,0,1], ["Thor's Hammer"] , ['steel plate'],['Fire Dragon']],
 		}
 
 class Bands():  # Tier Bonus :   formations
@@ -149,6 +168,16 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Orc Nob','Orc Warlock'],
  						 	    ['Orc Warboss'],
  						 	    ['Orc Nob'],
+ 			] ),
+ 		'Orc Hunting Party' :(-1,[ ['Feral Warg'], 
+ 								   ['Feral Warg'],
+ 						 	       ['Orc Warg-rider'],
+ 						 	       ['Orc Warg-rider'],
+ 						 	       ['Orc Warg-rider'],
+ 						 	       ['Nob Warg-rider'],
+ 						 	       [],
+ 						 	       ['Nob Warg-rider'],
+ 						 	       [],
  			] ),
  		'Undead Horde' : (2, [  ['Living Corpse'], 
  								['Living Corpse'], 
@@ -246,39 +275,74 @@ class Bands():  # Tier Bonus :   formations
 	 							['Spider Queen']
 	 		] ),
 
+ 		'Lone Rider' : (+3, [ ['Nob Warg-rider'],
+ 			] ),
+
  		'Wandering Monster' : (0, [	['Ogre','Green Ooze','Giant Wolfspider','Cyclops Brute','Cave Troll']	
  			] ),
 
  		'Dragon Nest' : (0, [	['Fire Dragon','Frost Dragon','Bone Dragon']	
  			] ),
 
+ 		'Dane and the CS Nerds' :  (10, [  ['Dane Ronald Erickson, Bachelor’s of Science 2018'], 
+	 							['Ogre Berserker'], 
+	 							['Wartroll'],
+	 							['Wartroll'],
+	 							['Cyclops Hurler'],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[],
+	 							[]
+	 		] ),
+
+
+ 		
+
 
  	}
 
- 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave'
+ 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave',
  						],
  				   2 : [
  				   		],
- 				   3 : ['Black Eye Cult','Demon Horde'
+ 				   3 : ['Black Eye Cult','Demon Horde',
  				   		],
- 				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band'
+ 				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band',
  				   		],
- 				   5 : [
+ 				   5 : ['Orc Hunting Party',
  				   		'Wolf Den','Kobold Party'], #-
  				   6 : [
  				   		],
- 				   7 : ['Ironkeep Warsquad'
+ 				   7 : ['Ironkeep Warsquad',
  				   		],
  				   8 : [
  				   		],
  				   9 : [
  				   		],
- 				   10: ['Dragon Nest'
+ 				   10: ['Dragon Nest',
  				   		],
  				   11 : [
  				   		],
+ 				   	12 : [
+ 				   		],
+ 				   	13 : [
+ 				   		],
+ 				   	14 : [
+ 				   		],
+ 				   	15 : ['Dane and the CS Nerds',
+ 				   		],
+ 				   	16 : [
+ 				   		],
+ 				   	17 : [
+ 				   		],
+ 				   	18 : [
+ 				   		],
+ 				   	19 : [
+ 				   		],
  				   }
 
- 	# dicto = { 	   1 : ['Dragon Nest'],
+ 	# dicto = { 	   1 : ['Dane and the CS Nerds'],
  	# 			   }
 

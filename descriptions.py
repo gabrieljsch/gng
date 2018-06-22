@@ -78,6 +78,7 @@ class Descriptions():
 		"arrow" : "A light projectile with a sharp tip and feathered butt.",
 		"bolt" : "A short, heavier projectile that can punch through heavy armor.",
 		"javelin" : "A balanced polearm with a sharp tip and a weighted butt used for throwing.",
+		"stone" : "An especially round stone, perfect for throwing.",
 		"throwing axe" : "A smaller, more balanced axe used for throwing.",
 
 		# God weapons

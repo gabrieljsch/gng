@@ -63,8 +63,10 @@ class Armors():
 		"direwolf pelt" :   ['[','grey','hide',2,0, 0,'spiked'],
 		"bear hide" :   	['[','brown','hide',2,0, 0],
 		"ooze skin" :   	['[','green','hide',2,-1, 0],
+		"warg pelt" : 		['[','darkbrown','hide',2,1, 0],
 		"bone skin" :   	['[','bone','hide',2,1, 0,'spiked'],
 		"ogre hide" : 		['[','yellow','hide',3,2, 0],
+		"horse hide" :   	['[','brown','hide',2,2, 0],
 		"dog hide" : 		['[','tan','hide',3,1, 0],
 		"troll hide" :  	['[','yellow','hide',4,2, 0],
 		"spider hide" : 	['[','tan','hide',4,1, 0],
@@ -107,6 +109,8 @@ class Armors():
 		"Bloodshell" : 	  ['[','red','plate',9,4, d(6), 'spiked'],
 		}
 
+
+
 class Shields():
 
 	array = {
@@ -138,7 +142,7 @@ class Brands():
 	}
 
 	# Manage brands
-	weapon_brands = ["flaming","frozen","silvered","envenomed","hellfire","infernal","vampiric","antimagic"]
+	weapon_brands = ["flaming","frozen","silvered","envenomed","hellfire","infernal","vampiric","antimagic","electrified"]
 
 	ammo_brands = ["flaming","frozen","silvered","envenomed","antimagic"]
 
@@ -153,6 +157,8 @@ class Brands():
 		"infernal": "darkred",
 		"vampiric": "red",
 		"antimagic": "magenta",
+		"electrified": "yellow",
+		"holy": "bone",
 
 		"spiked": "bone",
 		"tempered": "red",
@@ -172,6 +178,7 @@ class Ammos():
 
 		# Javelins
 		"iron javelin" :   ['/','grey', 'javelin', 5],
+		"large boulder" :  ['/','grey', 'stone', 3],
 		"winged javelin" : ['/','gold', 'javelin', 5],
 		"barbed javelin" : ['/','darkred', 'javelin', 6],
 
@@ -180,7 +187,7 @@ class Ammos():
 		"throwing knife" : ['/','grey', 'throwing knife', 3],
 	}
 
-	thrown_amclasses = set(["javelin","throwing axe","throwing knife"])
+	thrown_amclasses = set(["javelin","throwing axe","throwing knife","stone"])
 
 	projectile = {
 		"bow" :      set(["arrow"]),
@@ -222,11 +229,14 @@ class Weapons():
 		"tail smash" : 	  	['','tan','tail',0, 0, 6, 2, 0.8, None, 30],
 		"dragon tail" : 	['','darkred','tail',0, 0, 8, 1, 0.8, None, 25],
 		"acid slap" : 	  	['','green','appendage',0, d(2), 6, 1, 1.1, "envenomed", 90],
-		"jelly slap" : 		['','purple','appendage',0, d(2), 9, 1, 1.1, None, 95],
+		"jelly slap" : 		['','purple','appendage',0, d(2), 7, 1, 1.1, None, 95],
 		"shield hit" : 	  	['','steel','shield',0, 0, 5, 5, 1.0, None, 15],
 
+		# Feet
+		"hooves" : 	  		['','steel','hooves',0, 0, 5, 1, 1.0, None, 25],
+
 		# Ranged Innate
-		"vomit" :      ['','grey','darkgreen',0, 0, 6, 0, 1.2, None, 40],
+		"vomit" :      		['','grey','darkgreen',0, 0, 6, 0, 1.2, None, 40],
 
 
 
@@ -235,6 +245,7 @@ class Weapons():
 		# Blunt
 		"hammer" :       ['%','grey','hammer',1, 0, 10, 0, 1.2],
 		"warhammer" :    ['%','steel','warhammer',2, 0, 15, -4, 1.4],
+		"trollhammer" :  ['%','steel','warhammer',3, 0, 20, -6, 2.2],
 		"club" : 	     ['%','brown','club',1, 0, 9, -1, 1.1],
 		"spiked club" :  ['%','darkbrown','greatclub',2, 0, 16, -4, 1.7],
 		"flail" : 		 ['%','grey','flail',1, 0, 10, -3, 1.3],
@@ -332,13 +343,14 @@ class Weapons():
 		"executioner's axe" : 	['&','darkred','greataxe',2, 0, 17, -2, 1.5],
 		"gorkjaw choppa" :    	['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
 		"dwarven broadaxe" :  	['&','gold','greataxe',2, 0, 18, -4, 1.6],
-		"crusader greatsword" : ['!','steel','greatsword',2, 0, 14, -1, 1.3,'flaming'],
+		"crusader greatsword" : ['!','steel','greatsword',2, 0, 14, -1, 1.3,'holy'],
 
 
 		# Ranged Weapons
 
 		# Thrown
 		"iron javelin" : 	  ['/','grey','javelin',1, 0, 3, 0, 1.2],
+		"large boulder" : 	  ['/','grey','stone',3, 0, 11, -3, 2.4],
 		"barbed javelin" : 	  ['/','darkred','javelin',1, 0, 4, -1, 1.3],
 		"throwing axe" : 	  ['%','grey','throwing axe',1, 0, 3, -1, 1.3],
 		"throwing knife" : 	  ['%','grey','throwing knife',1, 0, 3, 0, 0.9],
@@ -377,6 +389,7 @@ class Weapons():
 		"Longclaw" :              	  ['!','gold','greatsword',  2, d(5), 18, 5, 1.1],
 		"God-Cleaver" : 		 	  ['!','gold','god sword',   2, d(5), 22, -10, 1.4, 'hellfire'],
 		"Worldshaper" :     	 	  ['%','purple','god hammer',  2, d(5), 25, -12, 1.6, 'frozen'],
+		"Thor's Hammer" :     	 	  ['%','gold','god hammer',  2, d(5), 23, -10, 1.8,'electrified'],
 
 		"Talon" : 					  [')','gold','god bow',     2, d(5), 14, 4, 1.3],
 		}
@@ -402,6 +415,7 @@ class Weapons():
 		"head" : ["smash", "into"],
 		"tail" : ["smash", "into"],
 		"appendage" : ["slap","into"],
+		"hooves" : ["stomp","onto"],
 
 		# Shield
 		"shield" : ["smash", "into"],
@@ -442,6 +456,7 @@ class Weapons():
 		"bolt" : ["fire", "into"],
 		"vomit" : ["hurl", "onto"],
 		"javelin" : ["hurl", "into"],
+		"stone" : ["hurl", "into"],
 		"throwing axe" : ["hurl", "into"],
 		"throwing knife" : ["stick", "into"],
 
