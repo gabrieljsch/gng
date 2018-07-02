@@ -2,7 +2,7 @@ from maps import Maps
 import ai
 
 from bestiary import Monsters, Bands
-from codex import Weapons, Ammos, Brands, Armors, Shields
+from codex import Weapons, Ammos, Brands, Armors, Shields, Tomes
 from character import CharacterInfo
 from descriptions import Descriptions, Colors
 
@@ -26,7 +26,7 @@ class Player():
 
 	def __init__(self, statsheet, innate_equipment, game):
 
-		# # Test Colors
+		# # Test def __init__(self, spells, name, rep, color, hands, loc, brand = None):Colors
 		# color("hello mothafucka", Colors.array['brown'])
 		# color("hello mothafucka", Colors.array['darkbrown'])
 
@@ -62,7 +62,7 @@ class Player():
 		self.rider, self.mount = None, None
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], [], []
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], ["web shot"], []
 
 		# Initialze Equipment
 		self.wielding, self.hands, self.total_hands, self.quivered = [], 2, 2, None
@@ -97,14 +97,107 @@ class Player():
 				if item[1]: self.abilities.append(item[0])
 				else: self.spells.append(item[0])
 
+		# Give class Tome
+
+		# def __init__(self, spells, name, rep, color, hands, loc, brand = None):
+
+
+		# TODO: MAKE THIS BETTER IDIOT, AND ALSO FIX GIVE_TOME
+
+
+
+		if game.pclass == "Warrior":
+			tome = 'Tome of the Warrior'
+		elif game.pclass == "Paladin":
+			tome = 'Tome of the Paladin'
+		elif game.pclass == "Ranger":
+			tome = 'Tome of the Ranger'
+		elif game.pclass == "Rogue":
+			tome = 'Tome of the Rogue'
+		elif game.pclass == "Mage":
+			tome = 'Tome of the Mage'
+		elif game.pclass == "Warlock":
+			tome = 'Tome of the Warlock'
+		data = Tomes.array[tome]
+		self.inventory.append(Tome(data[0],tome,'_',data[2], data[1], None))
+
 		# Initialize Level, XP
 		self.level, self.xp, self.xp_levels = 1, 0, 12
+		self.skill_points = 0
 
 		# Racial Bonuses
 		self.innate_ac = 0
 
 		# Apply Racial Passives
 		self.racial_bonuses(game)
+		self.traits = []
+
+	def read(self,tome):
+		skillnums = '123456789'
+
+		spaces = [i for i in range(24 - (len(tome.spells)))]
+		print("=======================================================================================")
+		for space in spaces: print("")
+
+		print("")
+		print("")
+		print("")
+		print("Available Skills")
+		print("=======================================================================================")
+		print("")
+
+
+		repeat = True
+		while repeat:
+			repeat = False
+			for spell in tome.spells:
+				print(skillnums[tome.spells.index(spell)] + ') '+ spell[0])
+				print("")
+
+			decision = rinput("Which skill will you investigate?")
+
+			if decision in skillnums and skillnums.index(decision) < len(tome.spells):
+				skill = tome.spells[skillnums.index(decision)][0]
+				cost = tome.spells[skillnums.index(decision)][1]
+				stype = tome.spells[skillnums.index(decision)][2]
+				print("=======================================================================================")
+				print("")
+				print("")
+				print("")
+				print(skill.upper() + "  ("+stype+") : " + str(cost) + " points")
+				print("")
+				print(Descriptions.skill[skill][0])
+				print("")
+
+				if skill in self.traits or skill in self.abilities or skill in self.spells:
+					print("You already know this skill.")
+
+					decision = rinput("(G)o back")
+
+					if decision.lower() == 'g':
+						repeat = True
+				else:
+					decision = rinput("You have " + str(self.skill_points) + " skill points. (B)uy or (G)o back?")
+
+					if decision.lower() == 'g':
+						repeat = True
+					elif decision.lower() == 'b':
+						if self.skill_points < cost:
+							print("You do not have enough points for that.")
+							repeat = True
+						else:
+							if stype == 'trait':
+								self.traits.append(skill)
+							elif stype == 'spell':
+								self.spells.append(skill)
+							elif stype == 'ability':
+								self.abilities.append(skill)
+							self.skill_points - cost
+
+							game.game_log.append("You learn " + skill + "!")
+
+
+
 
 	def calc_resistances(self):
 		return [self.frostr + self.equipped_armor.frostr, self.firer + self.equipped_armor.firer, self.poisonr + self.equipped_armor.poisonr, self.acidr + self.equipped_armor.acidr, self.shockr + self.equipped_armor.shockr, self.expr + self.equipped_armor.expr]
@@ -132,7 +225,9 @@ class Player():
 			self.innate_ac += 2
 		if self.race == 'Hill Troll':
 			self.innate_ac += 1
-			self.hands = 4
+			self.hands, self.total_hands = 4, 4
+		if self.race == "Terran":
+			self.skill_points += 2
 
 
 	def quiver(self, bypass = None):
@@ -150,7 +245,13 @@ class Player():
 
 				decision = rinput("Quiver What?")
 
-				if decision in game.item_order and game.item_order.index(decision) < len(ammo) and Weapons.array[ammo[game.item_order.index(decision)].sname][3] <= self.total_hands:
+				if decision in game.item_order and game.item_order.index(decision) < len(ammo):
+
+					try: 
+						if Weapons.array[ammo[game.item_order.index(decision)].sname][3] > self.total_hands:
+							game.temp_log.append("That item is too heavy for you to quiver.")
+							return
+					except: pass
 
 					# Quiver Item
 					self.quivered = ammo[game.item_order.index(decision)]
@@ -515,6 +616,7 @@ class Player():
 
 			# Increment Level
 			self.level += 1
+			self.skill_points += 1
 			try:
 				for band in Bands.dicto[self.level]:
 					try: game.bands.remove(band)
@@ -600,7 +702,7 @@ class Player():
 		else: item = bypass
 
 		# Equip Weapon
-		if type(item) == Weapon or type(item) == Shield:
+		if type(item) == Weapon or type(item) == Shield or type(item) == Tome:
 
 			# Carrying
 			carrying = [thing  for thing in self.wielding if thing.hands > 0]
@@ -609,14 +711,15 @@ class Player():
 			if item.wclass in Weapons.ranged_wclasses:
 				# Remove current weapons
 				for weap in carrying:
-						self.wielding.remove(weap)
-						self.inventory.append(weap)
+					self.wielding.remove(weap)
+					self.inventory.append(weap)
 
 				# Wield Weapon
 				self.hands = 0
 				self.wielding.append(item)
 				self.inventory.remove(item)
 				game.game_log.append("You draw your " + item.name + "!")
+
 				self.time += self.mspeed
 				return
 
@@ -663,6 +766,25 @@ class Player():
 			self.inventory.remove(item)
 			self.hands -= item.hands
 			game.game_log.append("You draw your " + item.name + "!")
+
+
+			# Manage Martial Draw
+			if 'martial draw' in self.traits and type(item) == Weapon:
+				x, y = self.loc
+				squares = []
+				for i in range(3):
+					for j in range(3):
+						squares.append([x - 1 + i, y - 1 + j])
+				targets = []
+				for unit in game.units[1:]:
+					if unit in game.allies: continue
+					if [unit.loc[0], unit.loc[1]] in squares:
+						targets.append(unit)
+
+				if len(targets) == 0: return
+				target = targets[d(len(targets)) - 1]
+				self.wielding[-1].strike(self, target)
+
 
 
 		# Equip Armor
@@ -734,13 +856,14 @@ class Player():
 				go_back = False
 
 				# Formulate items
-				weaps,shields,armors,ammos = [],[],[],[]
+				weaps,shields,armors,ammos, tomes = [],[],[],[], []
 				for item in items:
 					if type(item) == Ammo: ammos.append(item)
 					elif type(item) == Weapon: weaps.append(item)
 					elif type(item) == Shield: shields.append(item)
 					elif type(item) == Armor: armors.append(item)
-				combined = weaps + shields + armors + ammos
+					elif type(item) == Tome: tomes.append(item)
+				combined = weaps + shields + armors + ammos + tomes
 				j = 0
 
 				print("=======================================================================================")
@@ -760,6 +883,10 @@ class Player():
 				if len(ammos) != 0: print("Ammo")
 				for i in range(len(ammos)):
 					print(game.item_order[j] + " - " + ammos[i].string())
+					j += 1
+				if len(tomes) != 0: print("Tomes")
+				for i in range(len(tomes)):
+					print(game.item_order[j] + " - " + tomes[i].string())
 					j += 1
 				print("                                                                     ")
 				print("=======================================================================================")
@@ -810,6 +937,22 @@ class Player():
 						if decision.lower() == 'w': self.wield(Weapon,ditem)
 						elif decision.lower() == 'd': self.drop(ditem)
 						elif decision.lower() == 'g': go_back = True
+						else: game.temp_log.append("That is not a valid option.")
+				# Tome
+				elif type(ditem) == Tome:
+					if ditem in self.wielding:
+						decision = rinput("(S)tow, (R)ead, (D)rop, or (G)o back?")
+						if decision.lower() == 's': self.stash(ditem)
+						elif decision.lower() == 'd': self.drop(ditem)
+						elif decision.lower() == 'g': go_back = True
+						elif decision.lower() == 'r': self.read(ditem)
+						else: game.temp_log.append("That is not a valid option.")
+					else:
+						decision = rinput("(W)ield, (R)ead, (D)rop, or (G)o back?")
+						if decision.lower() == 'w': self.wield(Weapon,ditem)
+						elif decision.lower() == 'd': self.drop(ditem)
+						elif decision.lower() == 'g': go_back = True
+						elif decision.lower() == 'r': self.read(ditem)
 						else: game.temp_log.append("That is not a valid option.")
 				# Armor
 				elif type(ditem) == Armor:
@@ -863,6 +1006,7 @@ class Player():
 		except: game.game_log.append("You drop the " + item.name)
 		self.time += self.mspeed
 
+
 	def give_weapon(self, weapon):
 		data = Weapons.array[weapon]
 
@@ -875,15 +1019,27 @@ class Player():
 		self.hands -= data[3]
 
 		# Create Weapon Object
-		if data[1] in Weapons.ranged_wclasses and data[3] > 0:
+		if data[2] in Weapons.ranged_wclasses and data[3] > 0:
 			self.inventory.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],None, brand, prob))
 			return self.inventory[-1]
 		else:
  			self.wielding.append(Weapon(weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob))
  			return self.wielding[-1]
 
+
 	def calc_AC(self):
 		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2)  + self.innate_ac
+
+	def give_tome(self, tome):
+ 		data = Tomes.array[tome]
+ 		try: brand = data[3]
+ 		except: brand = None
+
+ 		self.hands -= data[1]
+
+ 		# Create Weapon Object
+ 		self.wielding.append(Tome(data[0], tome, '_', data[2], data[1], None, brand))
+ 		return self.wielding[-1]
 
 	def atk_mv(self, map, coords):
 
@@ -928,6 +1084,12 @@ class Player():
 					item.strike(self, unit)
 					if unit.hp <= 0: break
 
+				# Manage Wraithform
+				for passive in self.passives:
+					if passive[0] == 'wraithform':
+						self.passives.remove(passive)
+						game.game_log.append("You break from the material plane!")
+
 				if ranged:
 					game.temp_log.append("You are not wielding any melee weapons.")
 					return
@@ -952,6 +1114,12 @@ class Player():
 				self.time += maxas
 
 				# Don't Move
+				return
+
+		# Manage Immobile
+		for name, count in self.passives:
+			if name == 'immobile':
+				game.temp_log.append("You can't move!")
 				return
 
 		# Check for Traps
@@ -982,7 +1150,15 @@ class Player():
 		# Add ground loot to the log
 		if len(ground_booty) != 0: game.game_log.append("You see here: " + ground_booty)
 
-		# Move unit
+
+		# Manage Furious Charge
+		if "furious charge" in self.traits:
+			for unit in game.units:
+				if unit.loc == (self.loc[0] - 2 * (self.loc[0] - coords[0]), self.loc[1] - 2 * (self.loc[1] - coords[1])):
+					for weapon in weaps: weapon.strike(self, unit, False)
+					break
+
+		# move unit
 		self.loc = coords
 		self.time += self.mspeed
 
@@ -1031,6 +1207,7 @@ class Monster():
 				elif item in Weapons.array: self.give_weapon(item)
 				elif item in Shields.array: self.give_shield(item)
 				elif item in Weapons.spells: self.spells.append(item)
+				elif item in Tomes.array: self.give_tome(item)
 				elif item in Monsters.array:
 					ally = True if self in game.allies else False
 					self.mount = Mount(game.map.room_filler,self,item,ally)
@@ -1291,6 +1468,11 @@ class Monster():
 						if thrown: self.wielding.pop()
 
 		# If can't, move
+		for name, count in self.passives:
+			if name == 'immobile':
+				return
+
+
 		if not melee_attacked:
 			ai.smart_move_towards(self, enemy, game)
 
@@ -1313,7 +1495,10 @@ class Weapon():
 	def __init__(self,  name, rep, color, wclass, hands, enchantment, damage, to_hit, speed,   loc, brand = None, probability = None):
 
 		# Initialize Weapon Stats
-		self.rep, self.color, self.wclass, self.hands, self.enchantment, self.damage, self.to_hit, self.speed, self.loc, self.brand, self.probability = rep, color, wclass, hands, enchantment, damage, to_hit, speed, loc, brand, probability
+		self.rep, self.color, self.wclass, self.hands, self.enchantment, self.damage, self.to_hit, self.speed, self.loc, self.brand, self.origbrand, self.probability = rep, color, wclass, hands, enchantment, damage, to_hit, speed, loc, brand, brand, probability
+
+		# Initialize Passives
+		self.passives = []
 
 		fg.color = Colors.array[self.color]
 		self.name, self.sname= fg.color + name + fg.rs, name
@@ -1456,6 +1641,15 @@ class Weapon():
 				else:
 					damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					if enemy.equipped_armor.brand == 'spiked' and damage > 0 and d(10) > 3: barb_damage = d(int(1/2 + damage * 3/4))
+
+
+				# Check passives
+				for passive in self.passives:
+					passive[1] -= 1
+
+					if passive[1] == 0:
+						self.passives.remove(passive)
+						self.brand = self.origbrand
 
 
 				# Calc Resistances
@@ -1830,6 +2024,42 @@ class Weapon():
 				game.game_log.append("You " + verb + " your " + str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and poisoning it!")
 
 
+class Tome():
+
+	def __init__(self, spells, name, rep, color, hands, loc, brand = None):
+		self.rep, self.color, self.hands, self.loc, self.brand = rep, color, hands, loc, brand
+		self.wclass = "tome"
+
+		# Purchasable Skills
+		self.spells = spells
+
+		fg.color = Colors.array[self.color]
+		self.name = fg.color + name + fg.rs
+
+		# Magic Damage
+		self.mdamage = 2
+
+	def details(self):
+
+		print(self.string())
+		print("")
+		print("Basic Class Tome.")
+		print("")
+		print("Provides 2 bonus magic damage when wielded.")
+		print("")
+		if self.brand is not None:
+			print("")
+			print(Descriptions.brand[self.brand])
+
+	def string(self):
+
+		if self.brand is not None:
+			fg.bcolor = Colors.array[Brands.colors[self.brand]]
+			return (fg.bcolor + self.brand + fg.rs + ' '  + self.name)
+
+		else:
+			return (self.name)
+
 class Armor():
 
 	def __init__(self, name, rep, color,   aclass, armor_rating, encumberance, enchantment, loc, brand = None):
@@ -2161,15 +2391,13 @@ class Map():
 
 			for orgy in range(height):
 
-				for x in range(-1,2):
+				for pair in [(0,1),(1,0),(-1,0),(0,-1),(1,1),(1,-1),(-1,1),(1,1)]:
 
-					for y in range(-1,2):
-
-						adx = x + orgx
-						ady = y + orgy
-						if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
-							try: self.graph[(orgx,orgy)].append((adx,ady))
-							except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
+					adx = pair[0] + orgx
+					ady = pair[1] + orgy
+					if 0 <= adx < width and 0 <= ady < height and (orgx != adx or orgy != ady):
+						try: self.graph[(orgx,orgy)].append((adx,ady))
+						except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
 
 	def fill(self):
 		self.room_filler = RoomFiller(self.player.level, (15,2), self.map)
@@ -2445,8 +2673,8 @@ class Game():
 		# Manage Constants
 
 		# CHANGE RACE
-		self.race = "Hobbit"
-		self.pclass = "Rogue"
+		self.race = "Dragonborn"
+		self.pclass = "Paladin"
 
 		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
 		self.map = Map(self.player, 'starting_room')
@@ -2946,7 +3174,6 @@ class Game():
 					self.player.mana += 1
 					self.mregen = 0
 
-
 		for passive in unit.passives:
 
 			name = passive[0]
@@ -2977,6 +3204,11 @@ class Game():
 					unit.str -= Brands.dict['grotesque']['bonusstr']
 					if unit.name == 'you': game.game_log.append("Your body returns to its normal shape.")
 					else: game.game_log.append("The " + unit.name + "'s body returns to its normal shape.")
+
+				# Manage Immobile
+				if name == "immobile":
+					if unit.name == 'you': game.game_log.append("You can move again.")
+					else: game.game_log.append("The " + unit.name + " can move again.")
 
 				unit.passives.remove([passive[0], passive[1]])
 

@@ -223,7 +223,6 @@ def los(looker, other, map_arr, game):
 				# Exception Squares
 				if game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', '+','_']) or neighbor in locs: continue
 
-				
 				new = path[:]
 				new.append(neighbor)
 				queue.append(new)
@@ -231,7 +230,6 @@ def los(looker, other, map_arr, game):
 				if neighbor == other:
 
 					boole = True
-
 
 					if other[0] >= looker[0] and other[1] >= looker[1]:
 						for cnode in new[1:-1]:

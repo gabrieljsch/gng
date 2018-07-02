@@ -107,7 +107,7 @@ class Monsters():
 		# Spiders
 		"Spiderling" : 		 ["s","tan","spider",1,  1,1,4,1,1,0.7, 4, [0,0,2,0,0,0], ['fangs'] , ['spiderling skin']],
 		"Giant Wolfspider" : ["w","brown","spider",3,  4,4,4,4,2,0.8, 14, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
-		"Fateweaver" : 		 ["f","bone","spider",3,  3,3,4,4,2,0.8, 15, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
+		"Fateweaver" : 		 ["f","bone","spider",3,  3,3,4,4,2,0.8, 15, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['web shot']],
 		"Armored Crawler" :  ["A","steel","spider",5,  4,4,4,4,2,0.8, 40, [0,0,3,0,0,2], ['fangs'] , ['armored spider plates'],[]],
 		"Black Widower" :    ["W","red","spider",5,  4,4,4,4,2,0.8, 40, [0,0,4,0,1,0], ['spider fangs'] , ['massive stinger','spider hide'],[]],
 		"Broodmother" :  	 ["B","magenta","spider",5,  6,2,2,5,1,1.5, 40, [0,0,2,0,0,0], ['fangs'] , ['armored spider plates'],[]],
@@ -284,11 +284,7 @@ class Bands():  # Tier Bonus :   formations
  		'Dragon Nest' : (0, [	['Fire Dragon','Frost Dragon','Bone Dragon']	
  			] ),
 
- 		'Dane and the CS Nerds' :  (10, [  ['Dane Ronald Erickson, Bachelor’s of Science 2018'], 
-	 							['Ogre Berserker'], 
-	 							['Wartroll'],
-	 							['Wartroll'],
-	 							['Cyclops Hurler'],
+ 		'Dane and the CS Nerds' :  (10, [  ['Fateweaver'], 
 	 							[],
 	 							[],
 	 							[],

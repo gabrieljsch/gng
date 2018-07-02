@@ -128,7 +128,21 @@ class Shields():
 		"blackiron shield" :  ['}','grey',1,6,4,0],
 		"steel kite shield" : ['}','steel',1,8,5,0],
 		"tower shield" :  	  ['}','darkbrown',1,12,6,0],
+		"dwarven broadshield":['}','bronze',2,18,12,0],
 		}
+
+class Tomes():
+	array = {
+
+		"Tome of the Warrior" : [ [("furious charge", 1, 'trait')], 1, 'darkred'],   #,('warcry', 2, 'ability')], 1, 'darkred'],
+		"Tome of the Ranger" : [ [("martial draw", 1, 'trait')], 1, 'darkgreen'],
+		"Tome of the Rogue" : [ [("combat roll", 2, 'ability')], 1, 'bronze'],
+		"Tome of the Mage" : [ [("magic missile", 1, 'spell'),("blink", 3, 'spell'),("chain lightning", 3, 'spell')], 1, 'blue'],
+		"Tome of the Warlock" : [ [("dark bolt", 1, 'spell'),("raise skeleton", 3, 'spell')], 1, 'purple'],
+		"Tome of the Paladin" : [ [("bless weapon", 2, 'spell'),("flash heal", 3, 'spell')], 1, 'bone'],
+		"Tome of the Black Eye" : [ [("dark bolt", 1, 'spell'),("bloodreave", 4, 'spell'),("dark transformation", 5, 'ability')], 1, 'magenta'],
+		"Tome of Iron" : [ [("iron blesssing", 3, 'spell')], 1, 'steel'],
+	}
 
 
 class Brands():
@@ -183,8 +197,8 @@ class Ammos():
 		"barbed javelin" : ['/','darkred', 'javelin', 6],
 
 		# Other
-		"throwing axe" :   ['/','grey', 'throwing axe', 6],
-		"throwing knife" : ['/','grey', 'throwing knife', 3],
+		"throwing axe" :   ['/','steel', 'throwing axe', 6],
+		"throwing knife" : ['/','steel', 'throwing knife', 3],
 	}
 
 	thrown_amclasses = set(["javelin","throwing axe","throwing knife","stone"])
@@ -567,6 +581,97 @@ class Weapons():
 		# 			return True
 		# 	return False
 
+	def combat_roll(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		if attacker.name == 'you':
+
+			orig_position = attacker.loc[:]
+			valid = False
+
+			spaces = [i for i in range((len(Maps.rooms[game.map.map][0]) + 10))]
+
+			while not valid:
+
+				print("=======================================================================================")
+
+				game.map.display(game)
+				mloc = attacker.loc
+
+				# Choose Direction
+				if orig_position != attacker.loc: length = len(ai.shortest_path(attacker.loc, orig_position, map, game, False)) - 1
+				else: length = 0
+
+				print("Distance:", str(length) + '/' + str(Weapons.spells['combat roll'][5]))
+				decision = rinput("Roll where? Press spacebar to confirm.")
+
+				for i in range(len(spaces)): print(" ")
+
+				# if decision not in ['h','j','k','l','u','y','b','n',' ']:
+				# 	print("That is not a valid direction.")
+
+
+				prev_position = attacker.loc
+
+				if decision == 'h': mloc = (attacker.loc[0] - 1, attacker.loc[1])
+				elif decision == 'j': mloc = (attacker.loc[0], attacker.loc[1] + 1)
+				elif decision == 'k': mloc = (attacker.loc[0], attacker.loc[1] - 1)
+				elif decision == 'l': mloc = (attacker.loc[0] + 1, attacker.loc[1])
+				elif decision == 'y': mloc = (attacker.loc[0] - 1, attacker.loc[1] - 1)
+				elif decision == 'u': mloc = (attacker.loc[0] + 1, attacker.loc[1] - 1)
+				elif decision == 'b': mloc = (attacker.loc[0] - 1, attacker.loc[1] + 1)
+				elif decision == 'n': mloc = (attacker.loc[0] + 1, attacker.loc[1] + 1)
+				elif decision == ' ': pass
+
+				# NOTE: FIX ONCE HAVE INFO FOR ENTER BUTTON
+				# --------------------------------------------------------------------------
+
+				elif decision in [char for char in "abcdefghiklmnopqrstuvwxyz1234567890"]:
+					game.temp_log.append("That is not a valid option.")
+					return False
+
+				if game.map.square_identity(mloc) in ['|','#','-']:
+					if attacker.name == 'you': print("You cannot go there.")
+				elif len(ai.shortest_path(mloc, orig_position, map, game, False)) - 1 > Weapons.spells['combat roll'][5]:
+					length = len(ai.shortest_path(attacker.loc, orig_position, map, game, False)) - 1
+					print("That space is out of range.")
+				else:
+					attacker.loc = mloc
+
+				if decision == ' ':
+					# Check Space
+					if not game.map.can_move(mloc, True) or game.map.square_identity(mloc) == '+':
+						attacker.loc = orig_position
+						game.temp_log.append("You can't land there.")
+						return False
+					valid = True
+					game.game_log.append("You swiftly roll across the floor!")
+
+					if attacker.quivered is not None:
+						if attacker.quivered.wclass in Ammos.thrown_amclasses: attacker.fire()
+
+					return True
+
+				# --------------------------------------------------------------------------
+
+
+		# TO IMPLEMENT: Not Player
+
+		# else:
+		# 	print("IM TRYING")
+		# 	spaces = []
+		# 	for x in range(-1,2):
+		# 		for y in range(-1,2):
+		# 			if attacker.loc[0] + x >= 0 and attacker.loc[1] + y >= 0 and (x != 0 or y != 0): spaces.append((attacker.loc[0] + x, attacker.loc[1] + y))
+		# 	shuffle(spaces)
+
+		# 	for space in spaces:
+		# 		if game.map.can_move(space) and game.map.square_identity != '+':
+		# 			# Place Trap
+		# 			roomfiller.place_trap(damage,'mine',space)
+		# 			game.game_log.append("The " + attacker.name + " throws down an explosive mine!")
+		# 			return True
+		# 	return False
+
 
 	def tripmine(name, attacker, enemy, game, map, roomfiller, ability = False):
 
@@ -739,23 +844,33 @@ class Weapons():
 
 		# Apply Affect + flavor text
 		attacker.passives.append([status, 2 * count])
+		passives = [passive[0] for passive in attacker.passives]
+		print(passives)
 
 		if attacker.name != 'you':
 			game.game_log.append("The " + attacker.name + " flickers from the material plane and reappears!")
-			while count > 0:
+			while "wraithform" in passives:
 				if attacker.mana < attacker.maxmana: attacker.mana += 1
-				if attacker.hp < attacker.maxhp: attacker.hp += 1
+				if attacker.hp < attacker.maxhp and d(10) > 7: attacker.hp  += 1
 				attacker.time = 0
 				attacker.turn()
+				passives = [passive[0] for passive in attacker.passives]
 				count -= 1
+
+				if count == 0:
+					break
 		else:
 			game.game_log.append("You flicker from the material plane")
-			while count > 0:
+			while "wraithform" in passives:
 				if attacker.mana < attacker.maxmana: attacker.mana += 1
-				if attacker.hp < attacker.maxhp: attacker.hp += 1
+				if attacker.hp < attacker.maxhp and d(10) > 7: attacker.hp += 1
 				attacker.time = 0
 				game.player_turn(game.map)
+				passives = [passive[0] for passive in attacker.passives]
 				count -= 1
+
+				if count == 0:
+					break
 
 		return True
 
@@ -821,14 +936,23 @@ class Weapons():
 	def envenom(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
-		brand, coated = 'envenomed', False
+		passive, brand, hits, coated, bonus = 'envenomed', 'envenomed', 3, False, False
 
 		# Weapons
 		for item in attacker.wielding:
 			if item.wclass in Weapons.weapon_classes and item.hands > 0:
-				if item.wclass not in Weapons.ranged_wclasses and item.brand != brand:
-					item.brand = brand
-					coated = True
+				try:
+					if item.wclass not in Weapons.ranged_wclasses and item.brand != brand:
+
+						for passive in attacker.passives:
+							if passive[0] == 'envenomed':
+								passive[1] = hits
+								bonus = True
+						if not bonus:
+							item.passives.append([passive, hits])
+						item.brand = brand
+						coated = True
+				except: pass
 
 		# Ammo
 		if attacker.quivered is not None:
@@ -853,6 +977,53 @@ class Weapons():
 			game.game_log.append("You coat your weapons in your deadly poison!")
 		else:
 			game.game_log.append("The " + attacker.name + " coats its weapons in a deadly poison!")
+
+		return True
+
+	def bless_weapon(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Traits
+		passive, brand, hits, coated, bonus = 'holy', 'holy', 3, False, False
+
+		# Weapons
+		for item in attacker.wielding:
+			if item.wclass in Weapons.weapon_classes and item.hands > 0:
+				try:
+					if item.wclass not in Weapons.ranged_wclasses and item.brand != brand:
+
+						for passive in attacker.passives:
+							if passive[0] == 'holy':
+								passive[1] = hits
+								bonus = True
+						if not bonus:
+							item.passives.append([passive, hits])
+						item.brand = brand
+						coated = True
+				except: pass
+
+		# Ammo
+		if attacker.quivered is not None:
+			if attacker.quivered.brand != brand:
+				# Envenom quiver
+				attacker.quivered.brand = brand
+				coated = True
+				# Check other ammo
+				for thing in attacker.inventory:
+					if thing.name in Ammos.array and thing != attacker.quivered:
+						if thing.name == attacker.quivered.name and thing.brand == attacker.quivered.brand:
+							attacker.quivered.number += thing.number
+							attacker.inventory.remove(thing)
+							break
+
+		if not coated:
+			if attacker.name == 'you': game.temp_log.append("There is no weapon for you to bless right now.")
+			return False
+
+		# Flavor Text
+		if attacker.name == 'you':
+			game.game_log.append("You invoke to deity to bless your weapon, giving it divine power!")
+		else:
+			game.game_log.append("The " + attacker.name + " invokes its deity to bless its weapon with divine power!")
 
 		return True
 
@@ -914,6 +1085,34 @@ class Weapons():
 		for weapon in attacker.wielding:
 			if weapon.wclass in Weapons.weapon_classes and weapon.hands == 0:
 				weapon.strike(attacker, enemy)
+		return True
+
+	def web_shot(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Traits
+		if attacker.name == 'you': status, count = 'immobile', d(max(1, attacker.int - d(enemy.cha)))
+		else: status, count = 'immobile', d(max(1, attacker.tier * 2 - d(enemy.cha)))
+		if ability: damage = int(md(1, 1/2 + 1/2 * attacker.dex))
+		else: damage = max(0, int(md(1, 1/2 + 1/2 * attacker.int) + attacker.calc_mdamage() - enemy.equipped_armor.mdefense) )
+
+		# Flavor Text
+		if attacker.name == 'you':
+			game.game_log.append("You shoot a net of webs at the " + enemy.name + ", dealing " + str(damage) + " damage and rendering it immobile!")
+		else:
+			game.game_log.append("The " + attacker.name + " shoots a net of webs at " + enemy.info[0] + ", dealing " + str(damage) + " and rendering " + enemy.info[0] + " immobile!")
+
+		# Manage damage
+		enemy.hp -= damage
+		if enemy.name != 'you': game.player.well_being_statement(enemy, attacker, name, game)
+
+		# Apply Effect
+		for passive in enemy.passives:
+
+			if passive[0] == status:
+				passive[1] = count
+				return True
+
+		enemy.passives.append([status, count])
 		return True
 
 
@@ -1211,17 +1410,22 @@ class Weapons():
 
 		# Basic Spells
 
-		# Mage Spells
+		# Mage Skills
 		"magic missile" :  		(magic_missile,   		3, 1.15, True, False),
 		"chain lightning" : 	(chain_lightning, 		8, 1.4,  True, True,  6),
-		# Warlock Spells
+		# Warlock Skills
 		"dark bolt" :  			(dark_bolt, 			3, 1.2,  True, True,  7), 
 		"raise skeleton" : 		(raise_skeleton,   		6, 2.5,  False, False), 
-
-		# Paladin Spells / Abilities
+		# Paladin Skills
 		"flash heal":			(flash_heal, 			10, 1.3,  False, False), 
+		"bless weapon" : 		(bless_weapon,      	10, 1.2,  False, False),
 		"iron blessing" :  		(iron_blessing,      	10, 1.5,  False, False),
-		# Warrior Spells / Abilities
+		# Warrior Skills
+		# Ranger Skills
+		# Rogue Skills
+		"combat roll" : 		(combat_roll,      	    6, 1.0,  False, False, 2),
+
+
 
 		# Black Orc
 		"green blood" : 		(green_blood,   		10, 0.5,  False, False),
@@ -1246,6 +1450,7 @@ class Weapons():
 		"split" : 				(split,      			0,1.5,  False, False),
 		# Spider
 		"pounce" : 				(pounce,      			7,1.2,  True, True, 4),
+		"web shot" :  			(web_shot,      		6, 1.2,  True, True,  8),
 
 		# Black Eye Spells
 		"dark transformation" : (dark_transformation,   0, 3.0,  False, False),

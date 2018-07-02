@@ -35,7 +35,7 @@ class Descriptions():
 	wclass = {
 		# Weapons
 		# Augmented Innate
-		"fists" : ["A weapon carried in the hand to increase punching power."],
+		"fists" : ["A weapon carried in or fuzed with the hand to increase punching power."],
 
 		# Blunt
 		"hammer" : ["A blunt weapon with a flat head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor."],
@@ -115,8 +115,22 @@ class Descriptions():
 		"tempered" : "This armor provides moderate fire resistance to the wearer.",
 	}
 
-	spells = {
-		"poison breath"
+	skill = {
+		"poison breath" : ["You breathe a cloud of noxious gas at your enemy in hopes of poisoning them."],
+		"magic missile" : ["You conjure a phantasmal arrow of energy to strike your foe at any range."],
+		"combat roll" : ["Roll 2 squares across the floor, then throw a quivered throwing weapon at a random in-range enemy."],
+		"chain lightning" : ["You fire wild lightning into the air at a specific target. The lightning has a chance to bounce on every unit in 2 squares."],
+		"blink" : ["You can willingly translocate a random square within a short range."],
+		"bless weapon" : ["You call upon your deity to bless your weapon to smite down demons and the unholy."],
+		"dark bolt" : ["You blast a foe with a bolt cursed with black fire."],
+		"bloodreave" : ["You set your blood on fire to burn the soul of your enemies."],
+		"flash heal" : ["You call upon your deity to heal your wounds in so you may smite down your foes."],
+		"raise skeleton" : ["You command a fallen warrior from centuries past to rise and fight for you."],
+		"dark transformation" : ["When have been drained of enough blood, cast a ritual to tranform into a hideous abomination for a time."],
+		"martial draw" : ["You swing at a random in-range enemy when you draw a weapon."],
+		"furious charge" : ["You gain a mad ferocity. You strike enemies in the same direction you moved."],
+
+
 	}
 
 
