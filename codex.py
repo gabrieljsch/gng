@@ -42,7 +42,6 @@ def rinput(question):
 
 
 
-
 class Armors():
 	# self, name, rep, aclasas,  armor_rating, encumberance, enchantment,  brand(optional)
 
@@ -76,37 +75,38 @@ class Armors():
 		# Hide Armors
 		"leather armor" : 	['[','tan','hide',4,2, 0],
 		"hide armor" : 		['[','tan','hide',5,3, 0],
-		"studded armor" : 	['[','darkbrown','hide',7,5, 0],
+		"studded armor" : 	['[','darkbrown','hide',7,6, 0],
 
 		# Scale Armors
-		"ironscale mail" : ['[','steel','scale',2,3, d(2)],
-		"drakescale" :     ['[','cyan','scale',2,4, d(3)],
-		"wyvernscale" :    ['[','magenta','scale',3,4, d(4)],
-		"blackscale" : 	   ['[','darkred','scale',6,1, 0],
+		"ironscale mail" : ['[','steel','scale',6,3],
+		"drakescale" :     ['[','cyan','scale',2,1, d(3)],
+		"wyvernscale" :    ['[','magenta','scale',3,3, d(4)],
+		"blackscale" : 	   ['[','darkred','scale',6,2, 0],
 		# Dragonscales
-		"fire dragonscales" :  ['[','red','scale',8,5, d(4),'tempered'],
+		"fire dragonscales" :  ['[','red','scale',8,4, d(4),'tempered'],
 		"frost dragonscales" : ['[','cyan','scale',9,7, d(4),'icy'],
-		"bone dragonscales" :  ['[','bone','scale',6,4, d(4),'spiked'],
+		"bone dragonscales" :  ['[','bone','scale',6,5, d(4),'spiked'],
 
 		# Chainmail Armors
-		"rotted chainmail" : [']','brown','chainmail',4,2, 0],
-		"thornmail": 		 [']','darkred','chainmail',4,1, 0,'spiked'],
-		"berserker mail" :   [']','red','chainmail',5,3, 0],
-		"iron chainmail" :   [']','grey','chainmail',6,5, 0],
-		"steel chainmail" :  [']','steel','chainmail',8,6, 0],
+		"rotted chainmail" : 	[']','brown','chainmail',5,4, 0],
+		"thornmail": 			[']','darkred','chainmail',5,3, 0,'spiked'],
+		"berserker mail" :   	[']','red','chainmail',6,4, 0],
+		"iron chainmail" :   	[']','grey','chainmail',7,6, 0],
+		"steel chainmail" :  	[']','steel','chainmail',9,7, 0],
+		"godforge chainmail" :  [']','gold','chainmail',10,7, 0],
 
 		# Plate Armors
-		"blackiron plate" :   	  [']','grey','plate',7,6, 0],
-		"armored spider plates" : [']','steel','plate',7,4, 0],
-		"scrap plate armor" : 	  [']','brown','plate',8,11, 0],
-		"iron plate" :  	  	  [']','grey','plate',8,8, 0],
-		"steel plate" : 	  	  [']','steel','plate',10,9, 0],
-		"Orcish dreadplate" : 	  [']','darkred','plate',12,18, 0],
+		"blackiron plate" :   	  [']','grey','plate',8,7, 0],
+		"armored spider plates" : [']','steel','plate',8,5, 0],
+		"scrap plate armor" : 	  [']','brown','plate',9,12, 0],
+		"iron plate" :  	  	  [']','grey','plate',9,9, 0],
+		"steel plate" : 	  	  [']','steel','plate',11,10, 0],
+		"Orcish dreadplate" : 	  [']','darkred','plate',13,18, 0],
 
 		# Legendary Armor
-		"God-Frame" :     [']','gold','plate',13,13, d(3)],
-		"Kain's Pact" :   ['[','darkred','robes',6,0, d(6)],
-		"Bloodshell" : 	  ['[','red','plate',9,4, d(6), 'spiked'],
+		"God-Frame" :     [']','gold','plate',13,13, d(5)],
+		"Kain's Pact" :   ['[','darkred','robes',6,1, d(5)],
+		"Bloodshell" : 	  [']','red','plate',9,4, d(5), 'spiked'],
 		}
 
 
@@ -126,7 +126,7 @@ class Shields():
 		"wooden broadshield" :['}','brown',1,5,3,0],
 		"bronze aegis" :      ['}','bronze',1,5,1,1],
 		"blackiron shield" :  ['}','grey',1,6,4,0],
-		"steel kite shield" : ['}','steel',1,8,5,0],
+		"steel kiteshield" : ['}','steel',1,8,5,0],
 		"tower shield" :  	  ['}','darkbrown',1,12,6,0],
 		"dwarven broadshield":['}','bronze',2,18,12,0],
 		}
@@ -141,7 +141,7 @@ class Tomes():
 		"Tome of the Warlock" : [ [("dark bolt", 1, 'spell'),("raise skeleton", 3, 'spell')], 1, 'purple'],
 		"Tome of the Paladin" : [ [("bless weapon", 2, 'spell'),("flash heal", 3, 'spell')], 1, 'bone'],
 		"Tome of the Black Eye" : [ [("dark bolt", 1, 'spell'),("bloodreave", 4, 'spell'),("dark transformation", 5, 'ability')], 1, 'magenta'],
-		"Tome of Iron" : [ [("iron blesssing", 3, 'spell')], 1, 'steel'],
+		"Tome of Iron" : [ [("iron blessing", 3, 'spell')], 1, 'steel'],
 	}
 
 
@@ -156,15 +156,19 @@ class Brands():
 	}
 
 	# Manage brands
-	weapon_brands = ["flaming","frozen","silvered","envenomed","hellfire","infernal","vampiric","antimagic","electrified"]
+
+	# Brands to be randomly given to items in chests and equipped by monsters
+
+	weapon_brands = ["flaming","frozen","silvered","envenomed","hellfire","infernal","vampiric","antimagic","electrified","runic"]
 
 	ammo_brands = ["flaming","frozen","silvered","envenomed","antimagic"]
 
-	armor_brands = ["spiked","tempered","icy"]
+	armor_brands = ["spiked","tempered","icy","insulated","manaflow"]
 
 	colors = {
 		"flaming": "fire",
 		"frozen": "cyan",
+		"runic": "gold",
 		"silvered": "steel",
 		"envenomed": "darkgreen",
 		"hellfire": "orange",
@@ -177,6 +181,8 @@ class Brands():
 		"spiked": "bone",
 		"tempered": "red",
 		"icy": "cyan",
+		"insulated": "yellow",
+		"manaflow": "blue",
 	}
 
 
@@ -207,7 +213,7 @@ class Ammos():
 		"bow" :      set(["arrow"]),
 		"crossbow" : set(["bolt"]),
 		"ballista" : set(["bolt","arrow"]),
-		"god bow" : set(["bolt","arrow"])
+		"god bow" :  set(["bolt","arrow"])
 
 	}
 
@@ -222,7 +228,7 @@ class Weapons():
 		"fist" : 	   	  	['','bone','fist',0, 0, 3, 9, 0.7, None, 100],
 		"fist smash" : 	  	['','bone','fists',0, 0, 15, -2, 1.8, None, 100],
 		"stone fists" : 	['%','grey','fists',4, 0, 22, -4, 2.2, None, 100],
-		"foehammers" : 		['%','steel','fists',4, 0, 18, -3, 2.2, 'hellfire', 100],
+		"foehammers" : 		['%','steel','fists',4, 0, 18, -3, 2, 'hellfire', 100],
 		"claws" : 	   		['','bone','claws',0, 0, 7, 3, 0.85, None, 100],
 		"bone claws" : 	   	['','bone','claws',0, 0, 10, 2, 0.9, None, 100],
 
@@ -250,7 +256,7 @@ class Weapons():
 		"hooves" : 	  		['','steel','hooves',0, 0, 5, 1, 1.0, None, 25],
 
 		# Ranged Innate
-		"vomit" :      		['','grey','darkgreen',0, 0, 6, 0, 1.2, None, 40],
+		"vomit" :      		['','darkgreen','vomit',0, 0, 6, 0, 1.2, None, 40],
 
 
 
@@ -264,8 +270,8 @@ class Weapons():
 		"spiked club" :  ['%','darkbrown','greatclub',2, 0, 16, -4, 1.7],
 		"flail" : 		 ['%','grey','flail',1, 0, 10, -3, 1.3],
 		"greatflail" : 	 ['%','grey','flail',2, 0, 17, -6, 1.5],
-		"mace" : 		 ['%','yellow','mace',1, 0, 9, 0, 1.2],
-		"spiked mace" :  ['%','yellow','mace',1, 0, 10, -1, 1.25],
+		"mace" : 		 ['%','bronze','mace',1, 0, 9, 0, 1.2, "runic"],
+		"spiked mace" :  ['%','bronze','mace',1, 0, 10, -1, 1.25],
 
 		# Staves
 		"oak staff" :	 ['/','brown','staff',1, 0, 5, 4, 1.0],
@@ -354,6 +360,7 @@ class Weapons():
 		"witchhunter blade" : 	['!','steel','sword',1, 0, 10, 3, 1.0,"antimagic"],
 		"claymore" :     	  	['!','steel','greatsword',2, 0, 16, -3, 1.3],
 		"glaive" :      	  	['/','steel','polearm',2, 0, 14, -2, 1.2],
+		"warscythe" :      	  	['/','orange','polearm',2, 0, 19, -2, 1.8],
 		"executioner's axe" : 	['&','darkred','greataxe',2, 0, 17, -2, 1.5],
 		"gorkjaw choppa" :    	['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
 		"dwarven broadaxe" :  	['&','gold','greataxe',2, 0, 18, -4, 1.6],
@@ -380,13 +387,13 @@ class Weapons():
 		"blackwood longbow" : [')','darkbrown','bow',2, 0, 7, 1, 1.4],
 		"longbow" :    		  [')','brown','bow',2, 0, 8, 0, 1.7],
 
-		"elven longbow" :     [')','gold','bow',2, 0, 8, 1, 1.3],
+		"elven longbow" :     [')','gold','bow',2, 0, 8, 2, 1.3],
 
 		"uruk crossbow" :     [')','darkred','crossbow',2, 0, 10, 0, 2],
 
 		"ranger longbow" :    [')','darkbrown','bow',2, 0, 10, 1, 1.6],
 		"dwarven crossbow" :  [')','gold','crossbow',2, 0, 12, 0, 2],
-		"black ballista" : 	  [')','red','bow',3, 0, 12, 0, 2.6],
+		"black ballista" : 	  [')','red','bow',3, 0, 13, -2, 2.6],
 
 
 
@@ -396,7 +403,7 @@ class Weapons():
 		# Legendary Weapons
 		"The Glaive of Gore" :    	  ['/','darkred','polearm',     2, d(5), 16, 0, 1.2],
 		"The Singing Spear of Dorn" : ['/','fire','god spear',   1, d(5), 12, 3, 0.75, 'flaming'],
-		"The Black Axe of Borke" :    ['&','red','god axe',     2, -10, 28, -5, 1.6, 'vampiric'],
+		"Gork's Mawaxe" :    		  ['&','red','god axe',     2, -10, 28, -5, 1.6, 'vampiric'],
 		"Bloodreaver" :          	  ['!','darkred','demon sword', 1, -6, 24, -3, 1, 'vampiric'],
 		"Nighthunter" :     	  	  ['%','magenta','bastard sword',  2, d(5), 16, 6, 1.2, 'silvered'],
 		"Dawn" :        	  	  	  ['%','fire','sword',  	  1, d(5), 12, 2, 1.0, 'flaming'],
@@ -408,7 +415,7 @@ class Weapons():
 		"Talon" : 					  [')','gold','god bow',     2, d(5), 14, 4, 1.3],
 		}
 
-	legendary_weapons = ["The Glaive of Gore","The Singing Spear of Dorn","The Black Axe of Borke","Nighthunter",
+	legendary_weapons = ["The Glaive of Gore","The Singing Spear of Dorn","Gork's Mawaxe","Nighthunter",
 						"Dawn","Longclaw","Bloodreaver","The God-Cleaver","Worldshaper","Talon"]
 
 # ------------------------------------------------------------------
@@ -1145,24 +1152,99 @@ class Weapons():
 
 	def iron_blessing(name, attacker, enemy, game, map, roomfiller, ability = False):
 
+		# TODO: ATTEMPT TO MAKE UNIVERSAL BUFF TEMPLATE LIKE I DID FOR SPELLS
+
 		# Traits
 		status, count = 'blessed iron', 8
 
-		# Flavor Text
 		if attacker.name == 'you':
-			game.game_log.append("You bless your weapons and armor, they feel lighter!")
+			if len(game.allies) == 1: target = attacker
+			else:
+
+				print("                                                                     ")
+				print("---------------------------------------------------------------------------------------")
+				print(status)
+				print("                                                                     ")
+				print("=======================================================================================")
+				print("                                                                     ")
+				for i in range(len(game.allies)):
+
+					unit = game.allies[i]
+
+					print(str(game.item_order[i]) + " - " + unit.name)
+				print("                                                                     ")
+				print("=======================================================================================")
+
+
+
+				decision = rinput("Bestow " + spell_name + " on which target?")
+
+
+				if decision in game.item_order and game.item_order.index(decision) < len(game.allies):
+
+					# Choose Legal Enemy
+					target = game.allies[game.item_order.index(decision)]
+				else:
+					game.temp_log-append('That is not a valid unit.')
+					return False
+
+				if target.etype == 'machine':
+					if target.hp != target.maxhp:
+						heal = min(target.maxhp - target.hp, int(md(3, 1 + attacker.cha)))
+						target.hp += heal
+						game.game_log.append("You bless the machine spirit of the " + target.name  + ", healing it!")
+						return True
+
+
+			if target == attacker:
+				game.game_log.append("You bless your weapons and armor, they feel lighter!")
+			else:
+				game.game_log.append("You bless the " + target.name + "'s weapons and armor, they seem lighter!")
+
+			# Apply Effect
+			for passive in target.passives:
+
+				if passive[0] == status:
+					passive[1] = count
+					return True
+
+			target.passives.append([status, count])
+			return True
+
+		# Non-player case
+
+		# TODO: CASE WHERE NON-PLAYER IS AN ALLY
+		# TODO: Range of ability
 		else:
-			game.game_log.append("The " + attacker.name + " blesses its weapons and armor!")
+			closest, range = attacker, attacker.range_from_player
+			for unit in game.units:
+				if attacker != unit and unit.etype == 'machine' and unit.hp != unit.maxhp:
+					heal = min(unit.maxhp - unit.hp, int(md(3, 1 + attacker.cha)))
+					unit.hp += heal
+					game.game_log.append("The " + attacker.name + " blesses the machine spirit of the " + unit.name  + ", healing it!")
+					return True
+				elif unit not in game.allies:
+					if unit.range_from_player <= range:
+						closest, range = unit, unit.range_from_player
 
-		# Apply Effect
-		for passive in attacker.passives:
 
-			if passive[0] == status:
-				passive[1] = count
-				return True
+		
 
-		attacker.passives.append([status, count])
-		return True
+			# Flavor Text
+			if attacker == closest:
+				game.game_log.append("The " + attacker.name + " blesses its weapons and armor, they seem lighter!")
+			else:
+				game.game_log.append("The " + attacker.name + " blesses " + closest.name + "'s weapons and armor, they seem lighter!")
+
+			# Apply Effect
+			for passive in closest.passives:
+
+				if passive[0] == status:
+					passive[1] = count
+					return True
+
+			closest.passives.append([status, count])
+			return True
 
 	def frost_breath(name, attacker, enemy, game, map, roomfiller,  ability = False):
 

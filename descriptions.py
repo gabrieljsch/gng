@@ -39,7 +39,7 @@ class Descriptions():
 
 		# Blunt
 		"hammer" : ["A blunt weapon with a flat head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor."],
-		"warhammer" : ["A large blunt weapon with a double-sided flat head and a sturdy handle.","TThis weapon does bonus damage against enemies wearing plate armor and has a chance to stun the target."],
+		"warhammer" : ["A large blunt weapon with a double-sided flat head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor and has a chance to stun the target."],
 		"club" : ["A simple blunt weapon used for smashing.","This weapon does bonus damage against enemies wearing plate armor."],
 		"greatclub" : ["A simple but enormous blunt weapon used for crushing.","This weapon does bonus damage against enemies wearing plate armor and has a chance to stun the target."],
 		"mace" : ["A blunt weapon with a spherical head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor."],
@@ -102,7 +102,7 @@ class Descriptions():
 		# Weapon
 		"envenomed" : "This weapon has a chance to poison the enemy. Poison damage stacks progressively with successive strikes.",
 		"flaming" : "This weapon has a chance to light enemies aflame.",
-		"frozen" : "This weapon has a chance to freeze an enemy.",
+		"frozen" : "This weapon has a chance to freeze victims of its strikes.",
 		"silvered" : "This weapon deals extra damage to undead and unholy creatures.",
 		"hellfire" : "This weapon deals more damage as the target's health decreases.",
 		"infernal" : "This weapon has a chance to sap the dexterity of the target.",
@@ -113,6 +113,8 @@ class Descriptions():
 		"spiked" : "This armor has a chance to deal some physical damage back to attackers.",
 		"icy" : "This armor provides moderate frost resistance to the wearer.",
 		"tempered" : "This armor provides moderate fire resistance to the wearer.",
+		"insulated" : "This armor provides moderate shock resistance to the wearer.",
+		"manaflow" : "This armor transfers physical damage to your mana reserves before your health reserves.",
 	}
 
 	skill = {
@@ -129,6 +131,7 @@ class Descriptions():
 		"dark transformation" : ["When have been drained of enough blood, cast a ritual to tranform into a hideous abomination for a time."],
 		"martial draw" : ["You swing at a random in-range enemy when you draw a weapon."],
 		"furious charge" : ["You gain a mad ferocity. You strike enemies in the same direction you moved."],
+		"iron blessing" : ["You bless an ally's armor and weapons, reducing their encumbrance. Casting on a machine will heal it instead."],
 
 
 	}

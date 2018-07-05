@@ -34,7 +34,7 @@ class Player():
 		self.loc, self.time = (2,5), 0
 
 		# Initialize Representation
-		self.rep, self.name, self.info, self.passives, self.race, self.pclass  = '@', "you", ('you','your'), [], game.race, game.pclass
+		self.rep, self.name, self.info, self.passives, self.race, self.pclass  = '@', "you", ('you','your'), [], None, game.pclass
 
 		# Initialize Stats
 		self.con, self.str, self.dex, self.int, self.cha, self.mspeed, self.reg = statsheet[:7]
@@ -62,7 +62,7 @@ class Player():
 		self.rider, self.mount = None, None
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], ["web shot"], []
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], [], []
 
 		# Initialze Equipment
 		self.wielding, self.hands, self.total_hands, self.quivered = [], 2, 2, None
@@ -136,19 +136,17 @@ class Player():
 		skillnums = '123456789'
 
 		spaces = [i for i in range(24 - (len(tome.spells)))]
-		print("=======================================================================================")
-		for space in spaces: print("")
-
-		print("")
-		print("")
-		print("")
-		print("Available Skills")
-		print("=======================================================================================")
-		print("")
-
 
 		repeat = True
 		while repeat:
+			print("=======================================================================================")
+			for space in spaces: print("")
+			print("")
+			print("")
+			print("")
+			print("Available Skills")
+			print("=======================================================================================")
+			print("")
 			repeat = False
 			for spell in tome.spells:
 				print(skillnums[tome.spells.index(spell)] + ') '+ spell[0])
@@ -184,6 +182,7 @@ class Player():
 					elif decision.lower() == 'b':
 						if self.skill_points < cost:
 							print("You do not have enough points for that.")
+							spaces.pop()
 							repeat = True
 						else:
 							if stype == 'trait':
@@ -192,7 +191,7 @@ class Player():
 								self.spells.append(skill)
 							elif stype == 'ability':
 								self.abilities.append(skill)
-							self.skill_points - cost
+							self.skill_points -= cost
 
 							game.game_log.append("You learn " + skill + "!")
 
@@ -1190,6 +1189,9 @@ class Monster():
 		self.loc, self.time = loc, 1
 		self.passives, self.spells = [], []
 
+		# Initialize Range
+		self.range_from_player = None
+
 		# Initialize Stats
 		self.con, self.str, self.dex, self.int, self.cha, self.mspeed, self.xp = con, st, dex, int, cha, mspeed, xp
 
@@ -1202,7 +1204,6 @@ class Monster():
 		# Give innate weapons / shields
 		if other_items is not None:
 			for item in other_items:
-				print(item, type(item))
 				if item in Ammos.array: self.give_ammo(item)
 				elif item in Weapons.array: self.give_weapon(item)
 				elif item in Shields.array: self.give_shield(item)
@@ -1326,28 +1327,31 @@ class Monster():
 
 	def turn(self):
 
+		# Ally Unit
 		if self in game.allies:
 			enemy, mini = None, 100
-			for unit in game.units[1:]:
+			for unit in game.units:
 				los = ai.los(self.loc, unit.loc, Maps.rooms[game.map.map][0], game )
 				if los is not None:
-					if len(los) < mini:
+					if type(unit) == Player: self.range_from_player = len(los)
+					elif len(los) < mini:
 						enemy, mini = unit, len(los)
 
+			# No enemies in room
 			if enemy == None:
 				ai.move_towards(self, game.player, game.map)
 				self.time += self.mspeed
 				return
 
-
+		# Enemy Unit
 		else:
 			mini, enemy = 100, game.player
 			for unit in game.allies:
 				los = ai.los(self.loc, game.player.loc, Maps.rooms[game.map.map][0], game )
 				if los is not None:
+					if type(unit) == Player: self.range_from_player = len(los)
 					if len(los) <= mini:
-						mini = len(los)
-						enemy = unit
+						enemy, mini = unit, len(los)
 
 
 		melee_attacked = False
@@ -1619,15 +1623,10 @@ class Weapon():
 
 				# DAMAGE forumla
 
-				# Marked passive
-				if marked:
-					damage = int (self.damage + attacker.str + self.enchantment - ( 0.5 * enemy.calc_AC() ) )
-					for passive in enemy.passives:
-						if passive[0] == 'marked': enemy.passives.remove(passive)
-						break
+
 
 				# Projectile weapon
-				elif self.wclass in Weapons.ranged_wclasses and self.hands > 0:
+				if self.wclass in Weapons.ranged_wclasses and self.hands > 0:
 					damage = int (d(self.damage) + d(attacker.quivered.damage) + attacker.dex / 2 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					brand, wclass = attacker.quivered.brand, attacker.quivered.wclass
 				# Thrown Weapon
@@ -1635,12 +1634,20 @@ class Weapon():
 					damage = int (d(self.damage) + d(attacker.quivered.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					brand, wclass = attacker.quivered.brand, attacker.quivered.wclass
 				# Manage demon sword
-				elif self.wclass in ['demon sword']:
+				if self.wclass in ['demon sword']:
 					damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.60 * enemy.calc_AC() ) )
 				# Melee weapon
-				else:
-					damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
+				if self.sname in Weapons.array:
+					if brand == 'runic':damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment)
+					else: damage = int (d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 					if enemy.equipped_armor.brand == 'spiked' and damage > 0 and d(10) > 3: barb_damage = d(int(1/2 + damage * 3/4))
+
+				# Marked passive
+				if marked:
+					damage = int (self.damage + attacker.str + self.enchantment - ( 0.5 * enemy.calc_AC() ) )
+					for passive in enemy.passives:
+						if passive[0] == 'marked': enemy.passives.remove(passive)
+						break
 
 
 				# Check passives
@@ -1669,6 +1676,14 @@ class Weapon():
 				elif brand == "silvered":
 					if enemy.name != 'you': brandhit = True if enemy.etype in ["undead","skeleton","abomination"] else False
 					else: brandhit = True if enemy.race in ["ghoul"] else False
+				elif brand == "vampiric":
+					if enemy.name != 'you': brandhit = False if enemy.etype in ["ooze","skeleton","machine","spirit"] else True
+					else: brandhit = False if enemy.race in [] else True
+				elif brand == "runic":
+					brandhit = False
+					if attacker.mana >= self.damage / 2:
+						attacker.mana -= int(self.damage / 2)
+						brandhit = True
 				elif brand is not None: brandhit = True
 				elif brand is None: brandhit = False
 
@@ -1694,13 +1709,27 @@ class Weapon():
 				# Damage Case - Statement
 				else: self.damage_statement(attacker, enemy, damage, brand, brandhit, ename, eposs)
 						
-				# Resolve Damage
-				enemy.hp -= damage
+				# Manage Manaflow Armor
+				if enemy.equipped_armor.brand == 'manaflow' and enemy.mana > 0:
+					manadam = min(enemy.mana, damage)
+					enemy.mana -= manadam
+					enemy.hp -= damage - manadam
+				else:
+					# Resolve Damage
+					enemy.hp -= damage
 
 				# Manage Spiked
 				try:
-					attacker.hp -= barb_damage
 					game.game_log.append(enemy.info[1][0].upper() + enemy.info[1][1:] + ' spikes deal ' + str(barb_damage) + ' damage back to ' + attacker.info[0] + '!')
+
+					# Manage Manaflow Armor
+					if attacker.equipped_armor.brand == 'manaflow' and attacker.mana > 0:
+						manadam = min(attacker.mana, barb_damage)
+						attacker.mana -= manadam
+						attacker.hp -= barb_damage - manadam
+					else:
+						# Resolve Damage
+						attacker.hp -= barb_damage
 
 					# Check if unit is still alive
 					if attacker.hp <= 0 and type(attacker) != Player:
@@ -1755,7 +1784,14 @@ class Weapon():
 						if type(enemy) == Player: game.game_log.append("You counter the " + str(attacker.name) + " with your blade for " + str(damage) + " damage!")
 						else: game.game_log.append("The "  + str(enemy.name) + " counters " + aname +  " with its blade for " + str(damage) + " damage!")
 
-						attacker.hp -= damage
+						# Manage Manaflow Armor
+						if attacker.equipped_armor.brand == 'manaflow' and attacker.mana > 0:
+							manadam = min(attacker.mana, damage)
+							attacker.mana -= manadam
+							attacker.hp -= damage - manadam
+						else:
+							# Resolve Damage
+							attacker.hp -= damage
 						if enemy.name == 'you': game.player.well_being_statement(attacker, game.player, counter.name, game)
 
 
@@ -1998,7 +2034,11 @@ class Weapon():
 				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its " + name + " and sets " + ename +  " aflame!")
 			else:
 				game.game_log.append("You " + verb + " your "+ str(wclass) + " " + preposition + " the " + attackee_var + ", dealing " + str(damage) + " damage and setting it aflame!")
-
+		elif brand == "runic":
+			if type(attacker) == Monster:
+				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its crackling " + name + "!")
+			else:
+				game.game_log.append("You " + verb + " your crackling "+ str(wclass) + " " + preposition + " the " + attackee_var + " to deal an empowered " + str(damage) + " damage!")
 		elif brand == "infernal":
 			if type(attacker) == Monster:
 				game.game_log.append("The "  + attacker_var + " hits " + ename +  " for " + str(damage) + " damage with its " + name + " and saps " + eposs +  " soul!")
@@ -2071,11 +2111,13 @@ class Armor():
 		# Initialize Resistances
 		self.frostr, self.firer, self.poisonr, self.acidr, self.shockr, self.expr = 0, 0, 0, 0, 0, 0
 
-		# Manage Icy, Tempered
+		# Manage Icy, Tempered, Insulated
 		if self.brand == 'tempered':
 			self.firer += 3
 		if self.brand == 'icy':
 			self.frostr += 3
+		if self.brand == 'insulated':
+			self.shockr += 3
 
 		if aclass == 'garments':
 			self.mdefense = 0
@@ -2362,9 +2404,9 @@ class Chest():
 
 class Map():
 
-	def __init__(self, player, room):
+	def __init__(self, game, room):
 
-		self.map, self.player = room, player
+		self.map, self.game = room, game
 
 		self.def_map_array = Maps.rooms[self.map][0]
 		self.map_array = deepcopy(self.def_map_array)
@@ -2400,7 +2442,7 @@ class Map():
 						except: self.graph[(orgx,orgy)] = [ (adx,ady) ]
 
 	def fill(self):
-		self.room_filler = RoomFiller(self.player.level, (15,2), self.map)
+		self.room_filler = RoomFiller(self.game.player.level, (15,2), self.map)
 		self.room_filler.place()
 
 	def parse(self,line):
@@ -2472,9 +2514,9 @@ class Map():
 
 		# Place boyo on map
 		if newloc == Maps.rooms[room.map][2]:
-			self.player.loc = (newloc[0] + 1, newloc[1])
+			self.game.player.loc = (newloc[0] + 1, newloc[1])
 		else:
-			self.player.loc = (newloc[0] - 1, newloc[1])
+			self.game.player.loc = (newloc[0] - 1, newloc[1])
 
 
 
@@ -2492,13 +2534,13 @@ class Map():
 
 		# Make new Map
 		pot_maps = Maps.sizes[Maps.rooms[self.map][3][0][d(len(Maps.rooms[self.map][3][0])) - 1]]
-		newmap = Map(self.player,pot_maps[ d(len(pot_maps)) - 1])
+		newmap = Map(self.game,pot_maps[ d(len(pot_maps)) - 1])
 		game.map = newmap
 
 		# Entry Point
 		self.adjacent[coords] = (newmap, newmap.entry_point)
 		newmap.adjacent[newmap.entry_point] = (self, coords)
-		self.player.loc = (newmap.entry_point[0] + 1, newmap.entry_point[1])
+		self.game.player.loc = (newmap.entry_point[0] + 1, newmap.entry_point[1])
 
 		game.game_log.append("You enter the room...")
 
@@ -2553,7 +2595,6 @@ class RoomFiller():
 
 		# Tier and Band pick
 		etier = min(self.tier, len(Bands.dicto))
-		print(game.bands)
 		tier_group = game.bands
 		band = tier_group[d(len(tier_group)) -1]
 
@@ -2604,7 +2645,6 @@ class RoomFiller():
 
 		# Spawn Unit
 		unit = Monster(monster_name, data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], loc, other_items)
-		print("spawned", monster_name)
 		game.units.append(unit)
 		if ally: game.allies.append(unit)
 
@@ -2670,14 +2710,12 @@ class RoomFiller():
 class Game():
 
 	def __init__(self):
+
 		# Manage Constants
+		self.race = None
+		self.pclass = None
 
-		# CHANGE RACE
-		self.race = "Dragonborn"
-		self.pclass = "Paladin"
-
-		self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
-		self.map = Map(self.player, 'starting_room')
+		self.map = Map(self, 'starting_room')
 		self.state = 'ongoing'
 		self.room = 0
 		self.bands = Bands.dicto[1]
@@ -2686,7 +2724,7 @@ class Game():
 		self.hregen, self.mregen, self.prev_valid_turn = 0, 0, True
 
 		# Manage Units
-		self.units, self.allies, self.items, self.seen = [self.player], [], [], set([])
+		self.units, self.allies, self.items, self.seen = [], [], [], set([])
 
 		# Manage Game Log
 		self.game_log, self.temp_log = [], []
@@ -2695,8 +2733,114 @@ class Game():
 		self.item_order = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
-	def start_screen(self):
-		pass
+	def character_select(self):
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+		print("GNG")
+		print("---------------------------")
+		print("")
+		i, record = 0, {}
+		for race, stats in CharacterInfo.races.items():
+			print(str(self.item_order[i]) + ") " + race)
+			record[self.item_order[i]] = race
+			i += 1
+
+
+		race_decision = rinput("Which race will you play?")
+
+		try:
+			if race_decision in self.item_order and self.item_order.index(race_decision) < len(CharacterInfo.races):
+				self.race = record[race_decision]
+
+				goback = True
+
+
+				while goback == True:
+
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("")
+					print("GNG")
+					print("---------------------------")
+					print(self.race + "      (Press spacebar to rechoose)")
+					print("")
+
+					i, record = 0, {}
+					for pclass, stats in CharacterInfo.class_progression.items():
+						print(str(self.item_order[i]) + ") " + pclass)
+						record[self.item_order[i]] = pclass
+						i += 1
+
+
+					class_decision = rinput("Which class will you play?")
+
+					if class_decision == " ":
+						self.character_select()
+						return
+					if class_decision in self.item_order and self.item_order.index(class_decision) < len(CharacterInfo.class_progression):
+						# game.race = record[race_decision]
+						self.pclass = record[class_decision]
+
+						# Create Player
+						self.player = Player(CharacterInfo.races[self.race][0], CharacterInfo.races[self.race][1], self)
+
+						self.player.race = self.race
+						self.player.pclass = self.pclass
+						self.units.append(self.player)
+
+
+						goback = False
+		except: 
+			self.character_select()
 
 
 	def run(self):
@@ -3334,6 +3478,7 @@ def rinput(question):
 
 game = Game()
 # try:
+game.character_select()
 game.run()
 # except:
 # 	pass
