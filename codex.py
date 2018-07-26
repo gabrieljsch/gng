@@ -80,7 +80,7 @@ class Armors():
 
 		# Scale Armors
 		"chronid shell" :  ['[','bone','scale',3,0, 0],
-		"ironscale mail" : ['[','steel','scale',6,3],
+		"ironscale mail" : ['[','steel','scale',6,3, 0],
 		"drakescale" :     ['[','cyan','scale',2,1, d(3)],
 		"wyvernscale" :    ['[','magenta','scale',3,3, d(4)],
 		"blackscale" : 	   ['[','darkred','scale',6,2, 0],
@@ -317,7 +317,7 @@ class Weapons():
 		"trident" :   ['/','bronze','polearm',1, 0, 9, 1, 1],
 		"halberd" :	  ['/','grey','polearm',2, 0, 12, -2, 1.15],
 		"bardiche" :  ['/','steel','polearm',2, 0, 13, -2, 1.4],
-		"glaive" : 	  ['/','steel','polearm',2, 0, 14, -2, 1.2],
+		"glaive" : 	  ['/','steel','glaive',2, 0, 14, -2, 1.2],
 		"warscythe" : ['/','darkred','scythe',2, 0, 17, -2, 1.8],
 
 		"lance" : 	  ['/','grey','lance',2, 0, 11, -1, 1],
@@ -365,9 +365,9 @@ class Weapons():
 		"steel axe" : 	    ['&','steel','axe',1, 0, 10, -1, 1.1],
 
 		"iron battleaxe" :    ['&','grey','greataxe',2, 0, 12, -3, 1.3],
-		"bearded greataxe" :  ['&','steel','greataxe',2, 0, 11, -2, 1.1],
+		"bearded greataxe" :  ['&','steel','greataxe',2, 0, 11, -1, 1.1],
 		"steel battleaxe" :   ['&','steel','greataxe',2, 0, 14, -3, 1.3],
-		"executioner's axe" : ['&','darkred','greataxe',2, 0, 17, -2, 1.6],
+		"executioner axe" : ['&','darkred','greataxe',2, 0, 17, -4, 1.6],
 		# ---------------------------------------------------------------------
 
 
@@ -390,8 +390,8 @@ class Weapons():
 		"boss choppa" : 	 ['&','orange','greataxe',2, 0, 16, -4, 1.5],
 
 		# Rare
-		"gorktooth choppa" : ['&','darkred','axe',1, 0, 10, -1, 1.2,'hellfire'],
-		"gorkjaw choppa" :   ['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
+		"krogtooth choppa" : ['&','darkred','axe',1, 0, 10, -1, 1.2,'hellfire'],
+		"krogjaw choppa" :   ['&','darkred','greataxe',2, 0, 18, -4, 1.6,'hellfire'],
 		"dethklaw" : 	 	 ['&','orange','claw gauntlet',1, 0, 15, -3, 1.8],
 		# ---------------------------------------------------------------------
 
@@ -501,11 +501,11 @@ class Weapons():
 # ------------------------------------------------------------------
 
 		# Legendary Weapons
-		"the Glaive of Gore" :    	  ['/','darkred','polearm',  2, d(5), 16, 0, 1.2],
+		"the Glaive of Gore" :    	  ['/','darkred','glaive',  2, d(5), 16, 0, 1.2],
 		"the Singing Spear" : 		  ['/','orange','god spear',   1, d(5), 11, 3, 0.75],
 		"Soulreaper" :    	  		  ['/','cyan','scythe',  2, d(5), 17, -2, 2],
 
-		"Gork's Maw" :    		  	  ['&','red','god axe',     2, d(5), 19, -5, 1.6, 'vampiric'],
+		"Krog's Maw" :    		  	  ['&','red','god axe',     2, d(5), 19, -5, 1.6, 'vampiric'],
 
 		"Swiftspike" :        	  	  ['!','steel','dagger',  	  1, d(5), 7, 3, 0.4],
 		"Splinter" :        	  	  ['!','darkgreen','knife',  	  1, d(5), 8, 3, 0.9, 'envenomed'],
@@ -513,25 +513,25 @@ class Weapons():
 		"Bloodreaver" :          	  ['!','darkred','demon sword', 1, -d(5), 17, -3, 1.2],
 		"Nightsbane" :     	  	 	  ['!','steel','bastard sword',  2, d(5), 16, 4, 1.2, 'silvered'],
 		"Longfang" :              	  ['!','steel','bastard sword',  2, d(5), 14, 3, 1.0],
-		"God-Cleaver" : 		 	  ['!','orange','god sword',   2, d(5), 18, -2, 1.4, 'hellfire'],
+		"God-Cleaver" : 		 	  ['!','orange','executioner greatsword',   2, d(5), 23, -5, 1.7],
 
-		"Worldshaper" :     	 	  ['%','gold','god hammer',  2, d(5), 25, -12, 2.0, 'runic'],
+		"Worldshaper" :     	 	  ['%','gold','god hammer',  2, d(5), 25, -12, 2.3, 'runic'],
 		"Mjölnir" :     	 	  	  ['%','gold','god hammer',  1, d(5), 15, -1, 1.2, 'electrified'],
 
 		"the Gauntlets of Mars": 	  ['&','red','gauntlets',  2, d(5), 20, 0, 1.8],
 		"the Talons of Belial": 	  ['&','bone','claw gauntlets',  2, d(5), 15, 0, 1.0],
 
-		"Tempest" : 				  [')','gold','god bow',     2, d(5), 14, 3, 1.3],
-		"Whisper" : 				  [')','bone','god bow',     2, d(5), 10, 30, 1.8],
+		"Tempest" : 				  [')','gold','god bow',     2, d(5), 12, 0, 1.4],
+		"Godfinger" : 				  [')','salmon','god bow',     2, d(5), 8, 20, 2],
 		}
 				  ## Legendaries ##
 				  # Weapons
-	legendaries = ["the Glaive of Gore","the Singing Spear","Gork's Maw","Nightsbane", "Splinter",
-				   "Dawn","Longfang","Bloodreaver","God-Cleaver","Worldshaper","Tempest","Whisper",
+	legendaries = ["the Glaive of Gore","the Singing Spear","Krog's Maw","Nightsbane", "Splinter",
+				   "Dawn","Longfang","Bloodreaver","God-Cleaver","Worldshaper","Tempest","Godfinger",
 				   "Mjölnir", "Soulreaper", "Swiftspike","the Gauntlets of Mars","the Talons of Belial",
 				  # Armor
 				   "God-Frame","Bloodshell","Kain's Pact","Plaguebringer"]
-	enemy_legendaries = ["Mjölnir","Gork's Maw"]
+	enemy_legendaries = ["Mjölnir","Krog's Maw"]
 
 # ------------------------------------------------------------------
 
@@ -575,6 +575,7 @@ class Weapons():
 		"god spear" : ["plunge", "deep into"],
 		"lance" : ["drive", "into"],
 		"polearm" : ["slice", "into"],
+		"glaive" : ["slice", "into"],
 		"scythe" : ["carve", "into"],
 
 		# Dagger
@@ -592,6 +593,8 @@ class Weapons():
 		"bastard sword" : ["slash", "into"],
 		"god sword" : ["carve", "deep into"],
 		"greatsword" : ["cleave", "into"],
+		"executioner greatsword" : ["cleave", "into"],
+		
 
 
 		# Staff

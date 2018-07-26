@@ -40,45 +40,46 @@ class Descriptions():
 			# 
 		"Soulreaper" : "This ancient warscythe's blade glows a faint blue, indiscernible whispers are heard when wielding it. Its blade emerges from a skull on its shaft fashioned from femurs, which pulsate lightly...as if the weapon were breathing.",
 			# Increasing damage with kill tiers, 6 tiers, at last tier also gains possessed brand.
-		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when wielded. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
+		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when moving. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
 			# Chance to change brand with every hit.
-		"Gork's Maw" : "",
+		"Krog's Maw" : "",
 			# Can gain a temporary overshield with this weapon when healing over max health.
 		"Splinter" : "This deadly knife is coated in black adder venom that stops the heart of its victims in seconds. Its black single-edged blade blends into the grip without a hilt to separate, and its guard is wrapped by a thin, bone-white linen cloth.",
 			# Applies 3 venom stacks instead of normal 2 on brand hit.
 		"Swiftspike" : "",
-			# 
-		"Dawn" : "This ornate shortsword glows hot-red when sheathed and bursts into white-hot flame when drawn. Its short, double-edged blade is decorated with carvings of laurels and olive branches, and in its bronze pommel rests a brilliant ruby, which seems to burn brighter than the blade itself.",
+			# Movement speed is much faster when wielding this weapon
+		"Dawn" : "This ornate shortsword glows hot-red when sheathed and bursts into white-hot flame when drawn. Its short, double-edged blade is decorated with carvings of laurels and olive branches, and in its bronze pommel rests a brilliant diamond, which seems to burn brighter than the blade itself.",
 			# Always applies flaming brand, and need more fire resistance to resist its fire.
-		"Bloodreaver" : "done",
+		"Bloodreaver" : "This demon sword resembles a large falchion doused in blood. Its one sharp edge is jagged yet razor sharp, and blood seemingly flows through veins carved into the blade. In the center of its red hilt lies a large hole, in which floats a pulsating black amethyst. No one has dared to try removing it...",
 			# Counters with this weapon apply a deathmark to the enemy.
-		"Nightsbane" : "done",
+		"Nightsbane" : "This bastard sword of legend has a name feared by all creatures of darkness. Its blade is forged entirely from blessed dark silver, its dark-golden hilt and guard in the form of a sharp cross. A vial of holy water rests in center of the hilt, and scrolls covered in holy words are wrapped around the weapon's grip.",
 			# Automatically counter enemies who would be affected by silver brand.
-		"Longfang" : "done",
-			# Casting a spell while wielding this weapon grants this weapon a powerful execution passive for next hit.
+		"Longfang" : "",
+			# Casting a spell while wielding this weapon grants this weapon the brand corresponding to the type of spell for 1 hit.  "This beautiful bastard sword runs black and white with vein patterns of damascus steel "
 		"God-Cleaver" : "",
-			# 
+			# After 5 damaging hits with this weapon, the next hit will execute the target (if its not a unique?) (maybe needs to recharge will kills in between uses?).
 		"Worldshaper" : "",
 			# Killing enemies with this weapon restores a moderate amount of mana.
-		"Mjölnir" : "done",
-			# Electrified brand hit has a good chance to bounce to adjacent enemies.
-		"the Gauntlets of Mars": "",
+		"Mjölnir" : "This hammer of legend was once wielded by the god Thor, it still crackles with his thunderous energy. Its short haft is offset by its enourmous, almost rectangular head, decorated with ancient runes and images of Yggdrasil.",
+			# Electrified brand hit bounces thunder to adjacent enemies.
+		"the Gauntlets of Mars": "These ancient stone gauntlets generate a small energy field around them. The blood-red stone of the gauntlets are carved with ancient symbols of war and battle, and numerous cracks and battlescars adorn the edges of the weapons.",
 			# Blocking this weapon instead causes some damage and the blocker to be stunned.
 		"the Talons of Belial": "", 
 			# Killing an enemy causes enemies of a lower tier in small radius to be feared for a few turns (feared also reduces ac slightly).
-		"Tempest" : "",
-			# 
-		"Whisper" : "",
-			# 
+		"Tempest" : "done",
+			# Also fires quivered ammo at 2 other random enemies in range.
+		"Godfinger" : "done",
+			# You can never miss your target when firing this bow.
 
 		# Armor
 		"Kain's Pact" : "",
 			# Getting hit by a melee attack causes you to blink.
+			# Can cast spells with health when not enough mana.
 		"Plaguebringer" : "",
 			# Emits an aura of plague, damaging enemies in a certain radius.
 		"God-Frame" : "",
 			# Small chance to stun attacker on taking a hit.
-		"Bloodshell" : "",
+		"Bloodshell" : "done",
 			# Damage done by spikes also heal you for a percent.
 
 	}
@@ -107,6 +108,7 @@ class Descriptions():
 		"pike" : ["A two-handed polearm with an extremely long shaft and sharp tip.", "This weapon strikes the next two enemies behind the target on a successful hit."],
 		"lance" : ["A light polearm with a pointed tip, usually used while mounted.", "This weapon strikes the enemy behind the target on a successful hit."],
 		"polearm" : ["A weapon with a long shaft and sharp metal head used for chopping.", "This weapon strikes the enemy behind the target on a successful hit."],
+		"glaive" : ["A weapon with a long shaft and a long, sharp metal head used for chopping.", "This weapon strikes the enemy behind the target on a successful hit."],
 		"scythe" : ["A polearm with a long curved blade that can carve men in two.", "This weapon cleaves two adjacent units on either side of the target on a successful hit."],
 
 		# Dagger
@@ -122,6 +124,7 @@ class Descriptions():
 		"demon sword" : ["A sword forged from the blood of thousands of beings.", "This weapon ignores some armor and gives you a chance to counter when an enemy attack misses."],
 		"greatsword" : ["A large martial weapon with a long blade and two-handed grip.", "This weapon cleaves adjacent enemies on hits or, if none are adjacent, strikes the enemy behind the target."],
 		"bastard sword" : ["A large martial weapon with a long blade and a one-and-a-half-handed grip.", "This weapon cleaves adjacent enemies on hits and has a chance to counter when an enemy attack misses."],
+		"executioner greatsword" : ["An extremely large martial weapon with a heavy blade and two-handed grip.", "This weapon deals heavy damage to a single target."],
 
 		# Staff
 		"staff" : ["A long rod that can be made of wood or metal.", "This weapon imparts extra spell damage to the holder."],

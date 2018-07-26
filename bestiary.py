@@ -32,6 +32,7 @@ class Monsters():
 		"Goblin Chief" :   	   ["g","purple","goblin",3,  5,4,4,2,3,0.9, 15, [0,0,0,0,0,0], ['big choppa','big slica','skull smasha'] , ['berserker mail','leather armor'], ['trollhide shield']],
 
 		"Hobgoblin Skirmisher" : ["h","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], [['bearded axe','wooden broadshield'],['falchion','wooden broadshield'],'pike'] , ['iron chainmail','ironscale mail','studded armor']],
+		"Hobgoblin Defender" : 	 ["d","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], [['bearded axe','tower shield']], ['iron chainmail','ironscale mail','studded armor']],
 		"Hobgoblin Bolter" :     ["b","yellow","goblin",4,  4,4,4,2,3,0.9, 40, [0,0,0,0,0,0], ['crossbow'] , ['iron chainmail','ironscale mail','studded armor'],['crossbow','iron bolt']],
 
 		# Orcs
@@ -48,10 +49,10 @@ class Monsters():
 		"Orc Warg-rider" : ["o","green","orc",2,  3,4,3,2,2,1.1, 15, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide'], ['Warg']],
 		"Nob Warg-rider" : ["N","darkgreen","orc",4,  5,5,3,2,4,1.2, 15, [0,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['Feral Warg','green blood']],
 
-		"Orc Dethnob" :    ["N","orange","orc",5,  6,5,2,2,4,1.4, 50, [1,1,0,0,0,3], [['gorkjaw choppa','trollhide shield'],['dethklaw','trollhide shield'],['gorktooth choppa','gorktooth choppa'],] , ['Orcish dreadplate'], ['headbutt','green blood']],
+		"Orc Dethnob" :    ["N","orange","orc",5,  6,5,2,2,4,1.4, 50, [1,1,0,0,0,3], [['krogjaw choppa','trollhide shield'],['dethklaw','trollhide shield'],['krogtooth choppa','krogtooth choppa'],] , ['Orcish dreadplate'], ['headbutt','green blood']],
 
-		"Ro'khan, Prophet of Gork" :  ["R","red","orc",8,  7,7,4,6,8,1.0, 200, [1,1,0,0,0,1], ["Gork's Maw"] , ['Orcish dreadplate'], ['trollhide shield','furious charge','headbutt','green blood']],
-		"Waa'zhok, Conduit of Gork" : ["W","purple","orc",6,  6,5,3,8,8,1.0, 80, [0,0,0,0,4,0], ['toxic slica','oak staff'] , ['necromancer robes'], ['chain lightning','raise skeleton','green blood']],
+		"Ro'khan, Prophet of Krog" :  ["R","red","orc",8,  7,7,4,6,8,1.0, 200, [1,1,0,0,0,1], ["Krog's Maw"] , ['Orcish dreadplate'], ['trollhide shield','furious charge','headbutt','green blood']],
+		"Waa'zhok, Conduit of Krog" : ["W","purple","orc",6,  6,5,3,8,8,1.0, 80, [0,0,0,0,4,0], ['toxic slica','oak staff'] , ['necromancer robes'], ['chain lightning','raise skeleton','green blood']],
 
 		# Uruks
 		"Uruk Warrior" :   ["u","steel","uruk",3,  4,4,3,2,4,1.0, 15, [0,0,0,0,0,0], ['hooked longsword','spiked axe','spiked mace'] , ['blackiron plate'], ['blackiron shield']],
@@ -80,16 +81,16 @@ class Monsters():
 
 		# The Black Eye
 		"Cultist" :   	   		["c","purple","man",2,  3,3,3,1,1,1.0, 8, [0,0,0,0,0,0],  ['mace',['hand axe','iron dagger']] , ['tainted robes']],
-		"Cult Disciple" :  		["d","blue","man",3,  3,3,3,3,3,1.0, 14, [0,0,0,0,0,0], ['sawtooth blade','hammer'] , ['tainted robes'],['dark bolt']],
+		"Cult Disciple" :  		["d","blue","man",3,  3,3,3,3,3,1.0, 14, [0,0,0,0,0,0], ['sawtooth blade',['Tome of the Black Eye','iron dagger']] , ['tainted robes'],['dark bolt']],
 		"Cult Husk" :  			["h","bone","undead",3,  4,3,2,1,1,1.3, 14, [1,1,1,1,1,0], ['iron bastard sword','bearded greataxe'] , ['tainted robes']],
 		"Cult Gravewhisperer" : ["g","orange","man",4,  4,3,3,4,5,1.0, 22, [0,0,0,0,0,0], ['warped staff'] , ['tainted robes'], ['raise skeleton']],
 		"Abomination" :    		["A","bone","abomination",6,  7,7,1,1,2,1.6, 60, [0,0,0,0,0,0], ['fist smash'] , ['tainted robes']],
-		"Cult Destroyer" : 		["D","darkred","man",6,  5,3,3,7,6,1.0, 60, [0,0,0,0,0,0], ['spiked mace'] , ['tainted robes'], ['dark transformation','bloodreave','deathmark']],
+		"Cult Destroyer" : 		["d","darkred","man",6,  5,3,3,7,6,1.0, 60, [0,0,0,0,0,0], ['spiked mace'] , ['tainted robes'], ['dark transformation','bloodreave','deathmark']],
 		"Cult Prophet" :   		["P","magenta","man",7,  7,3,3,6,7,1.0, 100, [0,0,0,0,0,0], ['warped staff'] , ['tainted robes'], ['raise skeleton','bloodreave','deathmark']],
 
 		# Ironkeep Warsquad
 		"Ironkeep Knight" : 	["k","steel","man",5,  6,4,3,4,4,1.3, 40, [0,0,0,0,0,0], [['steel longsword','steel kiteshield'],'halberd','steel battleaxe'], ['steel plate']],
-		"Iron Priest" : 		["p","bronze","man",6,  6,4,2,6,4,1.2, 40, [0,0,0,0,0,0], [['spiked mace','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing']],
+		"Iron Priest" : 		["p","bronze","man",6,  6,4,2,6,4,1.2, 40, [0,0,0,0,0,0], [['Tome of Iron','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing']],
 		"Ironkeep Confessor" : 	["c","steel","man",7,  5,7,5,5,4,1.1, 40, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes']],
 		"Iron Dreadnought" :	["D","grey","machine",8,  8,8,2,1,1,1.4, 40, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
 
@@ -105,11 +106,11 @@ class Monsters():
 		"Screamer Drone" : ["s","yellow","chronid",3,  2,3,4,3,2,0.9, 14, [0,0,0,0,0,0], ['claws'] , ['chronid shell'],['bioscream']],
 		"Hive Warrior" :   ["W","orange","chronid",4,  5,5,3,2,1,1.0, 25, [0,0,0,0,0,0], ['bioscream','reaper talon','plated limb','bonesword'] , ['chronid shell'],['claws']],
 		"Broodmage" :  	   ["b","purple","chronid",5,  4,4,4,8,5,1.0, 40, [0,0,0,0,0,0], ['bone claws'] , ['chronid shell'],['armored limb']],
-		"Behemoth" :  	   ["B","bone","chronid",6,  8,5,1,2,1,1.8, 60, [0,0,0,0,0,0], ['fist smash'] , ['chronid plate']],
+		"Behemoth" :  	   ["B","bone","chronid",6,  8,5,1,2,1,1.8, 60, [0,0,0,0,0,0], ['fist smash'] , ['chronid plate'],['claws','plated limb']],
 		"Hivelord" : 	   ["H","red","chronid",7,  7,7,5,8,4,1.0, 100, [0,0,0,0,0,0], [['reaper talon','reaper talon'],['bonesword','bonesword']] , ['chronid plate'],['plated limb','bone claws']],
 
 		# Dark Elves
-		"Wardancer" :  		["w","purple","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail']],
+		"Wardancer" :  		["w","purple","elf",4,  3,3,5,4,3,0.80, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail','leather armor']],
 		"Dark Huntress" : 	["h","purple","elf",5,  4,4,6,4,3,0.85, 40, [0,0,1,0,0,0], ['thornknife'] , ['ironscale mail','leather armor'], ['blackwood longbow','thornarrow']],
 		"Dark Praetorian" : ["p","purple","elf",5,  5,4,5,4,3,0.95, 40, [1,0,0,0,0,0], ['sunspear',['thornblade','gauntlet shield']] , ['blackscale']],
 		"Dragoon" :    		["d","magenta","elf",6,  5,4,5,4,4,0.85, 60, [1,0,1,1,0,0], ['sunlance','thornblade'] , ['blackscale'],['Tortured Warsteed']],
@@ -136,7 +137,7 @@ class Monsters():
 		"Giant Wolfspider" : ["w","brown","spider",3,  4,4,4,4,2,0.8, 14, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['pounce']],
 		"Fateweaver" : 		 ["f","bone","spider",3,  3,3,4,4,2,0.8, 15, [0,0,2,0,0,0], ['fangs'] , ['spider hide'],['web shot']],
 		"Armored Crawler" :  ["A","steel","spider",5,  6,4,4,5,5,1.0, 40, [0,0,3,0,0,2], ['fangs'] , ['armored spider plates'],[]],
-		"Black Widower" :    ["W","red","spider",5,  5,5,5,5,3,0.8, 40, [0,0,5,0,1,0], ['spider fangs'] , ['massive stinger','spider hide'],[]],
+		"Black Widower" :    ["w","red","spider",5,  5,5,5,5,3,0.8, 40, [0,0,5,0,1,0], ['spider fangs'] , ['massive stinger','spider hide'],[]],
 		"Broodmother" :  	 ["B","magenta","spider",5,  7,2,2,5,1,1.5, 40, [0,0,2,0,0,0], ['fangs'] , ['armored spider plates'],[]],
 		"Lich Crawler" : 	 ["l","cyan","spider",6,  6,6,5,4,5,0.8, 60, [3,0,2,0,0,0], ['lich fangs'] , ['spider hide'],['pounce']],
 		"Tomblurker Spider" :["t","darkred","spider",6,  5,7,6,4,2,0.7, 60, [0,0,3,0,3,0], ['spider fangs'] , ['spider hide'],['massive stinger','pounce']],
@@ -175,7 +176,7 @@ class Monsters():
 		
 		}
 
-	uniques = ["Dane, Son of Erick", "Ro'khan, Prophet of Gork", "Waa'zhok, Conduit of Gork"]
+	uniques = ["Dane, Son of Erick", "Ro'khan, Prophet of Krog", "Waa'zhok, Conduit of Krog"]
 
 class Bands():  # Tier Bonus :   formations
 
@@ -195,7 +196,7 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Kobold Mage','Kobold Sneak'],
  						 	    ['Greater Kobold'],
 			] ),
- 		'Orc Band' :      (1, [ ['Goblin','Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'], 
+ 		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'], 
  								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Nob'], 
  						 	    ['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Nob'],
  						 	    ['Orc Warboy'],
@@ -363,8 +364,8 @@ class Bands():  # Tier Bonus :   formations
 	 										['Ogre Berserker'],
 	 		] ),
 
- 		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Herald of Gork"], 
- 											["Waa'zhok, Conduit of Gork"],
+ 		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Prophet of Krog"], 
+ 											["Waa'zhok, Conduit of Krog"],
 	 										['Orc Dethnob'],
 	 										['Orc Dethnob'],
 	 										['Orc Dethnob'],
@@ -426,7 +427,7 @@ class Bands():  # Tier Bonus :   formations
  				   		], # -----
  				   }
 
- 	# dicto = { 	   1 : ["Undead Horde",
+ 	# dicto = { 	   1 : ['Orc Band',
  	# 					], # -----
  	# 				2 : [
  	# 			   		], # -----
