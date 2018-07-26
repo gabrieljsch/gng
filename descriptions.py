@@ -138,6 +138,7 @@ class Descriptions():
 		"javelin" : "A balanced polearm with a sharp tip and a weighted butt used for throwing.",
 		"stone" : "An especially round stone, perfect for throwing.",
 		"throwing axe" : "A smaller, more balanced axe used for throwing.",
+		"throwing knife" : "A balanced knife used for throwing at longer ranges.",
 
 		# God weapons
 		"god spear" : ["A polearm with a long shaft and sharp head, initially owned by a god.", "This weapon strikes the next two enemies behind the target on a successful hit."],

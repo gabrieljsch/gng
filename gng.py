@@ -1586,7 +1586,8 @@ class Weapon():
 		# Legendary
 		if self.sname in Weapons.legendaries:
 			self.legendary = True
-			game.legendaries_to_spawn.remove(self.sname)
+			try: game.legendaries_to_spawn.remove(self.sname)
+			except: pass
 		else:
 			self.legendary = False
 
@@ -1698,6 +1699,37 @@ class Weapon():
 						if type(weapon) == Shield:
 							if d(100) > max(33, 90 - (3 * weapon.armor_rating)):
 
+								# Manage the Gauntlets of Mars
+								if self.sname == "the Gauntlets of Mars":
+									damage = int(d(self.damage) + attacker.str / 2 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
+
+									# Stun
+									# ------------------------
+									applied = False
+									for passive in enemy.passives:
+
+										if passive[0] == "stunned":
+											passive[1] = 1
+											applied = True
+											break
+
+									if not applied: enemy.passives.append(["stunned", 1])
+									# ------------------------
+
+									# Manage runic Armor
+									if enemy.equipped_armor.brand == 'runic' and enemy.mana > 0:
+										manadam = min(enemy.mana, damage)
+										enemy.mana -= manadam
+										enemy.hp -= damage - manadam
+									else:
+										# Resolve Damage
+										enemy.hp -= damage
+
+									# Damage Case - Statement
+									game.game_log.append("He attempted to block " + self.name)
+									return
+
+
 								# Block Statement
 								if type(attacker) == Monster: game.game_log.append("You block the "   + str(attacker.name) + "'s " + self.name + " with your " + weapon.name + "!")
 								else:
@@ -1725,6 +1757,7 @@ class Weapon():
 					elif self.wclass in ['demon sword']: damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.50 * enemy.calc_AC() ) )
 					# Manage scream
 					elif self.wclass in ['scream']: damage = int(d(self.damage) + attacker.cha / 1.5 + self.enchantment )
+					# REGULAR MELEE HIT
 					else: damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC() ) )
 
 					# Managed Spiked Armor
@@ -2277,10 +2310,18 @@ class Tome():
 		self.spells = spells
 
 		fg.color = Colors.array[self.color]
-		self.name = fg.color + name + fg.rs
+		self.name, self.sname = fg.color + name + fg.rs, name
 
 		# Magic Damage
 		self.mdamage = 2
+
+		# Legendary
+		if self.sname in Weapons.legendaries:
+			self.legendary = True
+			try: game.legendaries_to_spawn.remove(self.sname)
+			except: pass
+		else:
+			self.legendary = False
 
 	def details(self):
 
@@ -2317,7 +2358,8 @@ class Armor():
 		# Legendary
 		if self.sname in Weapons.legendaries:
 			self.legendary = True
-			game.legendaries_to_spawn.remove(self.sname)
+			try: game.legendaries_to_spawn.remove(self.sname)
+			except: pass
 		else:
 			self.legendary = False
 
@@ -2384,7 +2426,8 @@ class Shield():
 		# Legendary
 		if self.sname in Weapons.legendaries:
 			self.legendary = True
-			game.legendaries_to_spawn.remove(self.sname)
+			try: game.legendaries_to_spawn.remove(self.sname)
+			except: pass
 		else:
 			self.legendary = False
 
@@ -2479,7 +2522,7 @@ class Trap():
 			for unit in affected:
 
 				# Explosive Resist
-				resist = enemy.calc_resistances()[5]
+				resist = unit.calc_resistances()[5]
 				if d(4) <= resist:
 					if unit.name == 'you':
 						game.game_log.append("You shrug off the mine's explosion!")
@@ -2532,7 +2575,7 @@ class Chest():
 								 ["sunspear","sunlance"], 	]
 			self.color = "purple"
 		elif self.type == "wooden":
-			self.pot_weapons = [["steel dagger","iron axe","spear","hammer","mace","iron longsword","club","iron shortsword"], 
+			self.pot_weapons = [["the Gauntlets of Mars"],["steel dagger","iron axe","spear","hammer","mace","iron longsword","club","iron shortsword"], 
 								["crude shortbow","iron battleaxe","iron longsword","mace","flail","quarterstaff","iron bastard sword"], 
 								["buckler shield", "wooden broadshield","trollhide shield","recurve bow"], 
 								["iron battleaxe","iron greatsword","warhammer","spiked club","barbed javelin","longbow"],
