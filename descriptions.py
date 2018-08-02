@@ -36,51 +36,54 @@ class Descriptions():
 
 	legendary = {
 		# Weapons
-		"the Glaive of Gore" : "",
-			# 
+		"the Glaive of Gore" : "This rustic glaive was forged during the first wars of men. Its intensely sharp blade and opposite fleshhooks allow it to easily disembowel enemies with a single motion. Rivulets in the blade allow blood to flow from the blade down the shaft of the weapon in streams.",
+			# 10% Chance to cause disembowled effect, which causes a bleeding damage over time and weakens the afflicted.
 		"Soulreaper" : "This ancient warscythe's blade glows a faint blue, indiscernible whispers are heard when wielding it. Its blade emerges from a skull on its shaft fashioned from femurs, which pulsate lightly...as if the weapon were breathing.",
 			# Increasing damage with kill tiers, 6 tiers, at last tier also gains possessed brand.
-		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when moving. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
+		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when moving, it was once wielded by Huehuecóyotl. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
 			# Chance to change brand with every hit.
-		"Krog's Maw" : "",
-			# Can gain a temporary overshield with this weapon when healing over max health.
+		"Kraken" : "This ancient axe looks as if it had lain at the bottom of the ocean for centuries. Barnacles, coral, and in places even moss adorn this weapon like so many ornaments. Its simple design and light frame allow it to be thrown with relative ease and deadly effectiveness.",
+			# This axe can be thrown but takes a turn to return, but deals secondary damage and immobillizes when ripped out of an enemy to return to user, assuming a hand is free.
+		"Krog's Maw" : "This huge waraxe is the size of a mortal man, for it is said once to be wielded by the orc deity himself. Its single head is covered in huge teeth, spinning on mechanical chains to rend flesh. Records of those slain by this axe are depicted in crude markings along its ivory haft.",
+			# Can gain a overshield equal to a fifth of max health with this weapon when healing over max health with its vampiric brand.
 		"Splinter" : "This deadly knife is coated in black adder venom that stops the heart of its victims in seconds. Its black single-edged blade blends into the grip without a hilt to separate, and its guard is wrapped by a thin, bone-white linen cloth.",
 			# Applies 3 venom stacks instead of normal 2 on brand hit.
-		"Swiftspike" : "",
-			# Movement speed is much faster when wielding this weapon
+		"Swiftspike" : "This elegant dagger is constructed of elf glass and wyvern bone. This dagger is lighter in the hand than the empty hand itself, a strange visible force resides within the glass of its blade.",
+			# Killing an enemy with this grants a burst of speed for a few turns.
 		"Dawn" : "This ornate shortsword glows hot-red when sheathed and bursts into white-hot flame when drawn. Its short, double-edged blade is decorated with carvings of laurels and olive branches, and in its bronze pommel rests a brilliant diamond, which seems to burn brighter than the blade itself.",
-			# Always applies flaming brand, and need more fire resistance to resist its fire.
+			# Always applies flaming brand, and need more fire resistance to resist its fire brand.
 		"Bloodreaver" : "This demon sword resembles a large falchion doused in blood. Its one sharp edge is jagged yet razor sharp, and blood seemingly flows through veins carved into the blade. In the center of its red hilt lies a large hole, in which floats a pulsating black amethyst. No one has dared to try removing it...",
 			# Counters with this weapon apply a deathmark to the enemy.
 		"Nightsbane" : "This bastard sword of legend has a name feared by all creatures of darkness. Its blade is forged entirely from blessed dark silver, its dark-golden hilt and guard in the form of a sharp cross. A vial of holy water rests in center of the hilt, and scrolls covered in holy words are wrapped around the weapon's grip.",
 			# Automatically counter enemies who would be affected by silver brand.
-		"Longfang" : "",
-			# Casting a spell while wielding this weapon grants this weapon the brand corresponding to the type of spell for 1 hit.  "This beautiful bastard sword runs black and white with vein patterns of damascus steel "
-		"God-Cleaver" : "",
-			# After 5 damaging hits with this weapon, the next hit will execute the target (if its not a unique?) (maybe needs to recharge will kills in between uses?).
-		"Worldshaper" : "",
-			# Killing enemies with this weapon restores a moderate amount of mana.
+		"Longfang" : "This beautiful bastard sword runs black and white with twisted vein patterns of damascus steel. The blade is inscribed with strange magical runes, one for each school of magic. The pommel is dominated by the ivory tooth of some creature, as long as the grip and as straight as a spike.",
+			# Casting a spell while wielding this weapon grants this weapon the brand corresponding to the type of spell for a single hit.  
+		"God-Cleaver" : "This executioner greatsword has a name feared by all but the one who wields it. Once this blade tastes the blood of a victim four times, the fifth is guaranteed to end its life, regardless of magic and deception. Its blade is as long as a mortal man is tall, and its fully-engraved blade glows a faint orange.",
+			# After 4 damaging hits with this weapon, the next hit will execute the target (if its not a unique?).
+		"Worldshaper" : "This legendary hammer is the size of a mortal man, for it is said to have been wielded by Odin. A crackling blue energy field surrounds this golden hammer at all times. Its single golden head sits atop its long mithril shaft, and a brilliant opal rests on its large pommel.",
+			# Killing enemies with this weapon restores a quarter tank of mana.
 		"Mjölnir" : "This hammer of legend was once wielded by the god Thor, it still crackles with his thunderous energy. Its short haft is offset by its enourmous, almost rectangular head, decorated with ancient runes and images of Yggdrasil.",
 			# Electrified brand hit bounces thunder to adjacent enemies.
 		"the Gauntlets of Mars": "These ancient stone gauntlets generate a small energy field around them. The blood-red stone of the gauntlets are carved with ancient symbols of war and battle, and numerous cracks and battlescars adorn the edges of the weapons.",
-			# Blocking this weapon instead causes some damage and the blocker to be stunned.
-		"the Talons of Belial": "", 
+			# Blocking this weapon instead causes full damage and the blocker to be stunned.
+		"the Talons of Belial": "These bone-white gauntlets hold in place two long, razor-sharp talons each. The talons are each longer than the gauntlet ítself and curve near the end slightly in towards the gauntlet. Its a miracle if anything comes into contact with one of the talons and isn't shorn completely in half.", 
 			# Killing an enemy causes enemies of a lower tier in small radius to be feared for a few turns (feared also reduces ac slightly).
-		"Tempest" : "done",
+		"Tempest" : "This golden bow radiates with flashes of dark storms and bright sunbeams, for it was once wielded by Horus himself. It takes great strength to draw the string fully back, for the bow easily can retain its intended shape while strung indefinitely.",
 			# Also fires quivered ammo at 2 other random enemies in range.
-		"Godfinger" : "done",
+		"Godfinger" : "This seemingly normal bow somehow operates without a bowstring. When drawn, a blue phantasmal hand is seen over the user's own, assisting in the bow's operation. It is said that the bow has yet to miss a target, no matter the operator.",
 			# You can never miss your target when firing this bow.
 
 		# Armor
-		"Kain's Pact" : "",
-			# Getting hit by a melee attack causes you to blink.
+		"Kain's Pact" : "These fiery robes burn blood red to the eye. The robes utilize an ornate leather breastplate, resembling a rib-cage, to allow its users more protection than normal robes. Wearers are able to cast spells when magical energy is spent...for a price.",
 			# Can cast spells with health when not enough mana.
+		"the Phasic Robes" : "These ethereal robes seem to ebb and flow independent of the user's movements. The pinkish-orange robes feel as if they are made of heavy wool, but are as light as if from silk. Wearers are often seen appearing in multiple locations within the same time.",
+			# Getting hit by a melee attack causes you to blink.
 		"Plaguebringer" : "",
 			# Emits an aura of plague, damaging enemies in a certain radius.
-		"God-Frame" : "",
-			# Small chance to stun attacker on taking a hit.
-		"Bloodshell" : "done",
-			# Damage done by spikes also heal you for a percent.
+		"God-Frame" : "This set of golden plate armor is designed to protect a god from everything possible. It is beautifully engraved with scenes of myth and legend, and on its backplate is welded a force generator that can emit bursts of stunning energy.",
+			# Small chance to stun attackers on taking a hit.
+		"Bloodshell" : "This dark red plate armor is covered in small white teeth, which seem to breathe and react to the touch. In place of a chest pauldron, this armor utilizes a cracked monstrous chronid skrull, teeth flared outwards.",
+			# Damage done by spikes also heals you for a percent.
 
 	}
 
@@ -198,8 +201,11 @@ class Descriptions():
 		"raise skeleton" : ["You command a fallen warrior from centuries past to rise and fight for you."],
 		"dark transformation" : ["When you have been drained of enough blood, cast a ritual to temporarily tranform into a hideous abomination."],
 		"martial draw" : ["You swing at a random adjacent enemy when you draw a weapon."],
+		"evening rites" : ["You prayers and rituals make you immune to the effects of hellfire, soulflame, and vampiric weapons."],
+		"life leech" : ["Your damaging spells drain enemies to heal you for a percent of their damage."],
 		"furious charge" : ["You gain a mad ferocity. You strike adjacent enemies in the same direction you move."],
 		"iron blessing" : ["You bless an ally's armor and weapons, reducing their encumbrance. Casting on a machine will heal it instead."],
+		"deathmark" : ["You curse a target with the black mark, which ignites when the target is hit by a physical attack."],
 
 
 	}	

@@ -18,7 +18,7 @@ class Monsters():
 		# Kobolds
 		"Kobold" : 		  ["k","orange","kobold",1,  2,2,2,1,3,1.0, 4, [0,1,0,1,1,0], ['spear','iron shortsword',['hand axe','buckler shield']] , ['leather armor','troll hide']],
 		"Kobold Archer" : ["a","orange","kobold",1,  2,2,2,1,3,1.0, 4, [0,1,0,1,1,0], ['iron dagger','iron shortsword'] , ['leather armor','troll hide'],['crude shortbow','iron arrow']],
-		"Kobold Mage" :   ["m","magenta","kobold",2,  2,3,3,4,3,1.0, 8, [0,1,0,1,1,0], ['iron dagger'] , ['leather armor','studded armor'],['flame tongue']],
+		"Kobold Mage" :   ["m","magenta","kobold",2,  2,3,3,4,3,1.0, 8, [0,1,0,1,1,0], [['iron dagger','Tome of Fire']] , ['leather armor','studded armor'],['flame tongue']],
 		"Kobold Sneak" :  ["s","darkgreen","kobold",2,  3,3,3,3,3,0.9, 8, [0,1,0,1,1,0], [['iron dagger','iron dagger']] , ['leather armor','studded armor']],
 		"Greater Kobold": ["K","darkred","kobold",3,  4,4,4,3,4,1.0, 15, [0,1,0,1,1,1], ['halberd','iron battleaxe',['steel axe','wooden broadshield']] , ['studded armor','drakescale']],
 
@@ -31,34 +31,36 @@ class Monsters():
 		"Goblin Spiderrider" : ["g","yellow","goblin",2,  3,2,3,1,1,0.85, 15, [0,0,0,0,0,0], ['goblin spear','slica'], ['bear hide','ogre hide'], ['buckler shield','Giant Wolfspider']],
 		"Goblin Chief" :   	   ["g","purple","goblin",3,  5,4,4,2,3,0.9, 15, [0,0,0,0,0,0], ['big choppa','big slica','skull smasha'] , ['berserker mail','leather armor'], ['trollhide shield']],
 
-		"Hobgoblin Skirmisher" : ["h","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], [['bearded axe','wooden broadshield'],['falchion','wooden broadshield'],'pike'] , ['iron chainmail','ironscale mail','studded armor']],
-		"Hobgoblin Defender" : 	 ["d","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], [['bearded axe','tower shield']], ['iron chainmail','ironscale mail','studded armor']],
+		"Hobgoblin Skirmisher" : ["h","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], [['bearded axe','wooden broadshield'],['falchion','wooden broadshield'],'pike'] , ['iron chainmail','ironscale mail','studded armor'],['furious charge']],
+		"Hobgoblin Defender" : 	 ["d","yellow","goblin",4,  5,4,3,2,3,1.0, 40, [0,0,0,0,0,0], ['bearded axe','falchion'], ['iron chainmail','ironscale mail','studded armor'],['tower shield']],
 		"Hobgoblin Bolter" :     ["b","yellow","goblin",4,  4,4,4,2,3,0.9, 40, [0,0,0,0,0,0], ['crossbow'] , ['iron chainmail','ironscale mail','studded armor'],['crossbow','iron bolt']],
+		"Hobgoblin Earthmage" :  ["h","magenta","goblin",6,  6,4,4,7,5,1.0, 60, [0,0,0,0,0,0], ['falchion','ash staff'] , ['bearhide robes'],['Tome of Earth']],
+		"Hobgoblin General" :    ["g","gold","goblin",7,  7,6,6,7,5,1.0, 100, [0,0,0,0,0,0], ['bearded greataxe','witchhunter blade'], ['godforge chainmail','steel plate'],['tower shield']],
 
 		# Orcs
-		"Orc Warboy" : 	   ["o","green","orc",2,  3,4,3,2,2,1.1, 6, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide']],
+		"Orc Warboy" : 	   ["o","green","orc",2,  3,4,3,2,2,1.0, 6, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide']],
 		"Orc Archer" :     ["a","green","orc",2,  3,3,4,2,2,1.0, 6, [0,0,0,0,0,0], ['choppa', 'slica'] , ['bear hide', 'troll hide'], ['crude shortbow','iron arrow']],
 		"Orc Warrior" :    ["o","darkgreen","orc",2,  4,4,3,2,3,1.1, 9, [0,0,0,0,0,0], ['slica','smasha','choppa'] , ['troll hide','leather armor'], ['trollhide shield']],
 		"Orc Berserker" :  ["b","red","orc",3,  4,5,4,2,3,0.8, 15, [1,1,1,0,1,0], ['iron greatsword',['choppa','slica']] , ['berserker mail','iron chainmail'], ['headbutt','furious charge']],
-		"Orc Nob" : 	   ["N","darkgreen","orc",4,  5,5,3,2,4,1.2, 40, [1,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','iron chainmail','scrap plate armor'], ['headbutt','green blood']],
-		"Orc Warlock" :    ["W","magenta","orc",4,  4,3,3,4,4,1.0, 40, [0,0,3,0,0,0], ['toxic slica','oak staff'] , ['wyvernscale','studded armor'], ['poison breath','raise skeleton','green blood']],
+		"Orc Brute" : 	   ["B","darkgreen","orc",4,  5,5,3,2,4,1.2, 40, [1,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','iron chainmail','scrap plate armor'], ['headbutt','green blood']],
+		"Orc Warlock" :    ["W","magenta","orc",4,  4,3,3,4,4,1.1, 40, [0,0,3,0,0,0], ['toxic slica','oak staff'] , ['wyvernscale','studded armor'], ['poison breath','raise skeleton','green blood']],
 		"Orc Warboss" :    ["O","darkred","orc",5,  6,6,4,6,5,1.2, 50, [1,1,1,1,1,1], ['boss choppa','ice choppa',['black ballista','big slica']] , ['berserker mail','scrap plate armor','steel chainmail'], ['headbutt','furious charge','iron bolt','green blood']],
 
 		"Warg" : 	   	   ["w","brown","beast",2,  3,4,3,2,1,0.8, 8, [2,0,0,0,0,0], ['fangs'] , ['warg pelt']],
 		"Feral Warg" : 	   ["w","darkbrown","beast",3,  4,5,4,2,1,0.8, 15, [2,0,0,0,0,0], ['fangs'] , ['warg pelt'],['furious charge']],
 		"Orc Warg-rider" : ["o","green","orc",2,  3,4,3,2,2,1.1, 15, [0,0,0,0,0,0], ['slica','choppa','smasha'] , ['bear hide', 'troll hide'], ['Warg']],
-		"Nob Warg-rider" : ["N","darkgreen","orc",4,  5,5,3,2,4,1.2, 15, [0,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['Feral Warg','green blood']],
+		"Brute Warg-rider":["B","darkgreen","orc",4,  5,5,3,2,4,1.2, 40, [0,0,0,0,0,1], ['big choppa','big slica','skull smasha','ice choppa'] , ['berserker mail','scrap plate armor'], ['Feral Warg','green blood']],
 
-		"Orc Dethnob" :    ["N","orange","orc",5,  6,5,2,2,4,1.4, 50, [1,1,0,0,0,3], [['krogjaw choppa','trollhide shield'],['dethklaw','trollhide shield'],['krogtooth choppa','krogtooth choppa'],] , ['Orcish dreadplate'], ['headbutt','green blood']],
+		"Orc Dethbrute" :  ["B","orange","orc",5,  6,5,2,2,4,1.4, 50, [1,1,0,0,0,3], [['krogjaw choppa','trollhide shield'],['dethklaw','trollhide shield'],['krogtooth choppa','krogtooth choppa'],] , ['Orcish dreadplate'], ['headbutt','green blood']],
 
-		"Ro'khan, Prophet of Krog" :  ["R","red","orc",8,  7,7,4,6,8,1.0, 200, [1,1,0,0,0,1], ["Krog's Maw"] , ['Orcish dreadplate'], ['trollhide shield','furious charge','headbutt','green blood']],
-		"Waa'zhok, Conduit of Krog" : ["W","purple","orc",6,  6,5,3,8,8,1.0, 80, [0,0,0,0,4,0], ['toxic slica','oak staff'] , ['necromancer robes'], ['chain lightning','raise skeleton','green blood']],
+		"Ro'khan, Prophet of Krog" :  ["R","red","orc",8,  7,7,4,6,8,1.2, 200, [1,1,0,0,0,1], ["Krog's Maw"] , ['Orcish dreadplate'], ['trollhide shield','furious charge','headbutt','green blood']],
+		"Waa'zhok, Conduit of Krog" : ["W","purple","orc",6,  6,5,3,8,8,0.9, 80, [0,0,0,0,4,0], ['toxic slica','oak staff'] , ['necromancer robes'], ['chain lightning','raise skeleton','green blood']],
 
 		# Uruks
-		"Uruk Warrior" :   ["u","steel","uruk",3,  4,4,3,2,4,1.0, 15, [0,0,0,0,0,0], ['hooked longsword','spiked axe','spiked mace'] , ['blackiron plate'], ['blackiron shield']],
-		"Uruk Pikeman" :   ["u","steel","uruk",3,  4,4,3,2,4,1.0, 15, [0,0,0,0,0,0], ['uruk-hai pike'] , ['blackiron plate']],
-		"Uruk Bolter" :    ["b","steel","uruk",3,  4,3,4,2,4,0.9, 15, [0,0,0,0,0,0], ['hooked shortsword'] , ['blackiron plate'], ['uruk crossbow','iron bolt']],
-		"Uruk Headhunter" :["h","steel","uruk",4,  4,4,4,2,4,1.0, 22, [0,0,0,0,0,0], ['hooked broadsword',['hooked axe','hooked axe']] , ['blackiron plate'], ['barbed javelin']],
+		"Uruk Warrior" :   ["u","bronze","uruk",3,  4,4,3,2,4,1.0, 15, [0,0,0,0,0,0], ['hooked longsword','spiked axe','spiked mace'] , ['blackiron plate'], ['blackiron shield']],
+		"Uruk Pikeman" :   ["u","bronze","uruk",3,  4,4,3,2,4,1.0, 15, [0,0,0,0,0,0], ['uruk-hai pike'] , ['blackiron plate']],
+		"Uruk Bolter" :    ["b","bronze","uruk",3,  4,3,4,2,4,0.9, 15, [0,0,0,0,0,0], ['hooked shortsword'] , ['blackiron plate'], ['uruk crossbow','iron bolt']],
+		"Uruk Headhunter" :["h","steel","uruk",4,  4,4,4,2,4,1.0, 22, [0,0,0,0,0,0], ['hooked broadsword',['spiked axe','spiked axe']] , ['blackiron plate'], ['barbed javelin']],
 		"Uruk-hai" : 	   ["u","red","uruk",4,  5,4,3,2,4,0.8, 22, [2,0,2,0,2,0], ['hooked broadsword'] , ['berserker mail'], ['headbutt','furious charge']],
 		"Uruk Bodyguard" : ["u","purple","uruk",5,  6,5,3,2,6,1.2, 40, [0,0,0,0,0,0], ['uruk-hai pike', ['hooked broadsword','blackiron shield']], ['blackiron plate'], ['shield hit']],
 		"Uruk Warlord" :   ["U","darkred","uruk",6,  7,6,4,2,6,1.0, 60, [0,0,0,0,0,0], ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','furious charge','headbutt','steel bolt']],
@@ -74,7 +76,7 @@ class Monsters():
 		"Undead Hound" :  	  ["h","tan","undead",3,  4,3,2,3,4,0.6, 15, [0,0,0,0,0,0], ['blood fangs'] , ['dog hide'],['furious charge','pounce']],
 		"Flayed One" :    	  ["f","red","undead",3,  4,4,3,1,2,0.7, 15, [0,0,0,0,0,0], ['bone claws'] , ['flayed skins']],
 		"Undead Immortal" :   ["i","steel","undead",4,  5,4,3,4,5,1.0, 24, [0,0,0,0,0,0], [['steel shortsword','steel shortsword'],['steel longsword','bronze aegis'],['spear','bronze aegis']] , ['steel chainmail']],
-		"Rotting Hulk" :      ["H","darkgreen","undead",4,  7,4,1,3,5,1.7, 24, [0,0,0,0,0,0], ['fist smash'] , ['tattered garments','rotted chainmail','flayed skins']],
+		"Rotting Hulk" :      ["H","darkgreen","undead",4,  7,4,1,3,5,1.7, 24, [0,0,0,0,0,0], ['fist smash'] , ['tattered garments','rotted chainmail','flayed skins'],['vomit']],
 
 		"Lich Eternal" :	  ["l","cyan","undead",7,  6,6,3,10,4,1.1, 100, [5,0,0,0,0,0], [['khopesh', 'steel kiteshield'],'glaive'] , ['godforge chainmail']],
 		"Lich Bonesinger" :	  ["l","magenta","undead",7,  5,5,4,10,8,1.0, 100, [5,0,0,0,0,0], ['glass dagger'] , ['godforge chainmail']],
@@ -90,18 +92,18 @@ class Monsters():
 
 		# Ironkeep Warsquad
 		"Ironkeep Knight" : 	["k","steel","man",5,  6,4,3,4,4,1.3, 40, [0,0,0,0,0,0], [['steel longsword','steel kiteshield'],'halberd','steel battleaxe'], ['steel plate']],
-		"Iron Priest" : 		["p","bronze","man",6,  6,4,2,6,4,1.2, 40, [0,0,0,0,0,0], [['Tome of Iron','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing']],
-		"Ironkeep Confessor" : 	["c","steel","man",7,  5,7,5,5,4,1.1, 40, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes']],
+		"Iron Priest" : 		["p","bronze","man",6,  6,4,2,6,4,1.2, 40, [0,0,0,0,0,0], [['Tome of Iron','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing'],['evening rites']],
+		"Ironkeep Confessor" : 	["c","steel","man",7,  5,7,5,5,4,1.1, 40, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes'],['evening rites']],
 		"Iron Dreadnought" :	["D","grey","machine",8,  8,8,2,1,1,1.4, 40, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
 
 		# Felltrons
 		"Repair Bot" : 		["r","red",  "machine",2,  3,1,3,5,1,1.0, 40, [0,0,3,0,0,0], ['bardiche'], ['bronze mail']],
-		"Assault Unit" : 	["f","steel","machine",5,  5,5,1,4,4,1.5, 40, [1,0,3,0,0,2], [['scimitar','bronze aegis'],['blastmace','bronze aegis'],'bardiche'], ['bronze mail']],
+		"Assault Unit" : 	["f","steel","machine",5,  5,5,1,4,4,1.5, 40, [1,0,3,0,0,2], [['scimitar','bronze aegis'],['blastmace','bronze aegis'],'shockglaive'], ['bronze mail']],
 		"Harrier Unit" : 	["h","steel","machine",5,  4,5,2,4,4,1.4, 40, [1,0,3,0,0,2], ['falchion'], ['bronze mail'],['machine crossbow','steel bolt']],
 		"Mageslayer Unit" : ["f","magenta","machine",6,  6,6,1,4,6,1.1, 40, [1,0,3,0,0,2], ['voidscythe'], ['warpbeast hide']],
 
 		# Chronids
-		"Drone" : 		   ["c","yellow","chronid",2,  2,3,4,1,1,0.9, 6, [0,0,0,0,0,0], ['claws'] , ['chronid shell']],
+		"Drone" : 		   ["c","bone","chronid",2,  2,3,4,1,1,0.9, 6, [0,0,0,0,0,0], ['claws'] , ['chronid shell']],
 		"Ripper Drone" :   ["r","yellow","chronid",3,  2,3,4,1,1,0.9, 14, [0,0,0,0,0,0], ['claws'] , ['chronid shell'],['claws','furious charge']],
 		"Screamer Drone" : ["s","yellow","chronid",3,  2,3,4,3,2,0.9, 14, [0,0,0,0,0,0], ['claws'] , ['chronid shell'],['bioscream']],
 		"Hive Warrior" :   ["W","orange","chronid",4,  5,5,3,2,1,1.0, 25, [0,0,0,0,0,0], ['bioscream','reaper talon','plated limb','bonesword'] , ['chronid shell'],['claws']],
@@ -118,19 +120,27 @@ class Monsters():
 		"Archon" :   		["A","darkred","elf",7,  6,6,7,5,4,0.90, 100, [1,1,2,1,1,0], ['glaive',['thornblade','thornblade']] , ['blackscale','thornmail'], ['gauntlet shield']],
 
 		# Demons
-		"Reaverfiend" :			["r","red","demon",3,  3,4,4,2,2,0.9, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],	
-		"Skulltracker" :  		["s","bone","demon",3,  4,3,3,4,5,1.0, 15, [0,0,0,0,0,2], ['iron axe','bone cleaver'] , ['tainted robes','tattered garments'],['boneshield']],
-		"Bloodhulk" :			["b","orange","demon",3,  6,2,2,2,4,1.2, 15, [2,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
-		"Chaos Spawn" :			["c","magenta","demon",3,  3,3,4,4,5,0.95, 15, [0,0,0,0,2,0], ['armored limb','horns','vomit'] , ['tainted robes','tattered garments'], ['blink','claws']],
-		"Chosen Reaverfiend" : 	["R","darkred","demon",6,  6,6,6,2,5,0.85, 60, [0,3,0,0,0,0], ['skullsplitter','greatflail'] , ['berserker mail'],['tail smash']],
-		"Chosen Skulltracker" : ["S","bone","demon",6,  6,5,4,4,8,1.0, 60, [0,0,0,0,0,3], ['filthaxe'] , ['tainted robes'],['boneshield']],
-		"Chosen Bloodhulk" : 	["B","orange","demon",6,  9,4,3,2,7,1.1, 60, [3,0,0,0,0,0], ['screamflail'] , ['tainted robes']],
-		"Chosen Chaos Spawn" :	["C","purple","demon",6,  5,4,5,7,8,0.95, 60, [0,0,0,0,3,0], ['bone claws'] , ['tainted robes'], ['blink']],
+		# Tier 5
+		"Reaverfiend" :	["r","red","demon",3,  3,4,4,2,2,0.9, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],	
+		"Skulltracker" :["s","bone","demon",3,  4,3,3,4,5,1.0, 15, [0,0,0,0,0,2], ['iron axe','bone cleaver'] , ['tainted robes','tattered garments'],['boneshield']],
+		"Bloodhulk" :	["B","orange","demon",3,  6,2,2,2,4,1.2, 15, [2,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
+		"Chaos Spawn" :	["c","magenta","demon",3,  3,3,4,4,5,0.95, 15, [0,0,0,0,2,0], ['armored limb','horns','vomit'] , ['tainted robes','tattered garments'], ['blink','claws']],
+		# Tier 4
+		"Frozen Devil" : ["f","cyan","demon",4,  4,4,4,4,4,1.1, 24, [3,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
+		# Tier 3
+		# Tier 2
+		"Hellfiend" :  ["h","red","demon",6,  6,6,6,2,5,0.85, 60, [0,3,0,0,0,0], ['skullsplitter','greatflail'] , ['berserker mail'],['tail smash','horns']],
+		"Foul One" :   ["f","darkgreen","demon",6,  6,5,4,4,8,1.2, 60, [0,0,4,4,0,0], ['filthaxe'] , ['tainted robes'],['boneshield']],
+		"Gorehulk" :   ["G","darkred","demon",6,  9,4,3,2,7,1.3, 60, [3,0,0,0,0,0], ['screamflail'] , ['tainted robes']],
+		"Changeling" : ["c","purple","demon",6,  5,4,5,7,8,0.95, 60, [0,0,0,0,3,0], ['bone claws'] , ['tainted robes'], ['blink']],
+		# Tier 1
 
 		# Oozes
-		"Green Ooze" : 	  ["Z","green","ooze",3,  5,3,3,3,2,1.3, 15, [0,0,3,0,3,0], ['acid slap'] , ['ooze skin'],['split']],
-		"Death Ooze" : 	  ["Z","darkred","ooze",3,  5,3,3,3,2,1.4, 15, [0,0,0,0,3,3], ['jelly slap'] , ['bone skin'],['split']],
 		"Lesser Ooze" :   ["z","green","ooze",1,  2,2,1,1,2,1.2, 8,  [0,0,1,0,1,1], ['jelly slap'] , ['ooze skin']],
+		"Green Ooze" : 	  ["Z","green","ooze",3,  5,3,3,3,2,1.3, 15, [0,0,3,0,3,0], ['acid slap'] , ['ooze skin'],['split']],
+		"Orange Ooze" :   ["Z","orange","ooze",3,  3,5,3,3,2,1.2, 15, [0,0,0,0,3,0], ['jelly slap'] , ['ooze skin'],['split']],
+		"Clear Ooze" :    ["Z","steel","ooze",3,  4,4,4,2,1,1.3, 15, [0,0,0,0,3,3], ['jelly slap'] , ['ooze skin'],['split']],
+		"Death Ooze" : 	  ["Z","darkred","ooze",4,  6,4,4,4,3,1.4, 25, [0,0,1,0,3,3], ['jelly slap'] , ['bone skin'],['split']],
 
 		# Spiders
 		"Spiderling" : 		 ["s","tan","spider",1,  1,1,4,1,1,0.7, 4, [0,0,2,0,0,0], ['fangs'] , ['spiderling skin']],
@@ -176,7 +186,20 @@ class Monsters():
 		
 		}
 
+	# Unique, named enemies
 	uniques = ["Dane, Son of Erick", "Ro'khan, Prophet of Krog", "Waa'zhok, Conduit of Krog"]
+
+	# Not affected by bleeds or vampiric
+	dont_bleed = ["skeleton","machine","spirit","ooze"]
+
+	# Bonus damage from silver weapons
+	silver_vulnerable = ["undead","skeleton","abomination","vampire","werewolf"]
+
+	# Bonus damage from holy weapons
+	holy_vulnerable = ["demon","undead","skeleton"]
+
+
+
 
 class Bands():  # Tier Bonus :   formations
 
@@ -197,26 +220,38 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Greater Kobold'],
 			] ),
  		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'], 
- 								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Nob'], 
- 						 	    ['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Nob'],
+ 								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Brute'], 
+ 						 	    ['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Brute'],
  						 	    ['Orc Warboy'],
  						 	    ['Orc Warrior', 'Orc Berserker'],
- 						 	    ['Orc Nob'],
- 						 	    ['Orc Nob','Orc Warlock'],
+ 						 	    ['Orc Brute'],
+ 						 	    ['Orc Brute','Orc Warlock'],
  						 	    ['Orc Warboy'],
  						 	    ['Orc Warboss'],
  						 	    ['Orc Warboy'],
- 						 	    ['Orc Nob'],
+ 						 	    ['Orc Brute'],
+ 			] ),
+ 		'Hobgoblin Squad' :(-2, [ ['Hobgoblin Skirmisher','Hobgoblin Defender'], 
+ 								 ['Hobgoblin Defender'], 
+ 						 	     ['Hobgoblin Skirmisher','Hobgoblin Defender'],
+ 						 	     ['Hobgoblin Bolter'],
+ 						 	     [],
+ 						 	     ['Hobgoblin Earthmage'],
+ 						 	     [],
+ 						 	     ['Hobgoblin General'],
+ 						 	     [],
+ 						 	     [],
+ 						 	     [],
  			] ),
  		'Orc Hunting Party' :(-1,[ ['Feral Warg'], 
  								   ['Feral Warg'],
  						 	       ['Orc Warg-rider'],
  						 	       ['Orc Warg-rider'],
  						 	       ['Orc Warg-rider'],
- 						 	       ['Nob Warg-rider'],
- 						 	       [],
- 						 	       ['Nob Warg-rider'],
- 						 	       ['Nob warg-rider'],
+ 						 	       ['Brute Warg-rider'],
+ 						 	       ['Feral Warg'],
+ 						 	       ['Brute Warg-rider'],
+ 						 	       ['Brute warg-rider'],
  			] ),
  		'Undead Horde' : (2, [  ['Living Corpse'], 
  								['Living Corpse'], 
@@ -230,7 +265,7 @@ class Bands():  # Tier Bonus :   formations
  			] ),
  		'Uruk Warband' : (-1, [ ['Uruk Warrior'], 
  								['Uruk Bolter'], 
- 								['Uruk Warrior','Uruk Warrior','Uruk Pikeman', 'Uruk Pikeman'],
+ 								['Uruk Warrior','Uruk Pikeman'],
  								['Uruk Bolter','Uruk-hai'],
  								['Uruk Headhunter','Uruk Headhunter','Uruk-hai'],
  								['Uruk Warrior'], 
@@ -268,21 +303,21 @@ class Bands():  # Tier Bonus :   formations
  								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
  								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
  								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
- 								['Skulltracker','Bloodhulk','Chaos Spawn','Reaverfiend'],
- 								['Chaos Spawn','Reaverfiend','Reaverfiend','Reaverfiend'],
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
  								[],
- 								['Chosen Reaverfiend','Chosen Skulltracker','Chosen Bloodhulk','Chosen Chaos Spawn'],
  								[],
- 								['Chosen Bloodhulk','Chosen Reaverfiend','Chosen Skulltracker','Chosen Chaos Spawn'],
+ 								[],
+ 								[],
  			] ),
 
- 		'Jelly Band' :  (-2, [  ['Green Ooze', 'Death Ooze'], 
-	 							['Green Ooze', 'Death Ooze'], 
+ 		'Jelly Band' :  (-2, [  ['Green Ooze','Clear Ooze'], 
+	 							['Orange Ooze','Green Ooze'], 
+	 							['Clear Ooze','Orange Ooze'],
 	 							[],
+	 							['Death Ooze'],
 	 							[],
-	 							[],
-	 							[],
-	 							[],
+	 							['Death Ooze'],
 	 							[],
 	 							[],
 	 							[],
@@ -338,7 +373,6 @@ class Bands():  # Tier Bonus :   formations
 	 							['Spiderling','Spiderling','Giant Wolfspider'],
 	 							[],
 	 							['Giant Wolfspider'],
-	 							[],
 	 							['Fateweaver','Giant Wolfspider','Fateweaver'],
 	 							['Armored Crawler','Broodmother','Black Widower'],
 	 							[],
@@ -348,10 +382,10 @@ class Bands():  # Tier Bonus :   formations
 	 							['Spider Queen']
 	 		] ),
 
- 		'Lone Rider' : (+3, [ ['Nob Warg-rider'],
+ 		'Lone Rider' : (+3, [ ['Brute Warg-rider'],
  			] ),
 
- 		'Wandering Monster' : (0, [	['Ogre','Green Ooze','Giant Wolfspider','Cyclops Brute','Cave Troll']	
+ 		'Wandering Monster' : (0, [	['Ogre','Direwolf Alpha','Cyclops Brute','Cave Troll','Ogre Berserker','Cyclops Hurler','Wartroll']	
  			] ),
 
  		'Dragon Nest' : (0, [	['Flame Dragon','Frost Dragon','Bone Dragon']	
@@ -366,13 +400,13 @@ class Bands():  # Tier Bonus :   formations
 
  		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Prophet of Krog"], 
  											["Waa'zhok, Conduit of Krog"],
-	 										['Orc Dethnob'],
-	 										['Orc Dethnob'],
-	 										['Orc Dethnob'],
-	 										['Orc Nob'],
-	 										['Orc Nob'],
-	 										['Orc Nob'],
-	 										['Orc Nob'],
+	 										['Orc Dethbrute'],
+	 										['Orc Dethbrute'],
+	 										['Orc Dethbrute'],
+	 										['Orc Brute'],
+	 										['Orc Brute'],
+	 										['Orc Brute'],
+	 										['Orc Brute'],
 	 		] ),
 
  		'Revelation' :  		(10, [  ['Death'], 
@@ -395,7 +429,7 @@ class Bands():  # Tier Bonus :   formations
  				   		], # -----
  				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band',
  				   		], # -----
- 				   5 : ['Orc Hunting Party',
+ 				   5 : ['Orc Hunting Party','Hobgoblin Squad',
  				   		'Wolf Den','Kobold Party'], # -----
  				   6 : [
  				   		], # -----
@@ -427,7 +461,7 @@ class Bands():  # Tier Bonus :   formations
  				   		], # -----
  				   }
 
- 	# dicto = { 	   1 : ['Orc Band',
+ 	# dicto = { 	   1 : ['Black Eye Cult',
  	# 					], # -----
  	# 				2 : [
  	# 			   		], # -----
