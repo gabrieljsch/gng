@@ -149,20 +149,31 @@ class Tomes():
 	array = {
 
 		# Class Tomes
-		"Tome of the Warrior" : [ [("furious charge", 1, 'trait')], 1, 'darkred'],   #,('warcry', 2, 'ability')], 1, 'darkred'],
-		"Tome of the Ranger" :  [ [("martial draw", 1, 'trait')], 1, 'darkgreen'],
-		"Tome of the Rogue" :   [ [("combat roll", 2, 'ability')], 1, 'bronze'],
-		"Tome of the Mage" :    [ [("magic missile", 1, 'spell'),("blink", 3, 'spell'),         ("chain lightning", 3, 'spell')], 1, 'blue'],
-		"Tome of the Warlock" : [ [("dark bolt", 1, 'spell'),    ("raise skeleton", 3, 'spell')], 1, 'purple'],
-		"Tome of the Paladin" : [ [("bless weapon", 1, 'spell'), ("evening rites", 2, 'trait'), ("flash heal", 3, 'spell')], 1, 'bone'],
+		"Tome of the Warrior" : [ [("furious charge", 1, 'trait'),	 ("battlecry", 3, 'ability')], 	1, 'darkred'],
+		"Tome of the Ranger" :  [ [("martial draw", 1, 'trait'), 	 ("double shot", 2, 'ability')],   1, 'darkgreen'],
+		"Tome of the Rogue" :   [ [("deadly precision", 1, 'trait'), ("combat roll", 2, 'ability')],  1, 'bronze'],
+		"Tome of the Mage" :    [ [("magic missile", 1, 'spell'),	 ("mana flow", 2, 'trait'),     ("blink", 3, 'spell'),   		("chain lightning", 3, 'spell')], 1, 'blue'],
+		"Tome of the Warlock" : [ [("dark bolt", 1, 'spell'),    	 ("life leech", 2, 'trait'),    ("raise skeleton", 3, 'spell'), ("death's hand", 3, 'spell')],    1, 'purple'],
+		"Tome of the Paladin" : [ [("bless weapon", 1, 'spell'), 	 ("evening rites", 2, 'trait'), ("flash heal", 3, 'spell')], 									  1, 'bone'],
 
 		"Tome of the Black Eye" : [ [("dark bolt", 1, 'spell'),   ("bloodreave", 4, 'spell'),("dark transformation", 5, 'ability'),("deathmark", 5, 'spell')], 1, 'magenta'],
 		"Tome of Iron" : 		  [ [("iron blessing", 3, 'spell')], 1, 'steel'],
-		"Tome of Venom" : 		  [ [("poison breath", 1, 'spell')], 1, 'green'],
-		"Tome of Earth" : 		  [ [], 1, 'tan'],
+		"Tome of Venom" : 		  [ [("poison breath", 1, 'spell'), ("ignite venom", 3, 'spell')], 1, 'green'],
+		"Tome of Earth" : 		  [ [("tremor strike", 4, 'spell')], 1, 'tan'],
 		"Tome of Fire" :		  [ [("flame tongue", 2, 'spell')], 1, 'fire'],
 		"Tome of Ice" : 		  [ [], 1, 'cyan'],
-		"Tome of Electricity" :   [ [], 1, 'yellow'],
+		"Tome of Electricity" :   [ [("chain lightning", 3, 'spell'), ("thunderbolt", 3, 'spell')], 1, 'yellow'],
+	}
+
+
+class Potions():
+	array = {
+
+		"healing potion" : "red",
+		"orcblood potion" : "darkgreen",
+		"resistance potion" : "orange",
+		"quicksilver potion" : "steel",
+
 	}
 
 
@@ -289,6 +300,9 @@ class Weapons():
 
 
 	# Basic Weapons
+
+		# Spectral Weapons
+		"spectral sword" : 	     ['!','springgreen','sword',1, 0, 9, 3, 0.9],
 
 		# Blunt / Gauntlets
 		# ---------------------------------------------------------------------
@@ -497,6 +511,7 @@ class Weapons():
 		"recurve bow " : 	  [')','darkbrown','bow',2, 0, 7, -1, 1.4],
 		"blackwood longbow" : [')','darkbrown','bow',2, 0, 7, 1, 1.4],
 		"longbow" :    		  [')','brown','bow',2, 0, 8, 0, 1.7],
+		"hand crossbow" :     [')','tan','crossbow',1, 0, 5, -1, 1.2],
 		"crossbow" :     	  [')','darkbrown','crossbow',2, 0, 10, 0, 2],
 		"machine crossbow" :  [')','steel','crossbow',2, 0, 7, -4, 0.85],
 
@@ -522,8 +537,8 @@ class Weapons():
 		"Kraken" : 					  ['&','springgreen','axe',  1, d(5), 13, 0, 1.1],
 		"Krog's Maw" :    		  	  ['&','red','god axe',     2, d(5), 19, -5, 1.6, 'vampiric'],
 
-		"Swiftspike" :        	  	  ['!','salmon','dagger',  	  1, d(5), 7, 3, 0.4],
-		"Splinter" :        	  	  ['!','darkgreen','knife',  	  1, d(5), 8, 4, 0.9, 'envenomed'],
+		"Swiftspike" :        	  	  ['!','salmon','dagger',  	 1, d(5), 7, 3, 0.4],
+		"Splinter" :        	  	  ['!','darkgreen','knife',  1, d(5), 8, 4, 0.9, 'envenomed'],
 		"Dawn" :        	  	  	  ['!','fire','sword',  	  1, d(5), 12, 2, 1.0, 'flaming'],
 		"Bloodreaver" :          	  ['!','darkred','demon sword', 1, -d(5), 17, -3, 1.2],
 		"Nightsbane" :     	  	 	  ['!','steel','bastard sword',  2, d(5), 16, 4, 1.2, 'silvered'],
@@ -611,8 +626,6 @@ class Weapons():
 		"greatsword" : ["cleave", "into"],
 		"executioner greatsword" : ["cleave", "into"],
 		
-
-
 		# Staff
 		"staff" : ["strike", "into"],
 

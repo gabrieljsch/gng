@@ -78,8 +78,8 @@ class Descriptions():
 			# Can cast spells with health when not enough mana.
 		"the Phasic Robes" : "These ethereal robes seem to ebb and flow independent of the user's movements. The pinkish-orange robes feel as if they are made of heavy wool, but are as light as if from silk. Wearers are often seen appearing in multiple locations within the same time.",
 			# Getting hit by a melee attack causes you to blink.
-		"Plaguebringer" : "",
-			# Emits an aura of plague, damaging enemies in a certain radius.
+		"Plaguebringer" : "This feared chainmail armor uses inbuilt vents to spread infectious diseases through the air. The chainmail is rusty and almost green with packed filth, and spikes holding heads of various defeated opponents are adorned on its backplate.",
+			# Emits an aura of plague, applying one stack of poison to enemies in radius 2.
 		"God-Frame" : "This set of golden plate armor is designed to protect a god from everything possible. It is beautifully engraved with scenes of myth and legend, and on its backplate is welded a force generator that can emit bursts of stunning energy.",
 			# Small chance to stun attackers on taking a hit.
 		"Bloodshell" : "This dark red plate armor is covered in small white teeth, which seem to breathe and react to the touch. In place of a chest pauldron, this armor utilizes a cracked monstrous chronid skrull, teeth flared outwards.",
@@ -90,7 +90,7 @@ class Descriptions():
 	wclass = {
 		# Weapons
 		# Augmented Innate
-		"fists" : ["Weapons carried in or fuzed with the hand to increase punching power."],
+		"fists" :["Weapons carried in or fuzed with the hand to increase punching power."],
 		"fist" : ["A weapon carried in or fuzed with the hand to increase punching power."],
 		"claw" : ["A weapon carried in or fuzed with the hand, with built-in claws to rend flesh.","This weapon does increased damage to lightly armored enemies"],
 
@@ -189,23 +189,33 @@ class Descriptions():
 	}
 
 	skill = {
+		# Spells and Abilities
 		"poison breath" : ["You breathe a cloud of noxious gas at your enemy to poison them."],
 		"magic missile" : ["You conjure a phantasmal arrow of energy to pierce your foe at any range."],
 		"combat roll" : ["Roll 2 squares across the floor, then throw a quivered throwing weapon at a random in-range enemy."],
 		"chain lightning" : ["You fire wild lightning into the air at a specific target. The lightning has a chance to bounce on every unit within 2 squares."],
+		"thunderbolt" : ["You call down a huge bolt of lightning and thunder to smite your foe. The thunderbolt has a chance to stun the target."],
 		"blink" : ["You willingly translocate to a random square within a short range."],
 		"bless weapon" : ["You call upon your deity to temporarily bless your weapon to smite down demons and the unholy."],
+		"tremor strike" : ["You slam your fists into the ground, creating a damaging shockwave around you that also has a good chance to stun."],
 		"dark bolt" : ["You blast a foe with a bolt cursed with a burning black fire."],
+		"death's hand" : ["You unleash a ghostly hand to grab a target, rendering it immobile, setting it aflame, and also poisoning it."],
 		"bloodreave" : ["You set your blood on fire and spray it to burn the soul of your enemies."],
 		"flash heal" : ["You call upon your deity to heal your wounds so you may smite down your foes."],
 		"raise skeleton" : ["You command a fallen warrior from centuries past to rise and fight for you."],
 		"dark transformation" : ["When you have been drained of enough blood, cast a ritual to temporarily tranform into a hideous abomination."],
-		"martial draw" : ["You swing at a random adjacent enemy when you draw a weapon."],
-		"evening rites" : ["You prayers and rituals make you immune to the effects of hellfire, soulflame, and vampiric weapons."],
-		"life leech" : ["Your damaging spells drain enemies to heal you for a percent of their damage."],
-		"furious charge" : ["You gain a mad ferocity. You strike adjacent enemies in the same direction you move."],
 		"iron blessing" : ["You bless an ally's armor and weapons, reducing their encumbrance. Casting on a machine will heal it instead."],
 		"deathmark" : ["You curse a target with the black mark, which ignites when the target is hit by a physical attack."],
+		"spectral sword" : ["You conjure a phantasmal sword from the energy around you. The sword's damage is equal to your intelligence."],
+		"double shot" : ["You nock two arrows on your bow in hopes of showering death upon the enemy."],
+		"battlecry" : ["You conjure a phantasmal sword from the energy around you. The sword's damage is equal to your intelligence."],
+		# Traits
+		"furious charge" : ["You gain a mad ferocity. You strike adjacent enemies in the same direction you move."],
+		"deadly precision" : ["You target weaknesses in enemies' armor, giving you a chance to critically strike with hits. The chance is doubled when using knives and daggers."],
+		"martial draw" : ["You swing at a random adjacent enemy when you draw a melee weapon."],
+		"evening rites" : ["You prayers and rituals make you immune to the effects of hellfire, soulflame, and vampiric weapons."],
+		"life leech" : ["Your damaging spells drain enemies to heal you for some of their damage."],
+		"mana flow" : ["Your connection to mana lets you regenerates it at twice its normal rate."],
 
 
 	}	
@@ -223,6 +233,14 @@ class Descriptions():
 		"Felltron" : "A race of ancient, sentient robotic humanoids, characterized by their strength, constitution, and very slow health regeneration.",
 		"Dwarf" : "A race of stout humanoids with homes deep underground, characterized by their constitution and ability to fight long after they receive mortal wounds.",
 		"Hill Troll" : "A race of hulking, brute humanoids, characterized by their huge stature and ability to wield larger weapons with great ease.",
+	}
+
+
+	potions = {
+		"healing potion": "This potion made from various herbs heals the drinker for 20 health.",
+		"orcblood potion": "This potion made from the blood of an orc purges the drinker from all status effects.",
+		"resistance potion": "This potion grants the drinker vastly increased resistances to the elements for a short time.",
+		"quicksilver potion" : "This potion grants the drinker incredibly quick movement speed for a while.",
 	}
 
 

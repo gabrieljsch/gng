@@ -24,7 +24,7 @@ class CharacterInfo():
 		"Ghoul" :      [[4,4,4,2,1,1.1,  6, [0,0,0,3,0,0], "darkred"], [("feral bite",True)]],
 		"Dragonborn" : [[4,5,2,3,2,1.3, 14, [0,2,0,0,0,0], "gold"], [("flame tongue",True), "tail smash"]],
 		"Black Orc" :  [[5,4,2,2,2,1.3, 15, [2,0,0,0,0,0], "grey"], [("green blood",True),"headbutt"]],
-		"Felltron" :   [[5,5,1,4,1,1.5, 50, [1,0,3,0,0,2], "steel"], []],
+		"Felltron" :   [[5,5,1,4,1,1.5, 50, [1,0,3,0,0,2], "steel"], [("repair matrix",True)]],
 		"Dwarf" : 	   [[6,3,3,3,3,1.4, 10, [0,0,0,0,0,2], "yellow"], [("iron grit",True)]],
 		"Hill Troll" : [[6,5,1,1,1,1.6, 16, [0,0,0,0,0,0], "orange"], []],
 	}
@@ -70,7 +70,7 @@ class CharacterInfo():
 						["shortbow","iron dagger","iron arrow","leather armor"],
 						["iron dagger","iron dagger","leather armor"],
 						["iron dagger","wool robes",("poison breath",False)],
-						["iron dagger","wool robes",("dark bolt",False)]],
+						["iron dagger","wool robes",("poison breath",False)]],
 
 		"Ghoul" :      [["iron axe","buckler shield","hide armor"],
 						["mace","buckler shield","hide armor"],
@@ -91,11 +91,11 @@ class CharacterInfo():
 						["crude shortbow","slica","iron arrow","troll hide"],
 						["hand axe","hand axe","throwing axe","troll hide"],
 						["oak staff","wool robes",("poison breath",False)],
-						["oak staff","wool robes",("dark bolt",False)]],
+						["oak staff","wool robes",("poison breath",False)]],
 
 		"Felltron" : 	[["iron axe","buckler shield","hide armor"],
 						["hammer","buckler shield","hide armor"],
-						["shortbow","iron shortsword","iron arrow","leather armor"],
+						["shortbow","hammer","iron arrow","leather armor"],
 						["iron dagger","iron dagger","throwing axe","leather armor"],
 						["oak staff","wool robes",("magic missile",False)],
 						["oak staff","wool robes",("dark bolt",False)]],
@@ -112,7 +112,7 @@ class CharacterInfo():
 						["crude shortbow","iron dagger","iron arrow","bear hide"],
 						["iron shortsword","bear hide","iron javelin"],
 						["iron shortsword","wolf pelt",("poison breath",False)],
-						["iron shortsword","wolf pelt",("dark bolt",False)]],
+						["iron shortsword","wolf pelt",("poison breath",False)]],
 	}
 
 	class_list = ["Warrior","Paladin","Ranger","Rogue","Mage","Warlock"]

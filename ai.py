@@ -5,6 +5,8 @@ from random import shuffle
 
 def move_towards(one, other, map):
 
+	# Simple move towards, when no path can be made
+
 	x = one.loc[0]
 	y = one.loc[1]
 
@@ -168,13 +170,16 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 
 			if snode not in startvisited:
 
+				# Exit 1
+				if snode in endvisited: return spath[:-1] + paths[snode][::-1]
+
 				for neighbor in a_dict[snode]:
+
+					# Exit 2
+					if neighbor == other: return spath + [neighbor]
 
 					# Exception Squares
 					if (game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
-
-
-					if snode in endvisited: return spath[:-1] + paths[snode][::-1]
 					
 					new = spath[:] + [neighbor]
 					squeue.append(new)
@@ -189,13 +194,13 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 
 			if enode not in endvisited:
 
+				# Exit 3
+				if enode in startvisited: return paths[enode][:-1] + epath[::-1]
+
 				for neighbor in a_dict[enode]:
 
 					# Exception Squares
 					if (game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
-
-
-					if enode in startvisited: return paths[enode][:-1] + epath[::-1]
 					
 					new = epath[:] + [neighbor]
 					equeue.append(new)
@@ -250,22 +255,36 @@ def los(looker, other, map_arr, game, range = False):
 	startvisited, endvisited = set([]), set([])
 	squeue, equeue = [[looker]],[[other]]
 
-	locs = set([(unit.loc[0], unit.loc[1]) for unit in game.units if other != (unit.loc[0], unit.loc[1])])
+	# Unique for LOS, last part is VERY important
+	locs = set([(unit.loc[0], unit.loc[1]) for unit in game.units if other != (unit.loc[0], unit.loc[1]) and game.player.loc != (unit.loc[0], unit.loc[1])])
 
 	while squeue or equeue:
 
 		if squeue:
 
 			spath = squeue.pop(0)
+			# print("spath",spath)
 			snode = spath[-1]
 
 			# Pre-determined range!!!!
 			if range is not False and len(spath) > range: continue
 
 			if snode not in startvisited:
+
+				# Exit 1
+				if snode in endvisited:
+					# print("G1")
+					# print(spath[:-1] + paths[snode][::-1])
+					# print(lostest(spath[:-1] + paths[snode][::-1]))
+					return lostest(spath[:-1] + paths[snode][::-1])
+
+
 				for neighbor in a_dict[snode]:
 
-					if snode in endvisited: return lostest(spath[:-1] + paths[snode][::-1])
+					# Exit 2
+					if neighbor == other:
+						# print("G2")
+						return spath + [neighbor]
 
 					new = spath[:] + [neighbor]
 					squeue.append(new)
@@ -276,15 +295,20 @@ def los(looker, other, map_arr, game, range = False):
 		if equeue:
 
 			epath = equeue.pop(0)
+			# print("epath",epath)
 			enode = epath[-1]
 
 			# Pre-determined range!!!!
 			if range is not False and len(epath) > range: continue
 
 			if enode not in endvisited:
-				for neighbor in a_dict[enode]:
 
-					if enode in startvisited: return lostest(paths[enode][:-1] + epath[::-1])
+				# Exit 3
+				if enode in startvisited:
+					# print("G3")
+					return lostest(paths[enode][:-1] + epath[::-1])
+
+				for neighbor in a_dict[enode]:
 
 					new = epath[:] + [neighbor]
 					equeue.append(new)
