@@ -8,7 +8,7 @@ import ai
 import sys, os
 import termios, fcntl
 import select
-from sty import fg, bg, ef, rs
+from sty import fg, bg, ef, rs, Rule
 
 def d(range):
 	return randint(1,range)
@@ -21,16 +21,16 @@ def md(range, number):
 	return sum
 
 def color(statement, color):
-	fg.color = Colors.array[color]
-	return(fg.color + str(statement) + fg.rs)
+	color = Colors.array[color]
+	return(fg(color[0], color[1], color[2])  + str(statement) + fg.rs)
 
 def bcolor(statement, bcolor):
-	bg.color = Colors.array[bcolor]
-	return(bg.color + str(statement) + bg.rs)
+	bcolor = Colors.array[bcolor]
+	return(bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + bg.rs)
 
 def fullcolor(statement, fcolor, bcolor):
-	fg.color, bg.color = Colors.array[fcolor], Colors.array[bcolor]
-	return(fg.color + bg.color + str(statement) + rs.all)
+	color, bcolor = Colors.array[fcolor], Colors.array[bcolor]
+	return(fg(color[0], color[1], color[2]) + bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + rs.all)
 
 def movement(decision, position):
 	if decision == 'h': return (position[0] - 1, position[1])
