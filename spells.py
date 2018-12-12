@@ -1,58 +1,57 @@
 from random import randint, shuffle
-from bestiary import Monsters
 from maps import Maps
 from codex import Weapons, Armors, Tomes, Shields, Brands, Ammos
-from descriptions import Descriptions, Colors
+from descriptions import Colors
 import ai
 
 import sys, os
 import termios, fcntl
 import select
-from sty import fg, bg, ef, rs, Rule
+from sty import fg, bg, rs
 
-def d(range):
-	return randint(1,range)
+def d(max_number):
+	return randint(1,max_number)
 
-def md(range, number):
-	sum = 0
-	while number > 0:
-		sum += d(range)
-		number -= 1
-	return sum
+def md(max_number, die_number):
+	total = 0
+	while die_number > 0:
+		sum += d(max_number)
+		die_number -= 1
+	return total
 
 def color(statement, color):
 	color = Colors.array[color]
-	return(fg(color[0], color[1], color[2])  + str(statement) + fg.rs)
+	return fg(color[0], color[1], color[2]) + str(statement) + fg.rs
 
 def bcolor(statement, bcolor):
 	bcolor = Colors.array[bcolor]
-	return(bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + bg.rs)
+	return bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + bg.rs
 
 def fullcolor(statement, fcolor, bcolor):
 	color, bcolor = Colors.array[fcolor], Colors.array[bcolor]
-	return(fg(color[0], color[1], color[2]) + bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + rs.all)
+	return fg(color[0], color[1], color[2]) + bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + rs.all
 
 def movement(decision, position):
-	if decision == 'h': return (position[0] - 1, position[1])
-	elif decision == 'j': return (position[0], position[1] + 1)
-	elif decision == 'k': return (position[0], position[1] - 1)
-	elif decision == 'l': return (position[0] + 1, position[1])
-	elif decision == 'y': return (position[0] - 1, position[1] - 1)
-	elif decision == 'u': return (position[0] + 1, position[1] - 1)
-	elif decision == 'b': return (position[0] - 1, position[1] + 1)
-	elif decision == 'n': return (position[0] + 1, position[1] + 1)
+	if decision == 'h': return position[0] - 1, position[1]
+	elif decision == 'j': return position[0], position[1] + 1
+	elif decision == 'k': return position[0], position[1] - 1
+	elif decision == 'l': return position[0] + 1, position[1]
+	elif decision == 'y': return position[0] - 1, position[1] - 1
+	elif decision == 'u': return position[0] + 1, position[1] - 1
+	elif decision == 'b': return position[0] - 1, position[1] + 1
+	elif decision == 'n': return position[0] + 1, position[1] + 1
 	else: return None
 
 def rinput(question):
 	fd = sys.stdin.fileno()
-	newattr = termios.tcgetattr(fd)
-	newattr[3] = newattr[3] & ~termios.ICANON
-	newattr[3] = newattr[3] & ~termios.ECHO
-	termios.tcsetattr(fd, termios.TCSANOW, newattr)
+	new_attributes = termios.tcgetattr(fd)
+	new_attributes[3] = new_attributes[3] & ~termios.ICANON
+	new_attributes[3] = new_attributes[3] & ~termios.ECHO
+	termios.tcsetattr(fd, termios.TCSANOW, new_attributes)
 
-	oldterm = termios.tcgetattr(fd)
-	oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-	fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+	old_term = termios.tcgetattr(fd)
+	old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+	fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
 
 	print("")
 	print(question)
@@ -61,26 +60,27 @@ def rinput(question):
 	except: print("Python interpreter could not keep up. Tell the idiot developer to fix his game.")
 
 	# Reset the terminal:
-	termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
-	fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+	termios.tcsetattr(fd, termios.TCSAFLUSH, old_term)
+	fcntl.fcntl(fd, fcntl.F_SETFL, old_flags)
 	return decision
 
-def apply(unit, passive, count, stacking = False):
+def apply(unit, passive, count, stacking=False, multiple=False):
 
-	for present_passive in unit.passives:
+	if not multiple:
+		for present_passive in unit.passives:
 
-		if present_passive[0] == passive:
-			if stacking: present_passive[1] += count
-			else: present_passive[1] = count
-			return
+			if present_passive[0] == passive:
+				if stacking: present_passive[1] += count
+				else: present_passive[1] = count
+				return
 
 	unit.passives.append([passive, count])
+	if multiple: print(unit.passives)
 
-class Spells():
+class Spells:
 
 
-# DEFINE spells
-
+	# DEFINE spells
 	def leap(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		if attacker.name == 'you':
@@ -162,7 +162,7 @@ class Spells():
 		# 			return True
 		# 	return False
 
-	def combat_roll(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def combat_roll(attacker, enemy, game, map, roomfiller, ability = False):
 
 		if attacker.name == 'you':
 
@@ -242,7 +242,6 @@ class Spells():
 		# 			return True
 		# 	return False
 
-
 	def tripmine(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
@@ -283,7 +282,6 @@ class Spells():
 					return True
 			return False
 
-
 	def green_blood(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Check Condition
@@ -302,7 +300,6 @@ class Spells():
 		# Purge passives
 		game.check_passives(attacker,True)
 		return True
-
 
 	def dark_transformation(name, attacker, enemy, game, map, roomfiller, ability = False):
 
@@ -511,7 +508,6 @@ class Spells():
 		if attacker.name == 'you': game.temp_log.append("There are no places to blink to!")
 		return False
 
-
 	def poison_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
@@ -569,7 +565,25 @@ class Spells():
 		attacker.give_weapon("spectral sword")
 		attacker.wielding[-1].damage = max(min(attacker.int + attacker.calc_mdamage(), 15), 7)
 
-		apply(attacker,'spectral sword',30)
+		apply(attacker,'spectral sword',30, multiple=True)
+
+		# Flavor Text
+		if attacker.name == 'you': game.game_log.append("You conjure a " + color("spectral sword","springgreen") + " in your free hand!")
+		else: game.game_log.append(attacker.info[3] + " conjures a " + color("spectral sword","springgreen") + " in its free hand!")
+
+		return True
+
+	def spectral_sword(name, attacker, enemy, game, map, roomfiller, ability = False):
+
+		# Condition
+		if attacker.hands < 1:
+			if attacker.name == 'you': game.temp_log.append('You do not have a free hand to use.')
+			return False
+
+		attacker.give_weapon("spectral sword")
+		attacker.wielding[-1].damage = max(min(attacker.int + attacker.calc_mdamage(), 15), 7)
+
+		apply(attacker,'spectral sword',30, multiple=True)
 
 		# Flavor Text
 		if attacker.name == 'you': game.game_log.append("You conjure a " + color("spectral sword","springgreen") + " in your free hand!")
@@ -764,7 +778,6 @@ class Spells():
 		# Apply Effect
 		apply(enemy, status, count)
 		return True
-
 
 	def iron_grit(name, attacker, enemy, game, map, roomfiller, ability = False):
 
@@ -1064,7 +1077,6 @@ class Spells():
 		if enemy.name != 'you': game.player.well_being_statement(enemy, attacker, name, game)
 		return True
 
-
 	def dark_bolt(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Traits
@@ -1228,7 +1240,7 @@ class Spells():
 		"holy" : 			["bone","holy"],
 		"wind" : 			["lightblue","hellfire"],
 		"earth" : 			["tan","flaming"],
-		"conjuration" : 	["magenta","runic"],
+		"conjuration" : 	["magenta","runed"],
 		"translocation" : 	["blue","antimagic"],
 		"transmutation" : 	["springgreen","vorpal"],
 		"iron" : 			["steel","silvered"],

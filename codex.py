@@ -1,21 +1,18 @@
-from random import randint, shuffle
-from bestiary import Monsters
-from maps import Maps
-import ai
+from random import randint
 
 import sys, os
 import termios, fcntl
 import select
 
-def d(range):
-	return randint(1,range)
+def d(max_number):
+	return randint(1,max_number)
 
-def md(range, number):
-	sum = 0
-	while number > 0:
-		sum += d(range)
-		number -= 1
-	return sum
+def md(max_number, die_number):
+	total = 0
+	while die_number > 0:
+		total += d(max_number)
+		die_number -= 1
+	return total
 
 def rinput(question):
 	fd = sys.stdin.fileno()
@@ -43,7 +40,7 @@ def rinput(question):
 
 
 class Armors():
-	# self, name, rep, aclasas,  armor_rating, encumbrance, enchantment,  brand(optional)
+	# self, name, rep, aclass,  armor_rating, encumbrance, enchantment,  brand(optional)
 
 	array = {
 
@@ -70,7 +67,7 @@ class Armors():
 		"dog hide" : 		['[','tan','hide',3,1, 0],
 		"troll hide" :  	['[','yellow','hide',4,2, 0],
 		"spider hide" : 	['[','tan','hide',4,1, 0],
-		"flayed skins" : 	['[','darkred','hide',5,1, 0], 
+		"flayed skins" : 	['[','darkred','hide',5,1, 0],
 		"cave troll hide" : ['[','grey','hide',6,4, 0],
 		"warpbeast hide" :  ['[','purple','hide',7,6, 0,'voidforged'],
 
@@ -123,7 +120,7 @@ class Armors():
 
 
 
-class Shields():
+class Shields:
 
 	array = {
 		# self,rep    name, hands, armor_rating, encumbrance, enchantment, brand
@@ -145,7 +142,7 @@ class Shields():
 		"dwarven broadshield":['}','bronze',2,18,12,0],
 		}
 
-class Tomes():
+class Tomes:
 	array = {
 
 		# Class Tomes
@@ -166,7 +163,7 @@ class Tomes():
 	}
 
 
-class Potions():
+class Potions:
 	array = {
 
 		"healing potion" : "red",
@@ -177,9 +174,9 @@ class Potions():
 	}
 
 
-class Brands():
+class Brands:
 	dict = {
-	# Status Effects, and COUNTS GIVEN BY WEAPON BRANDS
+		# Status Effects, and COUNTS GIVEN BY WEAPON BRANDS
 		"drained": {"count": 3, "dex_loss": 3},
 		"flaming": {"count": 2},
 		"envenomed": {"count": 2},
@@ -201,8 +198,8 @@ class Brands():
 	colors = {
 		"flaming": "fire",
 		"frozen": "cyan",
-		"runic": "gold",
 		"silvered": "steel",
+		"runed": "gold",
 		"envenomed": "darkgreen",
 		"hellfire": "orange",
 		"soulflame": "darkred",
@@ -222,7 +219,7 @@ class Brands():
 	}
 
 
-class Ammos():
+class Ammos:
 	#                   rep, wclass, damage
 	array = {
 		# Arrows/Bolts
@@ -244,19 +241,19 @@ class Ammos():
 		"dwarven swiftaxe" : ['&','gold', 'throwing axe', 7],
 	}
 
-	thrown_amclasses = set(["javelin","throwing axe","throwing knife","stone"])
+	thrown_amclasses = {"javelin", "throwing axe", "throwing knife", "stone"}
 
 	projectile = {
-		"bow" :      set(["arrow"]),
-		"crossbow" : set(["bolt"]),
-		"ballista" : set(["bolt","arrow"]),
-		"god bow" :  set(["bolt","arrow"])
+		"bow" : {"arrow"},
+		"crossbow" : {"bolt"},
+		"ballista" : {"bolt", "arrow"},
+		"god bow" : {"bolt", "arrow"}
 
 	}
 
 
-class Weapons():
-	# self,  name, rep, wclass hands,  enchantment, damage, to_hit, speed,   brand(optional), (percent to swing) 
+class Weapons:
+	# self,  name, rep, wclass hands,  enchantment, damage, to_hit, speed,   brand(optional), (percent to swing)
 
 	array = {
 
@@ -301,8 +298,11 @@ class Weapons():
 
 	# Basic Weapons
 
-		# Spectral Weapons
-		"spectral sword" : 	     ['!','springgreen','sword',1, 0, 9, 3, 0.9],
+		# Conjured Weapons
+		"spectral sword" : 	     ['!','springgreen','sword',1, 0, 0, 3, 0.9],
+		"brighthammer":		 	 ['%', 'bone', 'hammer', 1, 0, 0, 1, 1.0, "holy"],
+		"blightmaul": 		 	 ['%', 'darkred', 'maul', 1, 0, 0, -1, 1.2, "soulflame"],
+		"crackhammer": 			 ['%', 'yellow', 'hammer', 1, 0, 0, 0, 0.9, "electrified"],
 
 		# Blunt / Gauntlets
 		# ---------------------------------------------------------------------
@@ -311,7 +311,7 @@ class Weapons():
 		"mace" : 		 ['%','bronze','mace',1, 0, 9, 0, 1.3],
 		"flail" : 		 ['%','grey','flail',1, 0, 12, -4, 1.6],
 		"spiked mace" :  ['%','bronze','mace',1, 0, 11, -1, 1.3],
-		"godfist" : 	 ['%','gold','gauntlet',1, 0, 15, -2, 1.8, "runic"],
+		"godfist" : 	 ['%','gold','gauntlet',1, 0, 15, -2, 1.8, "runed"],
 		"godclaw" : 	 ['&','gold','claw gauntlet',1, 0, 12, 0, 1.3, "electrified"],
 
 		"spiked club" :  ['%','darkbrown','greatclub',2, 0, 16, -4, 1.7],
@@ -337,7 +337,7 @@ class Weapons():
 		# Polearms
 		# ---------------------------------------------------------------------
 		"spear" :	  ['/','brown','spear',1, 0, 8, 0, 1],
-		
+
 		"pike" :	  ['/','grey','pike',2, 0, 10, 0, 1.2],
 		"trident" :   ['/','bronze','polearm',1, 0, 9, 1, 1],
 		"halberd" :	  ['/','grey','polearm',2, 0, 12, -2, 1.15],
@@ -455,9 +455,9 @@ class Weapons():
 
 		# Felltron Weapons
 		# ---------------------------------------------------------------------
-		"voidscythe":  ['/','magenta','scythe', 2, 0, 14, 0, 1.7,"antimagic"],
-		"blastmace" :  ['%','orange','mace',1, 0, 11, 0, 1.5,"electrified"],
-		"powerglaive" :['/','yellow','glaive',2, 0, 13, -1, 1.4,"electrified"],
+		"voidscythe":   ['/','magenta','scythe', 2, 0, 14, 0, 1.7,"antimagic"],
+		"blastmace" :   ['%','orange','mace',1, 0, 11, 0, 1.5,"electrified"],
+		"powerglaive" : ['/','yellow','glaive',2, 0, 13, -1, 1.4,"electrified"],
 		# ---------------------------------------------------------------------
 
 
@@ -545,7 +545,7 @@ class Weapons():
 		"Longfang" :              	  ['!','steel','bastard sword',  2, d(5), 14, 3, 1.0],
 		"God-Cleaver" : 		 	  ['!','orange','executioner greatsword',   2, d(5), 23, -5, 1.7],
 
-		"Worldshaper" :     	 	  ['%','gold','god hammer',  2, d(5), 25, -12, 2.3, 'runic'],
+		"Worldshaper" :     	 	  ['%','gold','god hammer',  2, d(5), 25, -12, 2.3, 'runed'],
 		"Mjölnir" :     	 	  	  ['%','gold','god hammer',  1, d(5), 15, -1, 1.2, 'electrified'],
 
 		"the Gauntlets of Mars": 	  ['&','red','gauntlets',  2, d(5), 20, 0, 1.8],
@@ -554,15 +554,15 @@ class Weapons():
 		"Tempest" : 				  [')','gold','god bow',     2, d(5), 12, 0, 1.4],
 		"Godfinger" : 				  [')','salmon','god bow',     2, d(5), 8, 20, 2],
 		}
-				  ## Legendaries ##
-				  # Weapons
-	legendaries = ["the Glaive of Gore","the Singing Spear","Krog's Maw","Nightsbane", "Splinter",
-				   "Dawn","Longfang","Bloodreaver","God-Cleaver","Worldshaper","Tempest","Godfinger",
-				   "Mjölnir", "Soulreaper", "Swiftspike","the Gauntlets of Mars","the Talons of Belial",
-				   "Kraken",
-				  # Armor
-				   "God-Frame","Bloodshell","Kain's Pact","Plaguebringer","the Phasic Robes"]
-	enemy_legendaries = ["Mjölnir","Krog's Maw"]
+				# Legendaries
+					# Weapons
+	legendaries = {"the Glaive of Gore", "the Singing Spear", "Krog's Maw", "Nightsbane", "Splinter",
+				   "Dawn", "Longfang", "Bloodreaver", "God-Cleaver", "Worldshaper", "Tempest", "Godfinger",
+				   "Mjölnir", "Soulreaper", "Swiftspike", "the Gauntlets of Mars", "the Talons of Belial",
+				   "Kraken"
+				    # Armor
+				   "God-Frame", "Bloodshell", "Kain's Pact", "Plaguebringer", "the Phasic Robes"}
+	enemy_legendaries = ["Mjölnir", "Krog's Maw"]
 
 # ------------------------------------------------------------------
 
@@ -581,8 +581,8 @@ class Weapons():
 		"stinger" : ["stab", "into"],
 		"tail" : ["smash", "into"],
 		"head" : ["smash", "into"],
-		"appendage" : ["slap","into"],
-		"hooves" : ["stomp","onto"],
+		"appendage" : ["slap", "into"],
+		"hooves" : ["stomp", "onto"],
 
 		# Shield
 		"shield" : ["smash", "into"],
@@ -590,10 +590,11 @@ class Weapons():
 		# Blunt
 		"hammer" : ["crash", "on"],
 		"warhammer" : ["crash", "onto"],
-		"god hammer" :["smash","on"],
+		"god hammer" :["smash", "on"],
 		"club" : ["smash", "onto"],
 		"greatclub" : ["smash", "onto"],
 		"mace" : ["smash", "onto"],
+		"maul": ["smash", "into"],
 		"flail" : ["smash", "into"],
 		"gauntlet" : ['punch', 'into'],
 		"gauntlets" : ['punch', 'into'],
@@ -602,7 +603,7 @@ class Weapons():
 
 		# Polearm
 		"spear" : ["thrust","into"],
-		"pike" : ["thurst", "into"],
+		"pike" : ["thrust", "into"],
 		"god spear" : ["plunge", "deep into"],
 		"lance" : ["drive", "into"],
 		"polearm" : ["slice", "into"],
@@ -643,7 +644,7 @@ class Weapons():
 
 
 
-	ranged_wclasses = set(["bow","crossbow","vomit","scream","ballista","god bow"])
+	ranged_wclasses = {"bow", "crossbow", "vomit", "scream", "ballista", "god bow"}
 
 
 
@@ -652,7 +653,7 @@ class Weapons():
 
 
 
-	
+
 
 
 

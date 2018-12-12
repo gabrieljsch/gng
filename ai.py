@@ -65,7 +65,7 @@ def move_towards(one, other, map):
 					if map.can_move((x - 1, y)):
 						one.loc = (one.loc[0] - 1, one.loc[1])
 
-		elif dx <= 1 and dy >= 1:
+		elif dx <= 1 <= dy:
 			if map.can_move((x + 1, y - 1)):
 				one.loc = (one.loc[0] + 1, one.loc[1] - 1)
 			else:
@@ -82,7 +82,7 @@ def move_towards(one, other, map):
 					if map.can_move((x + 1, y)):
 						one.loc = (one.loc[0] + 1, one.loc[1])
 
-		elif dx >= 1 and dy <= 1:
+		elif dx >= 1 >= dy:
 			if map.can_move((x - 1, y + 1)):
 				one.loc = (one.loc[0] - 1, one.loc[1] + 1)
 			else:
@@ -200,7 +200,7 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 				for neighbor in a_dict[enode]:
 
 					# Exception Squares
-					if (game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
+					if (game.map.map_array[neighbor[1]][neighbor[0]] in {'|', '-', '#', ' ', '+', '_'} or neighbor in locs) and blockers: continue
 					
 					new = epath[:] + [neighbor]
 					equeue.append(new)

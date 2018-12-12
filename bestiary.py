@@ -66,20 +66,20 @@ class Monsters():
 		"Uruk Warlord" :   ["U","darkred","uruk",'w',6,  7,6,4,2,6,1.0,17, 60, [0,0,0,0,0,0], ['hooked broadsword',['uruk crossbow','hooked longsword']] , ['blackiron plate'], ['blackiron shield','furious charge','headbutt','steel bolt']],
 
 		# Undead
-		"Skeleton" : 	  	 ["s","bone","skeleton",'w',1,  2,2,1,1,2,1.1,50, 4, [0,0,5,0,0,0], ['iron longsword','iron axe','iron shortsword'] , ['tattered garments']],
-		"Skeleton Archer" :  ["a","bone","skeleton",'ar',2,  3,2,3,2,4,1.1,50, 8, [0,0,5,0,0,0], ['boneknife','iron dagger'] , ['tattered garments'],['recurve bow','iron arrow']],
-		"Skeleton Warrior" : ["w","bone","skeleton",'w',2,  4,2,2,2,4,1.2,50, 8, [0,0,5,0,0,0], ['bone cleaver','sawtooth blade','bonemace'] , ['iron chainmail','studded armor'],['buckler shield']],
+		"Skeleton" : 	  	  ["s","bone","skeleton",'w',1,  2,2,1,1,2,1.1,50, 4, [0,0,5,0,0,0], ['iron longsword','iron axe','iron shortsword'] , ['tattered garments']],
+		"Skeleton Archer" :   ["a","bone","skeleton",'ar',2,  3,2,3,2,4,1.1,50, 8, [0,0,5,0,0,0], ['boneknife','iron dagger'] , ['tattered garments'],['recurve bow','iron arrow']],
+		"Skeleton Warrior" :  ["w","bone","skeleton",'w',2,  4,2,2,2,4,1.2,50, 8, [0,0,5,0,0,0], ['bone cleaver','sawtooth blade','bonemace'] , ['iron chainmail','studded armor'],['buckler shield']],
 
-		"Living Corpse" : 	  ["z","bone","undead",'w',1,  2,2,1,1,1,1.3,20, 4, [0,0,0,0,0,0], ['iron longsword','iron axe','iron dagger','mace'] , ['tattered garments',]],
-		"Undead Legionaire" : ["z","steel","undead",'w',2,  3,3,2,2,1,1.2,14, 8, [0,0,0,0,0,0], ['bone cleaver','iron axe','mace'] , ['iron chainmail','rotted chainmail'],['boneshield']],
-		"Plaguebearer" :      ["p","darkgreen","undead",'w',2,  4,3,1,2,2,1.2,12, 8, [0,0,5,0,0,0], ['bone cleaver','flail'] , ['rotted chainmail'],['vomit','filth explosion']],
-		"Undead Hound" :  	  ["h","tan","undead",'w',3,  4,3,2,3,4,0.6,14, 15, [0,0,0,0,0,0], ['blood fangs'] , ['dog hide'],['furious charge','pounce']],
-		"Flayed One" :    	  ["f","red","undead",'w',3,  4,4,3,1,2,0.7,6, 15, [0,0,0,0,0,0], ['bone claws'] , ['flayed skins']],
-		"Undead Immortal" :   ["i","steel","undead",'w',4,  5,4,3,4,5,1.0,8, 24, [0,0,0,0,0,0], [['steel shortsword','steel shortsword'],['steel longsword','bronze aegis'],['spear','bronze aegis']] , ['steel chainmail']],
-		"Rotting Hulk" :      ["H","darkgreen","undead",'w',4,  7,4,1,3,5,1.7,12, 24, [0,0,0,0,0,0], ['fist smash'] , ['tattered garments','rotted chainmail','flayed skins'],['vomit','filth explosion']],
+		"Living Corpse" : 	   ["z","bone","undead",'w',1,  2,2,1,1,1,1.3,20, 4, [0,0,0,0,0,0], ['iron longsword','iron axe','iron dagger','mace'] , ['tattered garments',]],
+		"Undead Legionnaire" : ["z","steel","undead",'w',2,  3,3,2,2,1,1.2,14, 8, [0,0,0,0,0,0], ['bone cleaver','iron axe','mace'] , ['iron chainmail','rotted chainmail'],['boneshield']],
+		"Plaguebearer" :       ["p","darkgreen","undead",'w',2,  4,3,1,2,2,1.2,12, 8, [0,0,5,0,0,0], ['bone cleaver','flail'] , ['rotted chainmail'],['vomit','filth explosion']],
+		"Undead Hound" :  	   ["h","tan","undead",'w',3,  4,3,2,3,4,0.6,14, 15, [0,0,0,0,0,0], ['blood fangs'] , ['dog hide'],['furious charge','pounce']],
+		"Flayed One" :    	   ["f","red","undead",'w',3,  4,4,3,1,2,0.7,6, 15, [0,0,0,0,0,0], ['bone claws'] , ['flayed skins']],
+		"Undead Immortal" :    ["i","steel","undead",'w',4,  5,4,3,4,5,1.0,8, 24, [0,0,0,0,0,0], [['steel shortsword','steel shortsword'],['steel longsword','bronze aegis'],['spear','bronze aegis']] , ['steel chainmail']],
+		"Rotting Hulk" :       ["H","darkgreen","undead",'w',4,  7,4,1,3,5,1.7,12, 24, [0,0,0,0,0,0], ['fist smash'] , ['tattered garments','rotted chainmail','flayed skins'],['vomit','filth explosion']],
 
-		"Lich Eternal" :	  ["l","cyan","undead",'w',7,  6,6,3,10,4,1.1,8, 100, [5,0,0,0,0,0], [['khopesh', 'steel kiteshield'],'glaive'] , ['godforge chainmail']],
-		"Lich Bonesinger" :	  ["l","magenta","undead",'ma',7,  5,5,4,10,8,1.0,10, 100, [5,0,0,0,0,0], ['glass dagger'] , ['godforge chainmail']],
+		"Lich Eternal" :	   ["l","cyan","undead",'w',7,  6,6,3,10,4,1.1,8, 100, [5,0,0,0,0,0], [['khopesh', 'steel kiteshield'],'glaive'] , ['godforge chainmail']],
+		"Lich Bonesinger" :	   ["l","magenta","undead",'ma',7,  5,5,4,10,8,1.0,10, 100, [5,0,0,0,0,0], ['glass dagger'] , ['godforge chainmail']],
 
 		# The Black Eye
 		"Cultist" :   	   		["c","purple","man",'w',2,  3,3,3,1,1,1.0,14, 8, [0,0,0,0,0,0],  ['mace',['hand axe','iron dagger']] , ['tainted robes']],
@@ -121,7 +121,7 @@ class Monsters():
 
 		# Demons
 		# Tier 5
-		"Reaverfiend" :	["r","red","demon",'w',3,  3,4,4,2,2,0.9,11, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],	
+		"Reaverfiend" :	["r","red","demon",'w',3,  3,4,4,2,2,0.9,11, 15, [0,1,0,0,0,0], ['bloodletter'] , ['tainted robes','tattered garments']],
 		"Skulltracker" :["s","bone","demon",'w',3,  4,3,3,4,5,1.0,14, 15, [0,0,0,0,0,2], ['iron axe','bone cleaver'] , ['tainted robes','tattered garments'],['boneshield']],
 		"Bloodhulk" :	["B","orange","demon",'w',3,  6,2,2,2,4,1.2,9, 15, [2,0,0,0,0,0], ['flail'] , ['tainted robes','tattered garments']],
 		"Chaos Spawn" :	["c","magenta","demon",'mb',3,  3,3,4,4,5,0.95,5, 15, [0,0,0,0,2,0], ['armored limb','horns','vomit'] , ['tainted robes','tattered garments'], ['blink','claws']],
@@ -183,7 +183,7 @@ class Monsters():
 		"Wild Horse" : 		   ["h","brown","beast",'c',3,  4,2,4,1,8,0.7,9, 15, [0,0,0,0,0,0], ['hooves'] , ['horse hide']],
 		"Tortured Warsteed" :  ["h","darkred","beast",'w',3,  3,3,3,1,8,0.7,7, 15, [2,2,0,0,0,0], ['hooves'] , ['horse hide']],
 
-		
+
 		}
 
 	# Unique, named enemies
@@ -201,26 +201,26 @@ class Monsters():
 
 
 
-class Bands():  # Tier Bonus :   formations
+class Bands:  # Tier Bonus :   formations
 
  	formations = {
 
- 		'Wolf Den' :      (2, [ ['Wolf'], 
- 								['Wolf'], 
+ 		'Wolf Den' :      (2, [ ['Wolf'],
+ 								['Wolf'],
  						 	    ['Wolf','Direwolf Cannibal'],
  						 	    ['Direwolf','Direwolf Cannibal'],
  						 	    ['Direwolf Cannibal'],
  						 	    ['Direwolf Alpha'],
- 			] ),
- 		'Kobold Party' : (2, [  ['Kobold'], 
- 								['Kobold Archer'], 
+ 			]),
+ 		'Kobold Party' : (2, [  ['Kobold'],
+ 								['Kobold Archer'],
  						 	    ['Kobold','Kobold','Kobold Mage','Greater Kobold'],
  						 	    [],
  						 	    ['Kobold Mage','Kobold Sneak'],
  						 	    ['Greater Kobold'],
-			] ),
- 		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'], 
- 								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Brute'], 
+			]),
+ 		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'],
+ 								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Brute'],
  						 	    ['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Brute'],
  						 	    ['Orc Warboy'],
  						 	    ['Orc Warrior', 'Orc Berserker'],
@@ -230,9 +230,9 @@ class Bands():  # Tier Bonus :   formations
  						 	    ['Orc Warboss'],
  						 	    ['Orc Warboy'],
  						 	    ['Orc Brute'],
- 			] ),
- 		'Hobgoblin Squad' :(-2, [ ['Hobgoblin Skirmisher','Hobgoblin Defender'], 
- 								 ['Hobgoblin Defender'], 
+ 			]),
+ 		'Hobgoblin Squad' :(-2, [ ['Hobgoblin Skirmisher','Hobgoblin Defender'],
+ 								 ['Hobgoblin Defender'],
  						 	     ['Hobgoblin Skirmisher','Hobgoblin Defender'],
  						 	     ['Hobgoblin Bolter'],
  						 	     [],
@@ -242,8 +242,8 @@ class Bands():  # Tier Bonus :   formations
  						 	     [],
  						 	     [],
  						 	     [],
- 			] ),
- 		'Orc Hunting Party' :(-1,[ ['Feral Warg'], 
+ 			]),
+ 		'Orc Hunting Party' :(-1,[ ['Feral Warg'],
  								   ['Feral Warg'],
  						 	       ['Orc Warg-rider'],
  						 	       ['Orc Warg-rider'],
@@ -252,30 +252,30 @@ class Bands():  # Tier Bonus :   formations
  						 	       ['Feral Warg'],
  						 	       ['Brute Warg-rider'],
  						 	       ['Brute warg-rider'],
- 			] ),
- 		'Undead Horde' : (2, [  ['Living Corpse'], 
- 								['Living Corpse'], 
- 								['Living Corpse','Living Corpse','Undead Legionaire','Plaguebearer'],
- 								['Undead Legionaire', 'Undead Legionaire','Plaguebearer','Flayed One'],
- 								['Undead Legionaire', 'Plaguebearer','Flayed One'],
- 								['Living Corpse'], 
+ 			]),
+ 		'Undead Horde' : (2, [  ['Living Corpse'],
+ 								['Living Corpse'],
+ 								['Living Corpse','Living Corpse','Undead Legionnaire','Plaguebearer'],
+ 								['Undead Legionnaire', 'Undead Legionnaire','Plaguebearer','Flayed One'],
+ 								['Undead Legionnaire', 'Plaguebearer','Flayed One'],
+ 								['Living Corpse'],
  								['Undead Hound','Flayed One'],
- 								['Living Corpse'], 
+ 								['Living Corpse'],
  								['Rotting Hulk'],
- 			] ),
- 		'Uruk Warband' : (-1, [ ['Uruk Warrior'], 
- 								['Uruk Bolter'], 
+ 			]),
+ 		'Uruk Warband' : (-1, [ ['Uruk Warrior'],
+ 								['Uruk Bolter'],
  								['Uruk Warrior','Uruk Pikeman'],
  								['Uruk Bolter','Uruk-hai'],
  								['Uruk Headhunter','Uruk Headhunter','Uruk-hai'],
- 								['Uruk Warrior'], 
+ 								['Uruk Warrior'],
  								['Uruk Warlord'],
  								['Uruk Bodyguard'],
  								['Uruk Bodyguard'],
- 			] ),
+ 			]),
 
- 		'Dark Elf Guild' :  (-2, [  ['Wardancer','Wardancer','Dark Praetorian'], 
-	 								['Wardancer','Dark Huntress'], 
+ 		'Dark Elf Guild' :  (-2, [  ['Wardancer','Wardancer','Dark Praetorian'],
+	 								['Wardancer','Dark Huntress'],
 	 								['Dark Praetorian'],
 	 								[],
 	 								['Dragoon','Dark Justicar'],
@@ -284,10 +284,10 @@ class Bands():  # Tier Bonus :   formations
 	 								['Dark Praetorian'],
 	 								[],
 	 								['Archon']
-		] ),
+		]),
 
-		'Black Eye Cult' :  (0, [   ['Cultist', 'Cultist','Cultist','Cult Disciple'], 
-	 								['Cultist', 'Cultist','Cultist','Cult Disciple'], 
+		'Black Eye Cult' :  (0, [   ['Cultist', 'Cultist','Cultist','Cult Disciple'],
+	 								['Cultist', 'Cultist','Cultist','Cult Disciple'],
 	 								['Cult Disciple'],
 	 								[],
 	 								['Cult Gravewhisperer'],
@@ -297,22 +297,22 @@ class Bands():  # Tier Bonus :   formations
 	 								[],
 	 								[],
 	 								['Cult Prophet']
-			] ),
+			]),
 
- 		'Demon Horde' : (0, [   ['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
+ 		'Demon Horde' : (0, [   ['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
  								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'], 
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+ 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
  								[],
  								[],
  								[],
  								[],
- 			] ),
+ 			]),
 
- 		'Jelly Band' :  (-2, [  ['Green Ooze','Clear Ooze'], 
-	 							['Orange Ooze','Green Ooze'], 
+ 		'Jelly Band' :  (-2, [  ['Green Ooze','Clear Ooze'],
+	 							['Orange Ooze','Green Ooze'],
 	 							['Clear Ooze','Orange Ooze'],
 	 							[],
 	 							['Death Ooze'],
@@ -322,10 +322,10 @@ class Bands():  # Tier Bonus :   formations
 	 							[],
 	 							[],
 	 							[]
-	 		] ),
+	 		]),
 
- 		'Felltron Formation' :(-4, [['Assault Unit'], 
-		 							['Assault Unit'], 
+ 		'Felltron Formation' :(-4, [['Assault Unit'],
+		 							['Assault Unit'],
 		 							['Repair Bot'],
 		 							['Repair Bot'],
 		 							['Harrier Unit'],
@@ -335,11 +335,11 @@ class Bands():  # Tier Bonus :   formations
 		 							[],
 		 							[],
 		 							[]
-	 		] ),
+	 		]),
 
 
- 		'Chronid Hive' :  (1,  [['Drone'], 
-	 							['Drone'], 
+ 		'Chronid Hive' :  (1,  [['Drone'],
+	 							['Drone'],
 	 							['Drone'],
 	 							['Ripper Drone','Screamer Drone'],
 	 							['Ripper Drone','Screamer Drone'],
@@ -351,10 +351,10 @@ class Bands():  # Tier Bonus :   formations
 	 							['Ripper Drone','Screamer Drone','Hive Warrior'],
 	 							['Hivelord'],
 	 							[]
-	 		] ),
+	 		]),
 
- 		'Ironkeep Warsquad' :  (-4, [   ['Ironkeep Knight'], 
-	 									['Ironkeep Knight'], 
+ 		'Ironkeep Warsquad' :  (-4, [   ['Ironkeep Knight'],
+	 									['Ironkeep Knight'],
 	 									['Iron Priest'],
 	 									[],
 	 									['Ironkeep Confessor','Iron Dreadnought'],
@@ -364,10 +364,10 @@ class Bands():  # Tier Bonus :   formations
 	 									[],
 	 									[],
 	 									[]
-	 		] ),
+	 		]),
 
- 		'Spider Cave' :  (+3, [ ['Spiderling'], 
-	 							['Spiderling'], 
+ 		'Spider Cave' :  (+3, [ ['Spiderling'],
+	 							['Spiderling'],
 	 							['Spiderling'],
 	 							['Spiderling'],
 	 							['Spiderling','Spiderling','Giant Wolfspider'],
@@ -380,25 +380,25 @@ class Bands():  # Tier Bonus :   formations
 	 							['Lich Crawler','Tomblurker Spider'],
 	 							[],
 	 							['Spider Queen']
-	 		] ),
+	 		]),
 
  		'Lone Rider' : (+3, [ ["Ogre"],
- 			] ),
+ 			]),
 
- 		'Wandering Monster' : (0, [	['Ogre','Direwolf Alpha','Cyclops Brute','Cave Troll','Ogre Berserker','Cyclops Hurler','Wartroll']	
- 			] ),
+ 		'Wandering Monster' : (0, [	['Ogre','Direwolf Alpha','Cyclops Brute','Cave Troll','Ogre Berserker','Cyclops Hurler','Wartroll']
+ 			]),
 
- 		'Dragon Nest' : (0, [	['Flame Dragon','Frost Dragon','Bone Dragon']	
- 			] ),
+ 		'Dragon Nest' : (0, [	['Flame Dragon','Frost Dragon','Bone Dragon']
+ 			]),
 
- 		'Dane and the CS Nerds' :  (10, [  ["Dane, Son of Erick"], 
+ 		'Dane and the CS Nerds' :  (10, [  ["Dane, Son of Erick"],
 	 										['Wartroll'],
 	 										['Cyclops Hurler'],
 	 										['Wartroll'],
 	 										['Ogre Berserker'],
-	 		] ),
+	 		]),
 
- 		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Prophet of Krog"], 
+ 		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Prophet of Krog"],
  											["Waa'zhok, Conduit of Krog"],
 	 										['Orc Dethbrute'],
 	 										['Orc Dethbrute'],
@@ -407,58 +407,58 @@ class Bands():  # Tier Bonus :   formations
 	 										['Orc Brute'],
 	 										['Orc Brute'],
 	 										['Orc Brute'],
-	 		] ),
+	 		]),
 
- 		'Revelation' :  		(10, [  ['Death'], 
+ 		'Revelation' :  		(10, [  ['Death'],
 	 									['Famine'],
 	 									['War'],
 	 									['Pestilence'],
-	 		] ),
+	 		]),
 
 
- 		
+
 
 
  	}
 
- 	dicto = { 	   1 : ['Orc Band','Undead Horde','Wandering Monster','Wolf Den','Kobold Party','Spider Cave',
- 						], # -----
+ 	dicto = {	   1 : ['Orc Band', 'Undead Horde', 'Wandering Monster', 'Wolf Den', 'Kobold Party', 'Spider Cave',
+ 						],  # -----
  				   2 : [
- 				   		], # -----
- 				   3 : ['Black Eye Cult','Demon Horde','Chronid Hive',
- 				   		], # -----
- 				   4 : ['Uruk Warband','Dark Elf Guild','Black Eye Cult','Jelly Band',
- 				   		], # -----
+ 				   		],  # -----
+ 				   3 : ['Black Eye Cult', 'Demon Horde', 'Chronid Hive',
+ 				   		],  # -----
+ 				   4 : ['Uruk Warband', 'Dark Elf Guild', 'Black Eye Cult', 'Jelly Band',
+ 				   		],  # -----
  				   5 : ['Orc Hunting Party','Hobgoblin Squad',
- 				   		'Wolf Den','Kobold Party'], # -----
+ 				   		'Wolf Den', 'Kobold Party'],  # -----
  				   6 : [
- 				   		], # -----
+ 				   		],  # -----
  				   7 : ['Ironkeep Warsquad',
- 				   		], # -----
+ 				   		],  # -----
  				   8 : ['Felltron Formation',
- 				   		], # -----
+ 				   		],  # -----
  				   9 : [
- 				   		], # -----
+ 				   		],  # -----
  				   10: ['Dragon Nest',
- 				   		], # -----
+ 				   		],  # -----
  				   11 : [
- 				   		], # -----
- 				   	12 : [
- 				   		], # -----
- 				   	13 : [
- 				   		], # -----
- 				   	14 : [
- 				   		], # -----
- 				   	15 : ['Dane and the CS Nerds',
- 				   		], # -----
- 				   	16 : ['Revelation',
- 				   		], # -----
- 				   	17 : [
- 				   		], # -----
- 				   	18 : ["Ro'khan's Worldeaters",
- 				   		], # -----
- 				   	19 : [
- 				   		], # -----
+ 				   		],  # -----
+ 				   12 : [
+ 				   		],  # -----
+ 				   13 : [
+ 				   		],  # -----
+ 				   14 : [
+ 				   		],  # -----
+ 				   15 : ['Dane and the CS Nerds',
+ 				   		],  # -----
+ 				   16 : ['Revelation',
+ 				   		],  # -----
+ 				   17 : [
+ 				   		],  # -----
+ 				   18 : ["Ro'khan's Worldeaters",
+ 				   		],  # -----
+ 				   19 : [
+ 				   		],  # -----
  				   }
 
  	# dicto = { 	   1 : ['Lone Rider',

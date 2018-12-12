@@ -1,6 +1,6 @@
 from sty import Rule, Render
 
-class Colors():
+class Colors:
 
 	array = {
 		'red' : (255, 10, 10),
@@ -31,21 +31,21 @@ class Colors():
 
 
 
-class Descriptions():
+class Descriptions:
 
 
 	legendary = {
 		# Weapons
 		"the Glaive of Gore" : "This rustic glaive was forged during the first wars of men. Its intensely sharp blade and opposite fleshhooks allow it to easily disembowel enemies with a single motion. Rivulets in the blade allow blood to flow from the blade down the shaft of the weapon in streams.",
-			# 10% Chance to cause disembowled effect, which causes a bleeding damage over time and weakens the afflicted.
+			# 10% Chance to cause disemboweled effect, which causes a bleeding damage over time and weakens the afflicted.
 		"Soulreaper" : "This ancient warscythe's blade glows a faint blue, indiscernible whispers are heard when wielding it. Its blade emerges from a skull on its shaft fashioned from femurs, which pulsate lightly...as if the weapon were breathing.",
 			# Increasing damage with kill tiers, 6 tiers, at last tier also gains possessed brand.
 		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when moving, it was once wielded by Huehuecóyotl. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
 			# Chance to change brand with every hit.
 		"Kraken" : "This ancient axe looks as if it had lain at the bottom of the ocean for centuries. Barnacles, coral, and in places even moss adorn this weapon like so many ornaments. Its simple design and light frame allow it to be thrown with relative ease and deadly effectiveness.",
-			# This axe can be thrown but takes a turn to return, but deals secondary damage and immobillizes when ripped out of an enemy to return to user, assuming a hand is free.
+			# This axe can be thrown but takes a turn to return, but deals secondary damage and immobilizes when ripped out of an enemy to return to user, assuming a hand is free.
 		"Krog's Maw" : "This huge waraxe is the size of a mortal man, for it is said once to be wielded by the orc deity himself. Its single head is covered in huge teeth, spinning on mechanical chains to rend flesh. Records of those slain by this axe are depicted in crude markings along its ivory haft.",
-			# Can gain a overshield equal to a fifth of max health with this weapon when healing over max health with its vampiric brand.
+			# Can gain an over-shield equal to a fifth of max health with this weapon when healing over max health with its vampiric brand.
 		"Splinter" : "This deadly knife is coated in black adder venom that stops the heart of its victims in seconds. Its black single-edged blade blends into the grip without a hilt to separate, and its guard is wrapped by a thin, bone-white linen cloth.",
 			# Applies 3 venom stacks instead of normal 2 on brand hit.
 		"Swiftspike" : "This elegant dagger is constructed of elf glass and wyvern bone. This dagger is lighter in the hand than the empty hand itself, a strange visible force resides within the glass of its blade.",
@@ -62,11 +62,11 @@ class Descriptions():
 			# After 4 damaging hits with this weapon, the next hit will execute the target (if its not a unique?).
 		"Worldshaper" : "This legendary hammer is the size of a mortal man, for it is said to have been wielded by Odin. A crackling blue energy field surrounds this golden hammer at all times. Its single golden head sits atop its long mithril shaft, and a brilliant opal rests on its large pommel.",
 			# Killing enemies with this weapon restores a quarter tank of mana.
-		"Mjölnir" : "This hammer of legend was once wielded by the god Thor, it still crackles with his thunderous energy. Its short haft is offset by its enourmous, almost rectangular head, decorated with ancient runes and images of Yggdrasil.",
+		"Mjölnir" : "This hammer of legend was once wielded by the god Thor, it still crackles with his thunderous energy. Its short haft is offset by its enormous, almost rectangular head, decorated with ancient runes and images of Yggdrasil.",
 			# Electrified brand hit bounces thunder to adjacent enemies.
-		"the Gauntlets of Mars": "These ancient stone gauntlets generate a small energy field around them. The blood-red stone of the gauntlets are carved with ancient symbols of war and battle, and numerous cracks and battlescars adorn the edges of the weapons.",
+		"the Gauntlets of Mars": "These ancient stone gauntlets generate a small energy field around them. The blood-red stone of the gauntlets are carved with ancient symbols of war and battle, and numerous cracks and battle-scars adorn the edges of the weapons.",
 			# Blocking this weapon instead causes full damage and the blocker to be stunned.
-		"the Talons of Belial": "These bone-white gauntlets hold in place two long, razor-sharp talons each. The talons are each longer than the gauntlet ítself and curve near the end slightly in towards the gauntlet. Its a miracle if anything comes into contact with one of the talons and isn't shorn completely in half.", 
+		"the Talons of Belial": "These bone-white gauntlets hold in place two long, razor-sharp talons each. The talons are each longer than the gauntlet itself and curve near the end slightly in towards the gauntlet. Its a miracle if anything comes into contact with one of the talons and isn't shorn completely in half.",
 			# Killing an enemy causes enemies of a lower tier in small radius to be feared for a few turns (feared also reduces ac slightly).
 		"Tempest" : "This golden bow radiates with flashes of dark storms and bright sunbeams, for it was once wielded by Horus himself. It takes great strength to draw the string fully back, for the bow easily can retain its intended shape while strung indefinitely.",
 			# Also fires quivered ammo at 2 other random enemies in range.
@@ -82,7 +82,7 @@ class Descriptions():
 			# Emits an aura of plague, applying one stack of poison to enemies in radius 2.
 		"God-Frame" : "This set of golden plate armor is designed to protect a god from everything possible. It is beautifully engraved with scenes of myth and legend, and on its backplate is welded a force generator that can emit bursts of stunning energy.",
 			# Small chance to stun attackers on taking a hit.
-		"Bloodshell" : "This dark red plate armor is covered in small white teeth, which seem to breathe and react to the touch. In place of a chest pauldron, this armor utilizes a cracked monstrous chronid skrull, teeth flared outwards.",
+		"Bloodshell" : "This dark red plate armor is covered in small white teeth, which seem to breathe and react to the touch. In place of a chest pauldron, this armor utilizes a cracked monstrous chronid skull, teeth flared outwards.",
 			# Damage done by spikes also heals you for a percent.
 
 	}
@@ -175,14 +175,14 @@ class Descriptions():
 		"soulflame" : "This infernal weapon has a chance to siphon the dexterity of the target.",
 		"vampiric" : "This cursed weapon steals life from the victims of its strikes.",
 		"antimagic" : "This weapon deals extra damage to spellcasters and users of magic.",
-		"runic" : "This weapon expends mana to deliver strikes that ignore enemy armor when possible.",
+		"runed" : "This weapon expends mana to deliver strikes that ignore enemy armor when possible.",
 		"vorpal" : "This infernal weapon clears victims of status effects and deals bonus damage for each.",
 		"possessed" : "This possessed weapon hits multiple times for each strike... if it feels so inclined.",
 
 		# Armor
 		"spiked" : "This spiked armor has a chance to reflect some physical damage back to attackers.",
 		"icy" : "This frosted armor provides moderate frost resistance to the wearer.",
-		"tempered" : "This firefirged armor provides moderate fire resistance to the wearer.",
+		"tempered" : "This fire-forged armor provides moderate fire resistance to the wearer.",
 		"insulated" : "This padded armor provides moderate shock resistance to the wearer.",
 		"voidforged" : "This glowing armor provides moderate magic defense to the wearer.",
 		"runic" : "This well-adorned armor transfers physical damage to your mana reserves before your health reserves.",
@@ -203,7 +203,7 @@ class Descriptions():
 		"bloodreave" : ["You set your blood on fire and spray it to burn the soul of your enemies."],
 		"flash heal" : ["You call upon your deity to heal your wounds so you may smite down your foes."],
 		"raise skeleton" : ["You command a fallen warrior from centuries past to rise and fight for you."],
-		"dark transformation" : ["When you have been drained of enough blood, cast a ritual to temporarily tranform into a hideous abomination."],
+		"dark transformation" : ["When you have been drained of enough blood, cast a ritual to temporarily transform into a hideous abomination."],
 		"iron blessing" : ["You bless an ally's armor and weapons, reducing their encumbrance. Casting on a machine will heal it instead."],
 		"deathmark" : ["You curse a target with the black mark, which ignites when the target is hit by a physical attack."],
 		"spectral sword" : ["You conjure a phantasmal sword from the energy around you. The sword's damage is equal to your intelligence."],
