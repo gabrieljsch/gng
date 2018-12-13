@@ -16,7 +16,7 @@ class Monsters():
 		"Direwolf Alpha" : 	  ["A","darkred","beast",'w',3,  5,5,5,2,1,0.8,12, 15, [1,0,0,0,0,0], ['demon fangs','blood fangs'] , ['direwolf pelt'],['furious charge']],
 
 		# Kobolds
-		"Kobold" : 		  ["k","orange","kobold",'w',1,  2,2,2,1,3,1.0,15, 4, [0,1,0,1,1,0], ['spear',"iron shortword",['hand axe','buckler shield']] , ['leather armor','troll hide']],
+		"Kobold" : 		  ["k","orange","kobold",'w',1,  2,2,2,1,3,1.0,15, 4, [0,1,0,1,1,0], ['spear',"iron shortsword",['hand axe','buckler shield']] , ['leather armor','troll hide']],
 		"Kobold Archer" : ["a","orange","kobold",'ar',1,  2,2,2,1,3,1.0,15, 4, [0,1,0,1,1,0], ['iron dagger','iron shortsword'] , ['leather armor','troll hide'],['crude shortbow','iron arrow']],
 		"Kobold Mage" :   ["m","magenta","kobold",'ma',2,  2,3,3,4,3,1.0,15, 8, [0,1,0,1,1,0], [['iron dagger','Tome of Fire']] , ['leather armor','studded armor'],['flame tongue']],
 		"Kobold Sneak" :  ["s","darkgreen","kobold",'ro',2,  3,3,3,3,3,0.9,15, 8, [0,1,0,1,1,0], [['iron dagger','iron dagger']] , ['leather armor','studded armor']],
@@ -196,7 +196,7 @@ class Monsters():
 	silver_vulnerable = ["undead","skeleton","abomination","vampire","werewolf"]
 
 	# Bonus damage from holy weapons
-	holy_vulnerable = ["demon","undead","skeleton"]
+	holy_vulnerable = ["demon","undead","skeleton","abomination"]
 
 
 

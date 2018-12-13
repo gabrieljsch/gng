@@ -39,7 +39,7 @@ def rinput(question):
 
 
 
-class Armors():
+class Armors:
 	# self, name, rep, aclass,  armor_rating, encumbrance, enchantment,  brand(optional)
 
 	array = {
@@ -143,6 +143,7 @@ class Shields:
 		}
 
 class Tomes:
+
 	array = {
 
 		# Class Tomes
@@ -164,6 +165,7 @@ class Tomes:
 
 
 class Potions:
+
 	array = {
 
 		"healing potion" : "red",
@@ -175,6 +177,7 @@ class Potions:
 
 
 class Brands:
+
 	dict = {
 		# Status Effects, and COUNTS GIVEN BY WEAPON BRANDS
 		"drained": {"count": 3, "dex_loss": 3},
@@ -300,9 +303,16 @@ class Weapons:
 
 		# Conjured Weapons
 		"spectral sword" : 	     ['!','springgreen','sword',1, 0, 0, 3, 0.9],
-		"brighthammer":		 	 ['%', 'bone', 'hammer', 1, 0, 0, 1, 1.0, "holy"],
+		"brighthammer":		 	 ['%', 'bone', 'hammer', 1, 0, 0, 0, 1.0, "holy"],
 		"blightmaul": 		 	 ['%', 'darkred', 'maul', 1, 0, 0, -1, 1.2, "soulflame"],
-		"crackhammer": 			 ['%', 'yellow', 'hammer', 1, 0, 0, 0, 0.9, "electrified"],
+		"crackhammer": 			 ['%', 'yellow', 'hammer', 1, 0, 0, -1, 0.9, "electrified"],
+		"sunhammer": 			 ['%', 'fire', 'hammer', 1, 0, 0, 3, 1.1, "flaming"],
+		"frostmace": 			 ['%', 'cyan', 'mace', 1, 0, 0, 4, 1.2, "frozen"],
+		"doomhammer": 		     ['%', 'orange', 'hammer', 1, 0, 0, -2, 0.8, "hellfire"],
+		"dreadmace": 			 ['%', 'purple', 'mace', 1, 0, 0, 2, 1.0, "vorpal"],
+		"bloodmaul": 			 ['%', 'red', 'maul', 1, 0, 0, 0, 0.9, "vampiric"],
+		"soulflail": 			 ['%', 'springgreen', 'flail', 1, 0, 0, 0, 1.0, "possessed"],
+		"fangmace": 			 ['%', 'darkgreen', 'mace', 1, 0, 0, 3, 1.1, "envenomed"],
 
 		# Blunt / Gauntlets
 		# ---------------------------------------------------------------------
@@ -550,6 +560,8 @@ class Weapons:
 
 		"the Gauntlets of Mars": 	  ['&','red','gauntlets',  2, d(5), 20, 0, 1.8],
 		"the Talons of Belial": 	  ['&','bone','claw gauntlets',  2, d(5), 15, 0, 1.0],
+
+		"the Thick Rod": 		  	  ['!', 'fire', 'sword', 1, d(5), 12, 2, 1.0, 'flaming'],
 
 		"Tempest" : 				  [')','gold','god bow',     2, d(5), 12, 0, 1.4],
 		"Godfinger" : 				  [')','salmon','god bow',     2, d(5), 8, 20, 2],

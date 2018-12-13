@@ -1,7 +1,29 @@
 
-from maps import Maps
+from random import randint
 
-from random import shuffle
+def d(max_number):
+	return randint(1,max_number)
+
+def md(max_number, die_number):
+	total = 0
+	while die_number > 0:
+		total += d(max_number)
+		die_number -= 1
+	return total
+
+def adjacent_to(one, two):
+	return True if (abs(one.loc[0] - two.loc[0]) <= 1) and (abs(one.loc[1] - two.loc[1]) <= 1) else False
+
+def movement(decision, position):
+	if decision == 'h': return position[0] - 1, position[1]
+	elif decision == 'j': return position[0], position[1] + 1
+	elif decision == 'k': return position[0], position[1] - 1
+	elif decision == 'l': return position[0] + 1, position[1]
+	elif decision == 'y': return position[0] - 1, position[1] - 1
+	elif decision == 'u': return position[0] + 1, position[1] - 1
+	elif decision == 'b': return position[0] - 1, position[1] + 1
+	elif decision == 'n': return position[0] + 1, position[1] + 1
+	else: return None
 
 def move_towards(one, other, map):
 

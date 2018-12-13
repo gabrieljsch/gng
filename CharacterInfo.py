@@ -17,18 +17,18 @@ class CharacterInfo:
 	# 		(17)    con, st, dex, inte, cha, mspeed, reg, color, resistances(fr,fi,po,ac,sh,ex)   class equipment,   innate weapons (power, ability)
 
 	races = {
-		"Cytherean": 	[[2, 2, 4, 5, 3, 0.9, 12, [0, 0, 0, 0, 3, 3], "cyan"], [("wraithwalk", True)]],
-		"Gnome": 		[[2, 3, 6, 4, 3, 0.7, 10, [0, 0, 0, 0, 0, 2], "salmon"], [("tripmine", True)]],
-		"Hobbit": 		[[2, 3, 5, 3, 6, 0.8, 10, [1, 1, 1, 1, 1, 1], "brown"], [("leap", True)]],
-		"Elf": 			[[3, 3, 5, 4, 3, 1.0, 9, [0, 0, 0, 0, 0, 0], "blue"], [("wild equilibrium", True)]],
-		"Terran": 		[[4, 3, 3, 3, 5, 1.0, 14, [0, 0, 0, 0, 0, 0], "tan"], []],
-		"Naga": 		[[4, 3, 4, 4, 1, 0.9, 22, [0, 0, 3, 0, 0, 0], "green"], [("envenom", True), "tail smash"]],
-		"Ghoul": 		[[4, 4, 4, 2, 1, 1.1, 6, [0, 0, 0, 3, 0, 0], "darkred"], [("feral bite", True)]],
-		"Dragonborn": 	[[4, 5, 2, 3, 2, 1.3, 14, [0, 2, 0, 0, 0, 0], "gold"], [("flame tongue", True), "tail smash"]],
-		"Black Orc": 	[[5, 4, 2, 2, 2, 1.3, 15, [2, 0, 0, 0, 0, 0], "grey"], [("green blood", True), "headbutt"]],
-		"Felltron": 	[[5, 5, 1, 4, 1, 1.5, 50, [1, 0, 3, 0, 0, 2], "steel"], [("repair matrix", True)]],
-		"Dwarf": 		[[6, 3, 3, 3, 3, 1.4, 10, [0, 0, 0, 0, 0, 2], "yellow"], [("iron grit", True)]],
-		"Hill Troll": 	[[6, 5, 1, 1, 1, 1.6, 16, [0, 0, 0, 0, 0, 0], "orange"], []],
+		"Cytherean": 	[[2, 2, 4, 5, 3, 0.9, 12, [0, 0, 0, 0, 3, 3], "cyan"], [("wraithwalk", True)], "Nidas"],
+		"Gnome": 		[[2, 3, 6, 4, 3, 0.7, 10, [0, 0, 0, 0, 0, 2], "salmon"], [("tripmine", True)], "Odin"],
+		"Hobbit": 		[[2, 3, 5, 3, 6, 0.8, 10, [1, 1, 1, 1, 1, 1], "brown"], [("leap", True)], "Miluc"],
+		"Elf": 			[[3, 3, 5, 4, 3, 1.0, 9, [0, 0, 0, 0, 0, 0], "blue"], [("wild equilibrium", True)], "Baal"],
+		"Terran": 		[[4, 3, 3, 3, 5, 1.0, 14, [0, 0, 0, 0, 0, 0], "tan"], [], "Miluc"],
+		"Naga": 		[[4, 3, 4, 4, 1, 0.9, 22, [0, 0, 3, 0, 0, 0], "green"], [("envenom", True), "tail smash"], "Syx"],
+		"Ghoul": 		[[4, 4, 4, 2, 1, 1.1, 6, [0, 0, 0, 3, 0, 0], "darkred"], [("feral bite", True)], "Ra"],
+		"Dragonborn": 	[[4, 5, 2, 3, 2, 1.3, 14, [0, 2, 0, 0, 0, 0], "gold"], [("flame tongue", True), "tail smash"], "Ketem"],
+		"Black Orc": 	[[5, 4, 2, 2, 2, 1.3, 15, [2, 0, 0, 0, 0, 0], "grey"], [("green blood", True), "headbutt"], "Krog"],
+		"Felltron": 	[[5, 5, 1, 4, 1, 1.5, 50, [1, 0, 3, 0, 0, 2], "steel"], [("repair matrix", True)], "Omnus"],
+		"Dwarf": 		[[6, 3, 3, 3, 3, 1.4, 10, [0, 0, 0, 0, 0, 2], "yellow"], [("iron grit", True)], "Odin"],
+		"Hill Troll": 	[[6, 5, 1, 1, 1, 1.6, 16, [0, 0, 0, 0, 0, 0], "orange"], [], "Krog"],
 	}
 
 	race_starting_equipment = {

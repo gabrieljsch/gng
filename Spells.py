@@ -1,13 +1,13 @@
 from random import randint, shuffle
-from maps import Maps
+from Maps import Maps
 from codex import Weapons, Armors, Tomes, Shields, Brands, Ammos
-from descriptions import Colors
+from Colors import Colors
+from Gods import Gods
 import ai
 
 import sys, os
 import termios, fcntl
 import select
-from sty import fg, bg, rs
 
 def d(max_number):
 	return randint(1,max_number)
@@ -15,21 +15,9 @@ def d(max_number):
 def md(max_number, die_number):
 	total = 0
 	while die_number > 0:
-		sum += d(max_number)
+		total += d(max_number)
 		die_number -= 1
 	return total
-
-def color(statement, color):
-	color = Colors.array[color]
-	return fg(color[0], color[1], color[2]) + str(statement) + fg.rs
-
-def bcolor(statement, bcolor):
-	bcolor = Colors.array[bcolor]
-	return bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + bg.rs
-
-def fullcolor(statement, fcolor, bcolor):
-	color, bcolor = Colors.array[fcolor], Colors.array[bcolor]
-	return fg(color[0], color[1], color[2]) + bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + rs.all
 
 def movement(decision, position):
 	if decision == 'h': return position[0] - 1, position[1]
@@ -294,7 +282,7 @@ class Spells:
 		attacker.hp = min(attacker.maxhp, attacker.hp + heal)
 
 		# Apply Affect + flavor text
-		if attacker.name != 'you': game.game_log.append(attacker.info[4] + " blood purges it of all its stasuses and heals for " + str(heal) + " health!")
+		if attacker.name != 'you': game.game_log.append(attacker.info[4] + " blood purges it of all its statuses and heals for " + str(heal) + " health!")
 		else: game.game_log.append("Your blood purges you of all your statuses and heals you for " + str(heal) + " health!")
 
 		# Purge passives
@@ -310,7 +298,6 @@ class Spells:
 		if attacker.hp * 2.5 > attacker.maxhp:
 			if attacker.name == 'you': game.temp_log.append("You haven't given enough blood.")
 			return False
-
 
 		# Apply Affect + flavor text
 		if attacker.name != 'you':
@@ -346,7 +333,7 @@ class Spells:
 		# Change Color
 		newooze = game.units[-1]
 		newooze.color = attacker.color
-		newooze.name = color(newooze.namestring, newooze.color)
+		newooze.name = Colors.color(newooze.namestring, newooze.color)
 		newooze.info = ('the ' + newooze.name, 'the ' + newooze.name + "'s", 'its', 'The ' + newooze.name, 'The ' + newooze.name + "'s")
 
 		for space in spaces:
@@ -358,7 +345,7 @@ class Spells:
 				# Change Color
 				newooze = game.units[-1]
 				newooze.color = attacker.color
-				newooze.name = color(newooze.namestring, newooze.color)
+				newooze.name = Colors.color(newooze.namestring, newooze.color)
 				newooze.info = ('the ' + newooze.name, 'the ' + newooze.name + "'s", 'its', 'The ' + newooze.name, 'The ' + newooze.name + "'s")
 
 				# Flavor Text
@@ -368,7 +355,7 @@ class Spells:
 		game.game_log.append(attacker.info[3] + " splits into a smaller jelly!")
 		return True
 
-	def filth_explosion(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def filth_explosion(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		if attacker.hp > 0: return False
 
@@ -397,11 +384,11 @@ class Spells:
 
 			if not heal:
 				if len(hit) == 0: hit += unit.info[0]
-				else: hit +=  ", " + unit.info[0]
+				else: hit += ", " + unit.info[0]
 				unit.hp -= damage
 			else:
 				if len(healed) == 0: healed += unit.info[0]
-				else: healed +=  ", " + unit.info[0]
+				else: healed += ", " + unit.info[0]
 				unit.hp = min(unit.maxhp, unit.hp + damage)
 		if len(hit) == 0 and len(healed) == 0: game.game_log.append(attacker.info[3] + " explodes into a cloud of filth and decay!")
 		elif len(hit) != 0 and len(healed) == 0: game.game_log.append(attacker.info[3] + " explodes into a cloud of filth and decay, dealing " + str(damage) + " damage to " + hit +'!')
@@ -454,7 +441,7 @@ class Spells:
 		print(passives)
 
 		if attacker.name != 'you':
-			game.game_log.append(attacker.info[3] + " " + color("flickers","cyan") + " from the material plane and reappears!")
+			game.game_log.append(attacker.info[3] + " " + Colors.color("flickers","cyan") + " from the material plane and reappears!")
 			while "wraithform" in passives:
 				if attacker.mana < attacker.maxmana: attacker.mana += 1
 				if attacker.hp < attacker.maxhp and d(10) > 7: attacker.hp  += 1
@@ -466,7 +453,7 @@ class Spells:
 				if count == 0:
 					break
 		else:
-			game.game_log.append("You " + color("flicker","cyan") + " from the material plane")
+			game.game_log.append("You " + Colors.color("flicker","cyan") + " from the material plane")
 			while "wraithform" in passives:
 				if attacker.mana < attacker.maxmana: attacker.mana += 1
 				if attacker.hp < attacker.maxhp and d(10) > 7: attacker.hp += 1
@@ -499,9 +486,9 @@ class Spells:
 					attacker.loc = space
 					# Flavor Text
 					if attacker.name != 'you':
-						game.game_log.append(attacker.info[3] + " " + color("blinks","lightblue") + " and reappears!")
+						game.game_log.append(attacker.info[3] + " " + Colors.color("blinks","lightblue") + " and reappears!")
 					else:
-						game.game_log.append("You " + color("blink","lightblue") + " and reappear!")
+						game.game_log.append("You " + Colors.color("blink","lightblue") + " and reappear!")
 					return True
 
 		# No free spaces
@@ -516,13 +503,13 @@ class Spells:
 		# Poison Resist
 		resist = enemy.calc_resistances()[2]
 		if d(4) <= resist:
-			if enemy.name == 'you': game.game_log.append("You shrug off the cloud of " + color("poison gas","green") + " bellowed by " + attacker.info[0] + "!")
-			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " cloud of " + color("poison gas","green") + "!")
+			if enemy.name == 'you': game.game_log.append("You shrug off the cloud of " + Colors.color("poison gas","green") + " bellowed by " + attacker.info[0] + "!")
+			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " cloud of " + Colors.color("poison gas","green") + "!")
 			return True
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You bellow a cloud of " + color("poison gas","green") + " at " + enemy.info[0] + ", poisoning it!")
-		else: game.game_log.append(attacker.info[3] + " bellows a cloud of " + color("poison gas","green") + ", poisoning " + enemy.info[0] + "!")
+		if attacker.name == 'you': game.game_log.append("You bellow a cloud of " + Colors.color("poison gas","green") + " at " + enemy.info[0] + ", poisoning it!")
+		else: game.game_log.append(attacker.info[3] + " bellows a cloud of " + Colors.color("poison gas","green") + ", poisoning " + enemy.info[0] + "!")
 
 		# Apply Effect
 		apply(enemy, status, count, stacking = True)
@@ -546,8 +533,8 @@ class Spells:
 		damage = ct * 4
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You turn the " + color("venom","green") + " in " + enemy.info[0] + " to explosive fire, dealing " + str(damage) + " damage!")
-		else: game.game_log.append(attacker.info[3] + " turns the " + color("venom","green") + " in " + enemy.info[0] + " to explosive fire, dealing " + str(damage) + " damage!")
+		if attacker.name == 'you': game.game_log.append("You turn the " + Colors.color("venom","green") + " in " + enemy.info[0] + " to explosive fire, dealing " + str(damage) + " damage!")
+		else: game.game_log.append(attacker.info[3] + " turns the " + Colors.color("venom","green") + " in " + enemy.info[0] + " to explosive fire, dealing " + str(damage) + " damage!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -568,30 +555,31 @@ class Spells:
 		apply(attacker,'spectral sword',30, multiple=True)
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You conjure a " + color("spectral sword","springgreen") + " in your free hand!")
-		else: game.game_log.append(attacker.info[3] + " conjures a " + color("spectral sword","springgreen") + " in its free hand!")
+		if attacker.name == 'you': game.game_log.append("You conjure a " + Colors.color("spectral sword","springgreen") + " in your free hand!")
+		else: game.game_log.append(attacker.info[3] + " conjures a " + Colors.color("spectral sword","springgreen") + " in its free hand!")
 
 		return True
 
-	def spectral_sword(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def godhammer(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Condition
 		if attacker.hands < 1:
 			if attacker.name == 'you': game.temp_log.append('You do not have a free hand to use.')
 			return False
 
-		attacker.give_weapon("spectral sword")
-		attacker.wielding[-1].damage = max(min(attacker.int + attacker.calc_mdamage(), 15), 7)
+		weapon = Gods.god_spectral_hammers[attacker.god]
+		attacker.give_weapon(weapon)
+		attacker.wielding[-1].damage = max(min(attacker.cha + attacker.calc_mdamage(), 35), 10)
 
-		apply(attacker,'spectral sword',30, multiple=True)
+		apply(attacker,'spectral godhammer: ' + weapon,40, multiple=True)
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You conjure a " + color("spectral sword","springgreen") + " in your free hand!")
-		else: game.game_log.append(attacker.info[3] + " conjures a " + color("spectral sword","springgreen") + " in its free hand!")
+		if attacker.name == 'you': game.game_log.append("You call upon " + attacker.god + ", who grants you a " + Colors.color(weapon,attacker.wielding[-1].color) + " in your free hand!")
+		else: game.game_log.append(attacker.info[3] + " conjures a " + Colors.color(weapon,attacker.wielding[-1].color) + " in its free hand!")
 
 		return True
 
-	def envenom(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def envenom(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		passive, brand, hits, coated, bonus = 'envenomed', 'envenomed', 3, False, False
@@ -630,12 +618,12 @@ class Spells:
 			return False
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You coat your weapons in your " + color("deadly poison","green") + "!")
-		else: game.game_log.append(attacker.info[3] + " coats its weapons in a " + color("deadly poison","green") + "!")
+		if attacker.name == 'you': game.game_log.append("You coat your weapons in your " + Colors.color("deadly poison","green") + "!")
+		else: game.game_log.append(attacker.info[3] + " coats its weapons in a " + Colors.color("deadly poison","green") + "!")
 
 		return True
 
-	def bless_weapon(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def bless_weapon(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		passive, brand, hits, coated, bonus = 'holy', 'holy', 3, False, False
@@ -675,12 +663,12 @@ class Spells:
 			return False
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You invoke to deity to " + color("bless","bone") + " your weapon, giving it divine power!")
-		else: game.game_log.append(attacker.info[3] + " invokes its deity to " + color("bless","bone") + " its weapon with divine power!")
+		if attacker.name == 'you': game.game_log.append("You invoke to deity to " + Colors.color("bless","bone") + " your weapon, giving it divine power!")
+		else: game.game_log.append(attacker.info[3] + " invokes its deity to " + Colors.color("bless","bone") + " its weapon with divine power!")
 
 		return True
 
-	def flame_tongue(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def flame_tongue(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		status, count = 'aflame', d(2)
@@ -690,13 +678,13 @@ class Spells:
 		# Fire Resist
 		resist = enemy.calc_resistances()[1]
 		if d(4) <= resist:
-			if enemy.name == 'you': game.game_log.append("You shrug off a tongue of " + color("flame","fire") + " breathed by " + attacker.info[0] + "!")
-			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " burst of " + color("flame","fire") + "!")
+			if enemy.name == 'you': game.game_log.append("You shrug off a tongue of " + Colors.color("flame","fire") + " breathed by " + attacker.info[0] + "!")
+			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " burst of " + Colors.color("flame","fire") + "!")
 			return True
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You breathe a burst of " + color("flame","fire") + " at " + enemy.info[0] + ", dealing " + str(damage) + " damage and setting it " + color("aflame","fire") + "!")
-		else: game.game_log.append(attacker.info[3] + " breathes a burst of " + color("flame","fire") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage and setting " + enemy.info[0] + " " + color("aflame","fire") + "!")
+		if attacker.name == 'you': game.game_log.append("You breathe a burst of " + Colors.color("flame","fire") + " at " + enemy.info[0] + ", dealing " + str(damage) + " damage and setting it " + Colors.color("aflame","fire") + "!")
+		else: game.game_log.append(attacker.info[3] + " breathes a burst of " + Colors.color("flame","fire") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage and setting " + enemy.info[0] + " " + Colors.color("aflame","fire") + "!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -706,7 +694,7 @@ class Spells:
 		apply(enemy, status, count)
 		return True
 
-	def pounce(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def pounce(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Condition
 		los = ai.los(attacker.loc, enemy.loc, Maps.rooms[game.map.map][0], game )
@@ -745,7 +733,7 @@ class Spells:
 		attacker.unbreakableac = tempac
 		attacker.innate_ac += tempac
 		apply(attacker, 'unbreakable', 10)
-		if attacker.name == 'you': game.game_log.append('You roar out a ' + color('battlecry','darkred') + ' that emboldens you, granting you ' + str(tempac) + ' armor.')
+		if attacker.name == 'you': game.game_log.append('You roar out a ' + Colors.color('battlecry','darkred') + ' that emboldens you, granting you ' + str(tempac) + ' armor.')
 		return True
 
 	def double_shot(name, attacker, enemy, game, map, roomfiller, ability = False):
@@ -768,8 +756,8 @@ class Spells:
 		else: damage = max(0, int(md(1, 1/2 + 1/2 * attacker.int) + attacker.calc_mdamage() - enemy.equipped_armor.mdefense) )
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You shoot a net of " + color("webs","bone") + " at " + enemy.info[0] + ", dealing " + str(damage) + " damage and rendering it immobile!")
-		else: game.game_log.append(attacker.info[3] + " shoots a net of " + color("webs","bone") + " at " + enemy.info[0] + ", dealing " + str(damage) + " and rendering " + enemy.info[0] + " immobile!")
+		if attacker.name == 'you': game.game_log.append("You shoot a net of " + Colors.color("webs","bone") + " at " + enemy.info[0] + ", dealing " + str(damage) + " damage and rendering it immobile!")
+		else: game.game_log.append(attacker.info[3] + " shoots a net of " + Colors.color("webs","bone") + " at " + enemy.info[0] + ", dealing " + str(damage) + " and rendering " + enemy.info[0] + " immobile!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -787,7 +775,7 @@ class Spells:
 		# Check condition
 		if attacker.name != 'you':
 			for name, count in attacker.passives:
-				if name == státus: return
+				if name == status: return
 			if attacker.hp > attacker.maxhp / 3: return False
 
 		# Flavor Text
@@ -798,7 +786,7 @@ class Spells:
 		apply(attacker, status, count)
 		return True
 
-	def repair_matrix(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def repair_matrix(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		status = 'repair matrix'
@@ -816,12 +804,12 @@ class Spells:
 
 
 		# Apply Effect
-		attacker.strloss = int(2 * attacker.str / 3)
+		attacker.strength_loss = int(2 * attacker.str / 3)
 		attacker.acgain = int(attacker.con / 2)
 		attacker.prereg = attacker.reg
 		attacker.msgain = attacker.mspeed
 		
-		attacker.str -= attacker.strloss
+		attacker.str -= attacker.strength_loss
 		attacker.innate_ac += attacker.acgain
 		attacker.reg = 2
 		attacker.mspeed += attacker.msgain
@@ -854,7 +842,7 @@ class Spells:
 				print("=======================================================================================")
 
 
-				decision = rinput("Bestow " + spell_name + " on which target?")
+				decision = rinput("Bestow an iron blessing on which target?")
 
 
 				if decision in game.item_order and game.item_order.index(decision) < len(game.allies):
@@ -862,7 +850,7 @@ class Spells:
 					# Choose Legal Enemy
 					target = game.allies[game.item_order.index(decision)]
 				else:
-					game.temp_log-append('That is not a valid unit.')
+					game.temp_log.append('That is not a valid unit.')
 					return False
 
 				# Heal machine case
@@ -870,7 +858,7 @@ class Spells:
 					if target.hp != target.maxhp:
 						heal = min(target.maxhp - target.hp, int(md(3, 1 + attacker.cha)))
 						target.hp += heal
-						game.game_log.append("You " + color("bless","steel") + " the machine spirit of " + target.info[0]  + ", healing it!")
+						game.game_log.append("You " + Colors.color("bless","steel") + " the machine spirit of " + target.info[0]  + ", healing it!")
 						return True
 
 
@@ -883,12 +871,12 @@ class Spells:
 						if attacker.hp != attacker.maxhp:
 							heal = min(attacker.maxhp - attacker.hp, int(md(3, 1 + attacker.cha)))
 							attacker.hp += heal
-							game.game_log.append("You " + color("bless","steel") + " your machine spirit, healing yourself!")
+							game.game_log.append("You " + Colors.color("bless","steel") + " your machine spirit, healing yourself!")
 
 							return True
 
-				game.game_log.append("You " + color("bless","steel") + " your weapons and armor, they feel lighter!")
-			else: game.game_log.append("You " + color("bless","steel") + " " + target.info[1] + " weapons and armor, they seem lighter!")
+				game.game_log.append("You " + Colors.color("bless","steel") + " your weapons and armor, they feel lighter!")
+			else: game.game_log.append("You " + Colors.color("bless","steel") + " " + target.info[1] + " weapons and armor, they seem lighter!")
 
 			# Apply Effect
 			apply(target, status, count)
@@ -896,7 +884,7 @@ class Spells:
 
 		# Non-player case
 		# TODO: Range of ability
-		# TODO: Dont cast multiple times on same target
+		# TODO: Don't cast multiple times on same target
 		else:
 			targets = game.allies + [game.player] if attacker in game.allies else game.units
 			closest, range = attacker, attacker.range_from_player
@@ -906,7 +894,7 @@ class Spells:
 				if attacker != unit and unit.etype == 'machine' and unit.hp != unit.maxhp:
 					heal = min(unit.maxhp - unit.hp, int(md(3, 1 + attacker.cha)))
 					unit.hp += heal
-					game.game_log.append(attacker.info[3] + " " + color("blesses","steel") + " the machine spirit of " + unit.info[0]  + ", healing it!")
+					game.game_log.append(attacker.info[3] + " " + Colors.color("blesses","steel") + " the machine spirit of " + unit.info[0]  + ", healing it!")
 					return True
 				elif attacker != unit:
 					if unit.range_from_player <= range: closest, range = unit, unit.range_from_player
@@ -915,9 +903,9 @@ class Spells:
 			if range > 6: return False
 
 			# Flavor Text
-			if attacker == closest: game.game_log.append(attacker.info[3] + " " + color("blesses","steel") + " its weapons and armor, they seem lighter!")
-			elif closest.name == 'you': game.game_log.append(attacker.info[3] + " " + color("blesses","steel") + " your weapons and armor, they feel lighter!")
-			else: game.game_log.append(attacker.info[3] + " " + color("blesses","steel") + " " + closest.info[1] + " weapons and armor, they seem lighter!")
+			if attacker == closest: game.game_log.append(attacker.info[3] + " " + Colors.color("blesses","steel") + " its weapons and armor, they seem lighter!")
+			elif closest.name == 'you': game.game_log.append(attacker.info[3] + " " + Colors.color("blesses","steel") + " your weapons and armor, they feel lighter!")
+			else: game.game_log.append(attacker.info[3] + " " + Colors.color("blesses","steel") + " " + closest.info[1] + " weapons and armor, they seem lighter!")
 
 			# Apply Effect
 			apply(closest, status, count)
@@ -935,13 +923,13 @@ class Spells:
 			# Frost Resist
 			resist = enemy.calc_resistances()[0]
 			if d(4) <= resist:
-				if enemy.name == 'you': game.game_log.append("You shrug off the wave of " + color("frost","cyan") + " breathed by " + attacker.info[0] + "!")
-				else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " wave of " + color("frost","cyan") + "!")
+				if enemy.name == 'you': game.game_log.append("You shrug off the wave of " + Colors.color("frost","cyan") + " breathed by " + attacker.info[0] + "!")
+				else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " wave of " + Colors.color("frost","cyan") + "!")
 				return True
 
 			# Flavor Text
-			if attacker.name == 'you' and enemy.name != 'you': game.game_log.append("You breathe a wave of " + color("frost","cyan") + " that hits " + enemy.info[0] + ", dealing " + str(damage) + " damage and " + color("freezing","cyan") + " it!")
-			else: game.game_log.append(attacker.info[3] + " breathes a wave of " + color("frost","cyan") + " that " + color("freezes","cyan") + " " + enemy.info[0] + " and deals " + str(damage) + " damage!")
+			if attacker.name == 'you' and enemy.name != 'you': game.game_log.append("You breathe a wave of " + Colors.color("frost","cyan") + " that hits " + enemy.info[0] + ", dealing " + str(damage) + " damage and " + Colors.color("freezing","cyan") + " it!")
+			else: game.game_log.append(attacker.info[3] + " breathes a wave of " + Colors.color("frost","cyan") + " that " + Colors.color("freezes","cyan") + " " + enemy.info[0] + " and deals " + str(damage) + " damage!")
 
 			# Manage damage
 			enemy.hp -= damage
@@ -966,15 +954,15 @@ class Spells:
 
 		return True
 
-	def tremor_strike(name, attacker, enemy, game, map, roomfiller,  ability = False):
+	def tremor_strike(name, attacker, enemy, game, map, roomfiller,  ability=False):
 
 		# Traits
 		status, count = "stunned", 2
 		if ability: damage = max( 0, int(md(3, 1/2 + 1/2 * attacker.str)  ) )
 		else: damage = int(md(3, 1/2 + 1/2 * attacker.int) + attacker.calc_mdamage() - enemy.equipped_armor.mdefense)
 
-		if attacker.name == 'you': game.game_log.append("You slam the ground, causing a huge " + color("shockwave","tan") + " of force to barrel outwards.")
-		else: game.game_log.append(attacker.info[3] + " slams the ground, causing a huge " + color("shockwave","tan") + " of force to barrel outwards.")
+		if attacker.name == 'you': game.game_log.append("You slam the ground, causing a huge " + Colors.color("shockwave","tan") + " of force to barrel outwards.")
+		else: game.game_log.append(attacker.info[3] + " slams the ground, causing a huge " + Colors.color("shockwave","tan") + " of force to barrel outwards.")
 
 		def slam(attacker, enemy):
 
@@ -982,10 +970,10 @@ class Spells:
 			extra = ''
 			if d(100) >= 50:
 				apply(enemy, status, count, stacking = True)
-				extra = ' and ' + color("stunning","magenta") + ' you' if enemy.name == 'you' else ' and ' + color("stunning","magenta") + ' it'
+				extra = ' and ' + Colors.color("stunning","magenta") + ' you' if enemy.name == 'you' else ' and ' + Colors.color("stunning","magenta") + ' it'
 
 			# Flavor Text
-			game.game_log.append("The " + color("shockwave","tan") + " slams into " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
+			game.game_log.append("The " + Colors.color("shockwave","tan") + " slams into " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
 
 			# Manage damage
 			enemy.hp -= damage
@@ -1012,8 +1000,8 @@ class Spells:
 		damage = max(0, int(md(2, 3/2 + 1/2 * attacker.int) + attacker.calc_mdamage() - enemy.equipped_armor.mdefense))
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You conjure a speeding " + color("phantom arrow","magenta") + ", dealing " + str(damage) + " damage to " + enemy.info[0] + "!")
-		else: game.game_log.append(attacker.info[3] + " conjures a speeding " + color("phantom arrow","magenta") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage!")
+		if attacker.name == 'you': game.game_log.append("You conjure a speeding " + Colors.color("phantom arrow","magenta") + ", dealing " + str(damage) + " damage to " + enemy.info[0] + "!")
+		else: game.game_log.append(attacker.info[3] + " conjures a speeding " + Colors.color("phantom arrow","magenta") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -1031,8 +1019,8 @@ class Spells:
 			return False
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You are bathed in the light of your god, you are " + color("healed","bone") + " for " + str(heal) + " health!")
-		else: game.game_log.append(attacker.info[3] + " is bathed in the light of its god, " + color("healing","bone") + " for " + str(heal) + " health!")
+		if attacker.name == 'you': game.game_log.append("You are bathed in the light of your god, you are " + Colors.color("healed","bone") + " for " + str(heal) + " health!")
+		else: game.game_log.append(attacker.info[3] + " is bathed in the light of its god, " + Colors.color("healing","bone") + " for " + str(heal) + " health!")
 
 		# Manage damage
 		attacker.hp += heal
@@ -1042,7 +1030,7 @@ class Spells:
 
 		# Check Condition
 		if attacker.hp == attacker.mana:
-			if attacker.name == 'you': game.temp_log.append("Your " + color("spirit","springgreen") + " is already balanced.")
+			if attacker.name == 'you': game.temp_log.append("Your " + Colors.color("spirit","springgreen") + " is already balanced.")
 			return False
 
 		# Traits
@@ -1056,8 +1044,8 @@ class Spells:
 			type = 'health'
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("Your " + color("spirit","springgreen") + " balances itself, restoring " + type + "!")
-		else: game.game_log.append(attacker.info[3] + " balances its " + color("spirit","springgreen") + ", restoring "  + type + "!")
+		if attacker.name == 'you': game.game_log.append("Your " + Colors.color("spirit","springgreen") + " balances itself, restoring " + type + "!")
+		else: game.game_log.append(attacker.info[3] + " balances its " + Colors.color("spirit","springgreen") + ", restoring "  + type + "!")
 
 		return True
 
@@ -1068,8 +1056,8 @@ class Spells:
 		self_dam = d(max(1, int(damage / 3)))
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You vomit a stream of " + color("boiling blood","darkred") + ", dealing " + str(damage) + " damage to " + enemy.info[0] + " and " + str(self_dam) + " damage to yourself!")
-		else: game.game_log.append(attacker.info[3] + " vomits a stream of " + color("boiling blood","darkred") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage and some to itself!")
+		if attacker.name == 'you': game.game_log.append("You vomit a stream of " + Colors.color("boiling blood","darkred") + ", dealing " + str(damage) + " damage to " + enemy.info[0] + " and " + str(self_dam) + " damage to yourself!")
+		else: game.game_log.append(attacker.info[3] + " vomits a stream of " + Colors.color("boiling blood","darkred") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage and some to itself!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -1083,8 +1071,8 @@ class Spells:
 		damage = max(0, int(md(2, 2 + 1/2 * attacker.int) + attacker.calc_mdamage()  - enemy.equipped_armor.mdefense))
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You blast "  + enemy.info[0] + " with a " + color("dark bolt","purple") + ", dealing it " + str(damage) + " damage!")
-		else: game.game_log.append(attacker.info[3] + " blasts " + enemy.info[0] + " with a " + color("dark bolt","purple") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage!")
+		if attacker.name == 'you': game.game_log.append("You blast "  + enemy.info[0] + " with a " + Colors.color("dark bolt","purple") + ", dealing it " + str(damage) + " damage!")
+		else: game.game_log.append(attacker.info[3] + " blasts " + enemy.info[0] + " with a " + Colors.color("dark bolt","purple") + ", dealing " + enemy.info[0] + " " + str(damage) + " damage!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -1094,8 +1082,8 @@ class Spells:
 	def deaths_hand(name, attacker, enemy, game, map, roomfiller, ability = False):
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You unleash a huge " + color("shadow hand","purple") + " that grabs "  + enemy.info[0] + "!")
-		else: game.game_log.append(attacker.info[3] + " unleashes a huge " + color("shadow hand","purple") + " that grabs " + enemy.info[0] + "!")
+		if attacker.name == 'you': game.game_log.append("You unleash a huge " + Colors.color("shadow hand","purple") + " that grabs "  + enemy.info[0] + "!")
+		else: game.game_log.append(attacker.info[3] + " unleashes a huge " + Colors.color("shadow hand","purple") + " that grabs " + enemy.info[0] + "!")
 
 		# Apply Effects
 		count = int(attacker.int / 2)
@@ -1110,8 +1098,8 @@ class Spells:
 		damage = int(md(3, attacker.str))
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You " + color("bite","red") + " your teeth into "  + enemy.info[0] + ", dealing it " + str(damage) + " damage!")
-		else: game.game_log.append(attacker.info[3] + " " + color("bite","red") + " its teeth into " + attacker.info[0] + " for " + str(damage) + " damage!")
+		if attacker.name == 'you': game.game_log.append("You " + Colors.color("bite","red") + " your teeth into "  + enemy.info[0] + ", dealing it " + str(damage) + " damage!")
+		else: game.game_log.append(attacker.info[3] + " " + Colors.color("bite","red") + " its teeth into " + attacker.info[0] + " for " + str(damage) + " damage!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -1124,8 +1112,8 @@ class Spells:
 		status, count = 'marked', 10
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You mutter an ancient curse, a " + color("black mark","darkred") + " appears on " + enemy.info[0] + "!")
-		else: game.game_log.append(attacker.info[3] + " mutters an ancient curse, a " + color("black mark","darkred") + " appears on " + enemy.info[0] + "!")
+		if attacker.name == 'you': game.game_log.append("You mutter an ancient curse, a " + Colors.color("black mark","darkred") + " appears on " + enemy.info[0] + "!")
+		else: game.game_log.append(attacker.info[3] + " mutters an ancient curse, a " + Colors.color("black mark","darkred") + " appears on " + enemy.info[0] + "!")
 
 		# Apply Effect
 		apply(enemy, status, count)
@@ -1140,18 +1128,18 @@ class Spells:
 		# Fire Resist
 		resist = enemy.calc_resistances()[4]
 		if d(5) <= resist:
-			if enemy.name == 'you': game.game_log.append("You shrug off a " + color("thunderbolt","yellow") + " sent by " + attacker.info[0] + "!")
-			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " " + color("thunderbolt","yellow") + "!")
+			if enemy.name == 'you': game.game_log.append("You shrug off a " + Colors.color("thunderbolt","yellow") + " sent by " + attacker.info[0] + "!")
+			else: game.game_log.append(enemy.info[3] + " shrugs off " + attacker.info[1] + " " + Colors.color("thunderbolt","yellow") + "!")
 			return True
 
 		# Apply Effect
 		if d(100) >= 50:
 			apply(enemy, status, count)
-			extra = ' and ' + color("stunning","magenta") + ' you' if enemy.name == 'you' else ' and ' + color("stunning","magenta") + ' it'
+			extra = ' and ' + Colors.color("stunning","magenta") + ' you' if enemy.name == 'you' else ' and ' + Colors.color("stunning","magenta") + ' it'
 
 		# Flavor Text
-		if attacker.name == 'you': game.game_log.append("You call a bolt of crackling " + color("lightning","yellow") + " onto " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
-		else: game.game_log.append(attacker.info[3] + " calls a bolt of crackling " + color("lightning","yellow") + " onto " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
+		if attacker.name == 'you': game.game_log.append("You call a bolt of crackling " + Colors.color("lightning","yellow") + " onto " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
+		else: game.game_log.append(attacker.info[3] + " calls a bolt of crackling " + Colors.color("lightning","yellow") + " onto " + enemy.info[0] + ", dealing " + str(damage) + " damage" + extra + "!")
 
 		# Manage damage
 		enemy.hp -= damage
@@ -1173,19 +1161,19 @@ class Spells:
 			# Shock Resist
 			resist = enemy.calc_resistances()[4]
 			if d(4) <= resist:
-				if enemy.name == 'you': game.game_log.append("You shrug off the conjured " + color("wild lightning","yellow") + "!")
-				else: game.game_log.append(enemy.info[3]+ " shrugs off " + attacker.info[1] + " " + color("wild lightning","yellow") + "!")
+				if enemy.name == 'you': game.game_log.append("You shrug off the conjured " + Colors.color("wild lightning","yellow") + "!")
+				else: game.game_log.append(enemy.info[3]+ " shrugs off " + attacker.info[1] + " " + Colors.color("wild lightning","yellow") + "!")
 				return True
 
 			# Flavor Text
 			if attacker.name == 'you' and enemy.name != 'you':
-				game.game_log.append("You blast "  + enemy.info[0] + " with " + color("wild lightning","yellow") + ", dealing it " + str(damage) + " damage!")
+				game.game_log.append("You blast "  + enemy.info[0] + " with " + Colors.color("wild lightning","yellow") + ", dealing it " + str(damage) + " damage!")
 			elif attacker.name == 'you' and enemy.name == 'you':
-				game.game_log.append("You zap yourself with " + color("wild lightning","yellow") + ", you take " + str(damage) + " damage!")
+				game.game_log.append("You zap yourself with " + Colors.color("wild lightning","yellow") + ", you take " + str(damage) + " damage!")
 			elif attacker == enemy:
-				game.game_log.append(attacker.info[3] + " zaps itself with " + color("wild lightning","yellow") + ", taking " + str(damage) + " damage!")
+				game.game_log.append(attacker.info[3] + " zaps itself with " + Colors.color("wild lightning","yellow") + ", taking " + str(damage) + " damage!")
 			else:
-				game.game_log.append(attacker.info[3] + " blasts " + enemy.info[0] + " with " + color("wild lightning","yellow") + ", dealing " + str(damage) + " damage!")
+				game.game_log.append(attacker.info[3] + " blasts " + enemy.info[0] + " with " + Colors.color("wild lightning","yellow") + ", dealing " + str(damage) + " damage!")
 
 			# Manage damage
 			enemy.hp -= damage
@@ -1214,7 +1202,7 @@ class Spells:
 		"electricity" : 	["chain lightning", "thunderbolt"],
 		"poison" : 			["envenom","poison breath","ignite venom"],
 		"necromancy" : 		["dark bolt","raise skeleton","bloodreave","dark transformation","deathmark","death's hand","life leech"],
-		"holy" : 			["flash heal","bless weapon","evening rites"],
+		"holy" : 			["flash heal","bless weapon","evening rites","godhammer"],
 		"wind" : 			[],
 		"earth" : 			["tremor strike"],
 		"conjuration" : 	["magic missile","spectral sword"],
@@ -1277,6 +1265,7 @@ class Spells:
 		# Paladin Skills
 		"flash heal":			(flash_heal, 			10, 1.3,  False, False), 
 		"bless weapon" : 		(bless_weapon,      	10, 1.2,  False, False),
+		"godhammer": 			(godhammer, 			12, 1.0, False, False),
 		# Warrior Skills
 		"battlecry" : 			(battlecry,      	    10, 1.0,  False, False, 2),
 		# Ranger Skills

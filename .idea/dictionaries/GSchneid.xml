@@ -27,6 +27,7 @@
       <w>blightmaul</w>
       <w>bloodhulk</w>
       <w>bloodletter</w>
+      <w>bloodmaul</w>
       <w>bloodreave</w>
       <w>bloodreaver</w>
       <w>bloodshell</w>
@@ -59,26 +60,31 @@
       <w>deathmark</w>
       <w>demonclaw</w>
       <w>demonfist</w>
+      <w>demonkin</w>
       <w>dethbrute</w>
       <w>dethklaw</w>
       <w>direwolf</w>
       <w>dominus</w>
+      <w>doomhammer</w>
       <w>dracolich</w>
       <w>dragonborn</w>
       <w>dragonscales</w>
       <w>drakescale</w>
+      <w>dreadmace</w>
       <w>dreadplate</w>
       <w>dwarven</w>
       <w>earthmage</w>
       <w>elfrobe</w>
       <w>eviscerator</w>
       <w>falchion</w>
+      <w>fangmace</w>
       <w>fateweaver</w>
       <w>fcolor</w>
       <w>felltron</w>
       <w>felltrons</w>
       <w>filthaxe</w>
       <w>foehammers</w>
+      <w>frostmace</w>
       <w>frostr</w>
       <w>fullcolor</w>
       <w>gladius</w>
@@ -87,6 +93,7 @@
       <w>godfinger</w>
       <w>godfist</w>
       <w>godforge</w>
+      <w>godhammer</w>
       <w>gorehulk</w>
       <w>gravewhisperer</w>
       <w>greataxe</w>
@@ -95,6 +102,7 @@
       <w>greatsword</w>
       <w>hellfiend</w>
       <w>hivelord</w>
+      <w>hjklyubn</w>
       <w>hregen</w>
       <w>indominable</w>
       <w>indominbable</w>
@@ -132,8 +140,11 @@
       <w>mregen</w>
       <w>mspeed</w>
       <w>naga</w>
+      <w>namestring</w>
+      <w>nidas</w>
       <w>nightsbane</w>
       <w>nock</w>
+      <w>omnus</w>
       <w>orcblood</w>
       <w>orcish</w>
       <w>orcs</w>
@@ -153,6 +164,7 @@
       <w>rinput</w>
       <w>roomfiller</w>
       <w>runed</w>
+      <w>saqi</w>
       <w>screamflail</w>
       <w>shockr</w>
       <w>shockwave</w>
@@ -163,6 +175,7 @@
       <w>skulltracker</w>
       <w>slica</w>
       <w>smasha</w>
+      <w>soulflail</w>
       <w>soulflame</w>
       <w>soulreaper</w>
       <w>spellcasters</w>
@@ -172,6 +185,7 @@
       <w>stabba</w>
       <w>statsheet</w>
       <w>strred</w>
+      <w>sunhammer</w>
       <w>sunlance</w>
       <w>sunspear</w>
       <w>swiftaxe</w>
@@ -213,6 +227,7 @@
       <w>wooddagger</w>
       <w>worldeaters</w>
       <w>worldshaper</w>
+      <w>wraithform</w>
       <w>wraithwalk</w>
       <w>wyvern</w>
       <w>wyvernscale</w>
