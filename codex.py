@@ -106,7 +106,7 @@ class Armors:
 		"scrap plate armor" : 	  [']','brown','plate',9,12, 0],
 		"iron plate" :  	  	  [']','grey','plate',9,9, 0],
 		"steel plate" : 	  	  [']','steel','plate',11,10, 0],
-		"Orcish dreadplate" : 	  [']','darkred','plate',13,18, 0],
+		"Orcish dreadplate" : 	  [']','darkred','plate',12,18, 0],
 
 		# Legendary Armor
 		"Kain's Pact" :   	 ['[','red','robes',7,2, d(5)],
@@ -115,7 +115,7 @@ class Armors:
 		"Plaguebringer" : 	 ['[','darkgreen','chainmail',9,6, d(5)],
 
 		"Bloodshell" : 	  	 [']','darkred','plate',10,4, d(5), 'spiked'],
-		"God-Frame" :     	 [']','gold','plate',14,13, d(5)],
+		"God-Frame" :     	 [']','gold','plate',13,13, d(5)],
 		}
 
 
@@ -140,6 +140,11 @@ class Shields:
 		"tower shield" :  	  ['}','darkbrown',1,12,6,0],
 
 		"dwarven broadshield":['}','bronze',2,18,12,0],
+
+		# Legendary Shields
+		"Baal's Generator":   ['}','purple',1,8,1,0],
+		"the Black Cross":    ['}','grey',1,15,7,0],
+		"Invictus": 		  ['}','gold',1,11,4,0],
 		}
 
 class Tomes:
@@ -456,14 +461,14 @@ class Weapons:
 
 		# Dark Elf Weapons
 		# ---------------------------------------------------------------------
-		"thornknife" : ['!','darkgreen','knife',1, 0, 5, 3, 0.65],
-		"thornblade" : ['!','darkgreen','sword',1, 0, 8, 0, 0.9],
+		"thornknife" : ['!','purple','knife',1, 0, 5, 3, 0.65],
+		"thornblade" : ['!','purple','sword',1, 0, 8, 0, 0.9],
 		"sunspear" :   ['/','fire','spear',1, 0, 9, 0, 1.2, "flaming"],
 		"sunlance" :   ['/','fire','lance',2, 0, 10, 0, 1.3, "flaming"],
 		# ---------------------------------------------------------------------
 
 
-		# Felltron Weapons
+		# Dread Weapons
 		# ---------------------------------------------------------------------
 		"voidscythe":   ['/','magenta','scythe', 2, 0, 14, 0, 1.7,"antimagic"],
 		"blastmace" :   ['%','orange','mace',1, 0, 11, 0, 1.5,"electrified"],
@@ -541,7 +546,7 @@ class Weapons:
 
 		# Legendary Weapons
 		"the Glaive of Gore" :    	  ['/','darkred','glaive',  2, d(5), 16, 0, 1.2],
-		"the Singing Spear" : 		  ['/','orange','god spear',   1, d(5), 11, 3, 0.75],
+		"the Singing Spear" : 		  ['/','orange','god spear',   2, d(5), 12, 3, 0.75],
 		"Soulreaper" :    	  		  ['/','cyan','scythe',  2, d(5), 17, -2, 2],
 
 		"Kraken" : 					  ['&','springgreen','axe',  1, d(5), 13, 0, 1.1],
@@ -553,15 +558,16 @@ class Weapons:
 		"Bloodreaver" :          	  ['!','darkred','demon sword', 1, -d(5), 17, -3, 1.2],
 		"Nightsbane" :     	  	 	  ['!','steel','bastard sword',  2, d(5), 16, 4, 1.2, 'silvered'],
 		"Longfang" :              	  ['!','steel','bastard sword',  2, d(5), 14, 3, 1.0],
+		"Skullrazor" : 				  ['!','bone','greatsword', 2, d(5), 12, -1, 1.6],
 		"God-Cleaver" : 		 	  ['!','orange','executioner greatsword',   2, d(5), 23, -5, 1.7],
 
 		"Worldshaper" :     	 	  ['%','gold','god hammer',  2, d(5), 25, -12, 2.3, 'runed'],
-		"Mjölnir" :     	 	  	  ['%','gold','god hammer',  1, d(5), 15, -1, 1.2, 'electrified'],
+		"Mjölnir" :     	 	  	  ['%','gold','god hammer',  1, d(5), 15, -1, 1.3, 'electrified'],
 
 		"the Gauntlets of Mars": 	  ['&','red','gauntlets',  2, d(5), 20, 0, 1.8],
 		"the Talons of Belial": 	  ['&','bone','claw gauntlets',  2, d(5), 15, 0, 1.0],
 
-		"the Thick Rod": 		  	  ['!', 'fire', 'sword', 1, d(5), 12, 2, 1.0, 'flaming'],
+		"the Blasting Rod": 		  ['/', 'steel', 'staff', 1, d(5), 10, 2, 1.1],
 
 		"Tempest" : 				  [')','gold','god bow',     2, d(5), 12, 0, 1.4],
 		"Godfinger" : 				  [')','salmon','god bow',     2, d(5), 8, 20, 2],
@@ -571,10 +577,12 @@ class Weapons:
 	legendaries = {"the Glaive of Gore", "the Singing Spear", "Krog's Maw", "Nightsbane", "Splinter",
 				   "Dawn", "Longfang", "Bloodreaver", "God-Cleaver", "Worldshaper", "Tempest", "Godfinger",
 				   "Mjölnir", "Soulreaper", "Swiftspike", "the Gauntlets of Mars", "the Talons of Belial",
-				   "Kraken"
+				   "Kraken", "the Blasting Rod", "Skullrazor",
+				    # Shields
+				   "Baal's Generator","Invictus","the Black Cross",
 				    # Armor
 				   "God-Frame", "Bloodshell", "Kain's Pact", "Plaguebringer", "the Phasic Robes"}
-	enemy_legendaries = ["Mjölnir", "Krog's Maw"]
+	enemy_legendaries = ["Mjölnir", "Krog's Maw", "Skullrazor"]
 
 # ------------------------------------------------------------------
 

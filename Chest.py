@@ -1,8 +1,5 @@
-
-from bestiary import Monsters
 from codex import Weapons, Ammos, Brands, Armors, Potions, Shields
-from Descriptions import Descriptions, Colors
-# from Player import Player
+from Colors import Colors
 from ai import *
 
 from sty import fg, bg, rs

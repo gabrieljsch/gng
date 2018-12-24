@@ -1,7 +1,7 @@
 import ai
 from ai import *
 
-from bestiary import Monsters, Bands
+from bestiary import Monsters
 from codex import Weapons, Ammos, Brands, Armors, Shields, Tomes, Potions
 from Spells import Spells
 from Colors import Colors
@@ -14,23 +14,35 @@ from Potion import Potion
 from Trap import Trap
 from Maps import Maps
 
-from random import randint, shuffle
+from random import shuffle
 
+def apply(unit, passive, count, stacking=False):
+
+	for present_passive in unit.passives:
+
+		if present_passive[0] == passive:
+			if stacking: present_passive[1] += count
+			else: present_passive[1] = count
+			return
+
+	unit.passives.append([passive, count])
 
 
 # noinspection PyBroadException
 class Monster:
 
-	def __init__(self,      game, name, char, color_tone, etype, btype, tier,    con, st, dex, int, cha, mspeed, reg, xp,   resistances,  loc, other_items=None):
+	def __init__(self, game, name, char, color_tone, etype, behavior_type, tier,    con, st, dex, int, cha, mspeed, reg, xp,   resistances,  loc, other_items=None):
 
 		self.game = game
+		self.equipped_armor = None
+
 		# Initialize Representation
-		self.rep, self.color, self.etype, self.btype, self.tier = char, color_tone, etype, btype, tier
+		self.rep, self.color, self.etype, self.behavior_type, self.tier = char, color_tone, etype, behavior_type, tier
 
 		# Mount?
 		self.mount, self.rider = None, None
 
-		self.name, self.namestring, self.bytpe = Colors.color(name, self.color), name, btype
+		self.name, self.namestring = Colors.color(name, self.color), name
 		self.info = ('the ' + self.name, 'the ' + self.name + "'s", 'its', 'The ' + self.name, 'The ' + self.name + "'s") if self.namestring not in Monsters.uniques else (self.name, self.name + "'s", 'its', self.name, self.name + "'s")
 
 		# Initialize Health
@@ -75,18 +87,18 @@ class Monster:
 	def calc_AC(self):
 		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2) + self.innate_ac
 
-	def drop_booty(self, game):
+	def drop_booty(self):
 		self.equipped_armor.loc = self.loc
-		game.items.append(self.equipped_armor)
+		self.game.items.append(self.equipped_armor)
 		for weapon in self.wielding:
 			if weapon in Ammos.thrown_amclasses: continue
 			if weapon.hands > 0:
 				weapon.loc = self.loc
-				game.items.append(weapon)
+				self.game.items.append(weapon)
 		for item in self.inventory:
 			already_in = False
 			if type(item) == Ammo:
-				for other_item in game.items:
+				for other_item in self.game.items:
 					if other_item.loc == self.loc and type(other_item) == Ammo:
 						if other_item.name == item.name and other_item.brand == item.brand:
 							other_item.number += item.number
@@ -94,16 +106,16 @@ class Monster:
 							break
 			if not already_in:
 				item.loc = self.loc
-				game.items.append(item)
+				self.game.items.append(item)
 		if self.quivered is not None:
 
-			for item in game.items:
+			for item in self.game.items:
 				if item.loc == self.loc and type(item) == Ammo:
 					if item.base_string == self.quivered.base_string and item.brand == self.quivered.brand:
 						item.number += self.quivered.number
 						return
 			self.quivered.loc = self.loc
-			game.items.append(self.quivered)
+			self.game.items.append(self.quivered)
 
 
 	def give_weapon(self, weapon):
@@ -148,7 +160,7 @@ class Monster:
 		except: brand = None
 
 		# Create Shield Object
-		self.wielding.append(Shield(shield, data[0], data[1], data[2], data[3], data[4],spawned_enchantment, None, brand))
+		self.wielding.append(Shield(self.game,shield, data[0], data[1], data[2], data[3], data[4],spawned_enchantment, None, brand))
 
 	def give_tome(self, tome):
 		data = Tomes.array[tome]
@@ -183,6 +195,21 @@ class Monster:
 
 		# Create Potion Object
 		self.inventory.append(Potion(pot, data, None, number))
+
+
+	def currentPassives(self):
+		current = {name for name,count in self.passives}
+		for name, count in self.passives:
+			current.add(name)
+		return current
+
+
+	def removePassive(self, specified):
+		for passive in self.passives:
+			if passive[0] == specified:
+				self.passives.remove(passive)
+				return True
+		return False
 
 
 	def turn(self, game):
@@ -287,18 +314,28 @@ class Monster:
 									if self.mount is not None: self.mount.unit.loc = self.loc
 									if self.rider is not None: self.rider.loc = self.loc
 
-							# Manage Longfang 2
-							if type == "spell":
-								for weapon in self.wielding:
-									if weapon.base_string == "Longfang":
+							# Manage the Black Cross 2
+							for unit in self.game.units:
+								for item in unit.wielding:
+									if item.base_string == "the Black Cross":
 										for school, spells in Spells.spell_schools.items():
 											if spell in spells:
 												if school in Spells.school_info:
 													if Spells.school_info[school][1] is not None:
-														weapon.passives = [[Spells.school_info[school][1] , 1]]
-														weapon.brand = Spells.school_info[school][1]
-														game.game_log.append(weapon.name + " absorbs the power of " + self.info[1] + " spell and becomes " + Colors.color(weapon.brand, Brands.colors[weapon.brand]) + "!")
-														break
+														self.game.game_log.append("Yet " + item.name + " condemns " + self.info[1] + " use of magic, it " + Colors.color("ignites", "fire") + " " + self.info[2] + " flesh!")
+														apply(self, "aflame", 3)
+
+							# Manage Longfang 2
+							for weapon in self.wielding:
+								if weapon.base_string == "Longfang":
+									for school, spells in Spells.spell_schools.items():
+										if spell in spells:
+											if school in Spells.school_info:
+												if Spells.school_info[school][1] is not None:
+													weapon.passives = [[Spells.school_info[school][1] , 1]]
+													weapon.brand = Spells.school_info[school][1]
+													game.game_log.append(weapon.name + " absorbs the power of " + self.info[1] + " spell and becomes " + Colors.color(weapon.brand, Brands.colors[weapon.brand]) + "!")
+													break
 
 							# One spell per turn
 							return
@@ -321,7 +358,7 @@ class Monster:
 				item.strike(self, enemy, game)
 				if self in game.allies:
 					# Enemy Well-being Statement
-					try: game.player.well_being_statement(enemy, self, item, game)
+					try: game.player.well_being_statement(enemy, self, item)
 					except: pass
 
 			self.time += maxas
@@ -352,7 +389,7 @@ class Monster:
 							item.strike(self, enemy, game)
 							if self in game.allies:
 								# Enemy Well-being Statement
-								try: game.player.well_being_statement(enemy, self, item, game)
+								try: game.player.well_being_statement(enemy, self, item)
 								except: pass
 
 
@@ -373,10 +410,10 @@ class Monster:
 		for name, count in self.passives:
 			if name == 'immobile': immobile = True
 
-		if not melee_attacked and self.bytpe != 'as':
+		if not melee_attacked and self.behavior_type != 'as':
 
 			if not immobile:
-				coords = self.loc
+				coordinates = self.loc
 				if self.mount is None: smart_move_towards(self, enemy, game)
 
 				# Check for Traps
@@ -389,12 +426,12 @@ class Monster:
 					if self in game.allies:
 						for unit in game.units:
 							if unit in game.allies: continue
-							if unit.loc == (coords[0] - 2 * (self.loc[0] - unit.loc[0]), self.loc[1] - 2 * (self.loc[1] - unit.loc[1])):
+							if unit.loc == (coordinates[0] - 2 * (self.loc[0] - unit.loc[0]), self.loc[1] - 2 * (self.loc[1] - unit.loc[1])):
 								for weapon in self.wielding: weapon.strike(self, unit, game, False)
 								break
 					else:
 						for unit in game.allies:
-							if unit.loc == (coords[0] - 2 * (self.loc[0] - unit.loc[0]), coords[1] - 2 * (self.loc[1] - unit.loc[1])):
+							if unit.loc == (coordinates[0] - 2 * (self.loc[0] - unit.loc[0]), coordinates[1] - 2 * (self.loc[1] - unit.loc[1])):
 								for weapon in self.wielding: weapon.strike(self, unit, game,  False)
 								break
 
@@ -403,7 +440,7 @@ class Monster:
 					for weapon in self.rider.wielding:
 						if weapon.wclass == 'lance':
 							for unit in game.units:
-								if unit.loc == (coords[0] - 2 * (self.loc[0] - unit.loc[0]), coords[1] - 2 * (self.loc[1] - unit.loc[1])):
+								if unit.loc == (coordinates[0] - 2 * (self.loc[0] - unit.loc[0]), coordinates[1] - 2 * (self.loc[1] - unit.loc[1])):
 									weapon.strike(self.rider, unit, game, False)
 									break
 

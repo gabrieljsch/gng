@@ -51,7 +51,7 @@ class RoomFiller:
 		# Tier and Band pick
 		enemy_tier = min(self.tier, len(Bands.dicto))
 		tier_group = self.game.bands
-		band = tier_group[d(len(tier_group)) -1]
+		band = tier_group[d(len(tier_group)) - 1]
 
 		# Bonuses and actual bands
 		bonus, groups = Bands.formations[band]
@@ -85,7 +85,7 @@ class RoomFiller:
 					except IndexError: pass
 
 					try:
-						if self.game.map.square_identity(spawn_location) not in ['|', '-', ' ', '#','+','@','_'] and spawn_location != self.game.player.loc and spawn_location not in spawned:
+						if self.game.map.square_identity(spawn_location) not in {'|', '-', ' ', '#', '+', '@', '_'} and spawn_location != self.game.player.loc and spawn_location not in spawned:
 							picked = True
 							prev_loc = spawn_location
 							spawned.add(prev_loc)
@@ -108,7 +108,6 @@ class RoomFiller:
 		# Give innate weapons / shields
 		if other_items is not None:
 			for item in other_items:
-				print(item)
 				if item in Ammos.array:
 					unit.give_ammo(item)
 				elif item in Weapons.array:
@@ -175,7 +174,7 @@ class RoomFiller:
 		except IndexError: pass
 
 		# Create Shield Object
-		self.game.items.append(Shield(armor, data[0], data[1], data[2], data[3], data[4], spawned_enchantment, loc, brand))
+		self.game.items.append(Shield(self.game, armor, data[0], data[1], data[2], data[3], data[4], spawned_enchantment, loc, brand))
 
 
 	def place_ammo(self, ammo, loc, number, brand=None):

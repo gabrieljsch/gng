@@ -9,11 +9,8 @@ from Shield import Shield
 from Tome import Tome
 from Ammo import Ammo
 from Potion import Potion
-from Trap import Trap
-from Chest import Chest
 from Maps import Maps
 from bestiary import Bands
-from RoomFiller import RoomFiller
 
 from ai import *
 import ai
@@ -98,7 +95,7 @@ class Player:
 		self.rider, self.mount = None, None
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["godhammer","deathmark","poison breath"], [], []
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["godhammer","deathmark","frost breath"], ["double shot"], []
 
 		# Initialize Equipment
 		self.wielding, self.hands, self.total_hands, self.quivered = [], 2, 2, None
@@ -130,7 +127,7 @@ class Player:
 				data = Shields.array[item]
 				try: brand = data[6]
 				except IndexError: brand = None
-				self.wielding.append(Shield(item,data[0],data[1],data[2],data[3],data[4],data[5],None,brand))
+				self.wielding.append(Shield(self.game,item,data[0],data[1],data[2],data[3],data[4],data[5],None,brand))
 				self.hands -= data[2]
 			elif item in Armors.array:
 				data = Armors.array[item]
@@ -182,7 +179,7 @@ class Player:
 						break
 
 
-				print(skillnums[tome.spells.index(spell)] + ') '+ Colors.color(spell[0], color_tone))
+				print(skillnums[tome.spells.index(spell)] + ') ' + Colors.color(spell[0], color_tone))
 				print("")
 
 			decision = rinput("Which skill will you investigate?")
@@ -255,14 +252,14 @@ class Player:
 		# Innate bonuses
 		if self.game.race == 'Black Orc': self.innate_ac += 1
 		if self.game.race == 'Dragonborn': self.innate_ac += 2
-		if self.game.race == 'Felltron': self.innate_ac += 2
+		if self.game.race == 'Dread': self.innate_ac += 2
 		if self.game.race == 'Hill Troll':
 			self.innate_ac += 1
 			self.hands, self.total_hands = 4, 4
 		if self.game.race == "Terran": self.skill_points += 2
 
 
-	def quiver(self, bypass = None):
+	def quiver(self, bypass=None):
 
 		if bypass is None:
 
@@ -287,21 +284,17 @@ class Player:
 
 					# Quiver Item
 					self.quivered = ammo[self.game.item_order.index(decision)]
-					self.time += self.mspeed
-
-					# Quiver Statement
-					self.quiver_string()
 
 				else: self.game.temp_log.append("That is not a valid option")
 
 			else: self.game.temp_log.append("You have nothing to quiver.")
 
-		else:
-			self.quivered = bypass
-			self.time += self.mspeed
+		else: self.quivered = bypass
 
-			# Quiver Statement
-			self.quiver_string()
+		self.time += self.mspeed
+
+		# Quiver Statement
+		self.quiver_string()
 
 	def drink(self, bypass=None):
 
@@ -321,16 +314,15 @@ class Player:
 				if decision in self.game.item_order and self.game.item_order.index(decision) < len(potions):
 
 					# Drink Potion
-					potions[self.game.item_order.index(decision)].drink(self)
-					self.time += self.mspeed
+					potions[self.game.item_order.index(decision)].drink(self, self.game)
 
 				else: self.game.temp_log.append("That is not a valid option")
 
 			else: self.game.temp_log.append("You are carrying no potions.")
 
-		else:
-			bypass.drink(self)
-			self.time += self.mspeed
+		else: bypass.drink(self, self.game)
+
+		self.time += self.mspeed
 
 
 
@@ -340,7 +332,7 @@ class Player:
 
 		# Throwing weapon
 		thrown = False
-		kraken = True if [weap for weap in self.wielding if weap.base_string == 'Kraken'] else False
+		kraken = True if [weapon for weapon in self.wielding if weapon.base_string == 'Kraken'] else False
 
 		# Manage Kraken 1
 		if kraken: thrown = True
@@ -352,14 +344,14 @@ class Player:
 			if self.quivered.wclass in Ammos.thrown_amclasses and not kraken:
 				thrown = True
 				# Create Throwing platform
-				self.game.roomfiller.give_weapon(self, self.quivered.base_string, False)
+				self.give_weapon(self.quivered.base_string, hands=False)
 
 
 
 		for item in self.wielding:
 
 			# Ranged Projectile Thrower
-			if item.wclass in Weapons.ranged_wclasses or (item.wclass in Ammos.thrown_amclasses or item.base_string == 'Kraken' and mod not in ['double shot']):
+			if item.wclass in Weapons.ranged_wclasses or (item.wclass in Ammos.thrown_amclasses or item.base_string == 'Kraken' and mod not in {'double shot'}):
 
 
 				if item.base_string == 'Kraken': item.range = 8
@@ -376,8 +368,8 @@ class Player:
 
 				units_in_range = []
 				for unit in self.game.units[1:]:
-					los = ai.los(self.loc, unit.loc, Maps.rooms[self.game.map.map][0], self.game )
-					if los is not None and (len(los) - 1 <= (item.range)): units_in_range.append(unit)
+					los = ai.los(self.loc, unit.loc, Maps.rooms[self.game.map.map][0], self.game)
+					if los is not None and len(los) - 1 <= item.range: units_in_range.append(unit)
 
 				# Ranged range
 				if len(units_in_range) != 0:
@@ -424,7 +416,7 @@ class Player:
 						if thrown and not kraken: self.wielding.pop()
 
 						# Well-being
-						try: self.well_being_statement(unit, self, item, self.game)
+						try: self.well_being_statement(unit, self, item)
 						except: pass
 
 						# Return, to see that we used a ranged weapon
@@ -445,12 +437,13 @@ class Player:
 					return False
 
 		self.game.temp_log.append("You are not wielding a ranged weapon!")
+
 		# Remove throwing weapon
 		if thrown and not kraken: self.wielding.pop()
 		return False
 
 
-	def well_being_statement(self, enemy, attacker, means, game, estatus=True):
+	def well_being_statement(self, enemy, attacker, means, estatus=True):
 
 		# If enemy is defeated
 		if enemy.hp <= 0:
@@ -460,11 +453,10 @@ class Player:
 			if enemy in self.game.allies: self.game.allies.remove(enemy)
 
 			# Check for Indominbable
-			for name, count in enemy.passives:
-				if name == 'indominable':
-					enemy.hp = 1
-					self.game.game_log.append(enemy.info[3] + " refuses to die!")
-					return
+			if 'indominable' in enemy.currentPassives():
+				enemy.hp = 1
+				self.game.game_log.append(enemy.info[3] + " refuses to die!")
+				return
 
 			# If kill with weapon
 			legendary = False
@@ -508,10 +500,10 @@ class Player:
 				# Manage Soulreaper
 				if kill_weapon.base_string == "Soulreaper":
 
-					kill_prog = [20,50,90,140,200,300]
-					if kill_weapon.kills in kill_prog:
+					kill_progression = [20,50,90,140,200,300]
+					if kill_weapon.kills in kill_progression:
 						kill_weapon.damage += 1
-						if kill_weapon.kills == kill_prog[-1]:
+						if kill_weapon.kills == kill_progression[-1]:
 							self.game.game_log.append(kill_weapon.name + " is sated.")
 							kill_weapon.brand = 'possessed'
 						else: self.game.game_log.append(kill_weapon.name + " demands more blood.")
@@ -531,7 +523,7 @@ class Player:
 
 					if len(affected) != 0:
 						for unit in affected: apply(unit, 'terrified', 5)
-						self.game.game_log.append("The shredded remains of " + enemy.info[0] +  " left by " + kill_weapon.name + " make its underlings flee in terror!")
+						self.game.game_log.append("The shredded remains of " + enemy.info[0] + " left by " + kill_weapon.name + " make its underlings flee in terror!")
 			except: pass
 
 			# Ooze Passive / Filth explosion
@@ -541,13 +533,12 @@ class Player:
 
 
 			# Drop Loot
-			enemy.drop_booty(self.game)
+			enemy.drop_booty()
 
 			# XP Gain
 			self.xp += enemy.xp + int(d(self.cha) / 2)
-			return
 
-		if estatus:
+		elif estatus:
 			# Enemy is virile
 			if enemy.hp / enemy.maxhp > 0.9: self.game.game_log.append(enemy.info[3] + " seems uninjured.")
 
@@ -687,6 +678,16 @@ class Player:
 				self.cooldowns.append( [spell_name, Spells.spells[spell_name][1] * 3] )
 				self.abilities.remove(spell_name)
 			else: return
+
+
+		# Manage the Black Cross 1
+		if type == "spell":
+			for unit in self.game.units:
+				for item in unit.wielding:
+					if item.base_string == "the Black Cross":
+						self.game.game_log.append("Yet " + item.name + " condemns your use of magic, it " + Colors.color("ignites","fire") + " your flesh!")
+						apply(self, "aflame", 3)
+
 
 
 		# Manage Longfang
@@ -891,7 +892,7 @@ class Player:
 			carrying = [thing  for thing in self.wielding if thing.hands > 0]
 
 			# Ranged weapons / Gauntlets / Claw Gauntlet  require all hands
-			if item.wclass in Weapons.ranged_wclasses and item.hands > 1 or item.wclass in ['gauntlets','claw gauntlets']:
+			if item.wclass in Weapons.ranged_wclasses and item.hands > 1 or item.wclass in {'gauntlets','claw gauntlets'}:
 				# Remove current weapons
 				for weap in carrying:
 					self.wielding.remove(weap)
@@ -907,7 +908,7 @@ class Player:
 				self.time += self.mspeed
 
 			# Not enough total hands
-			elif item.hands > self.total_hands or item.hands > 1 and item.wclass != 'bastard sword' and self.race in ['Gnome','Hobbit']:
+			elif item.hands > self.total_hands or item.hands > 1 and item.wclass != 'bastard sword' and self.race in {'Gnome','Hobbit'}:
 				self.game.temp_log.append("You cannot wield that weapon!")
 
 			# Not enough FREE Hands
@@ -1195,7 +1196,7 @@ class Player:
 
 		self.game.items.remove(item)
 		if not already_in: self.inventory.append(item)
-		if type(item) in [Ammo, Potion]:
+		if type(item) in {Ammo, Potion}:
 			if item.number > 1: self.game.game_log.append("You pick up " + str(item.number) + ' ' + item.name + "s.")
 			else: self.game.game_log.append("You pick up the " + item.name + ".")
 		elif item.legendary:
@@ -1245,4 +1246,15 @@ class Player:
 
 
 	def calc_AC(self):
-		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2)  + self.innate_ac
+		return d(int(max(1, (self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2))) + int((self.equipped_armor.armor_rating + self.equipped_armor.enchantment) / 2) + self.innate_ac
+
+	def currentPassives(self):
+		current = [name for name, count in self.passives]
+		return current
+
+	def removePassive(self, specified):
+		for passive in self.passives:
+			if passive[0] == specified:
+				self.passives.remove(passive)
+				return True
+		return False

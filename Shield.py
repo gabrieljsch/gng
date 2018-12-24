@@ -1,14 +1,10 @@
-import sys, os
-import termios, fcntl
-import select
-from sty import fg, bg, rs
-from codex import Weapons, Ammos, Brands, Armors, Shields, Tomes, Potions
+from codex import Weapons, Brands
 from Descriptions import Descriptions
 from Colors import Colors
 
 class Shield:
 
-	def __init__(self, name, rep, color_tone, hands, armor_rating, encumbrance, enchantment, loc, brand=None):
+	def __init__(self, game, name, rep, color_tone, hands, armor_rating, encumbrance, enchantment, loc, brand=None):
 		self.rep, self.color, self.hands, self.armor_rating, self.encumbrance, self.enchantment, self.loc, self.brand = rep, color_tone, hands, armor_rating, encumbrance, enchantment, loc, brand
 		self.wclass = "shield"
 
@@ -45,11 +41,11 @@ class Shield:
 
 	def __str__(self):
 
-		enchstr = "+" + str(self.enchantment) if self.enchantment >= 0 else str(self.enchantment)
+		enchant_string = "+" + str(self.enchantment) if self.enchantment >= 0 else str(self.enchantment)
 
 		if self.brand is not None:
-			if self.base_string[:4].lower() == 'the ': return Colors.color(self.base_string[:4], self.color) + Colors.color(self.brand, Brands.colors[self.brand]) + " " + enchstr + ' ' + Colors.color(self.base_string[4:], self.color)
-			else: return Colors.color(self.brand, Brands.colors[self.brand]) + " " + enchstr + ' ' + self.name
+			if self.base_string[:4].lower() == 'the ': return Colors.color(self.base_string[:4], self.color) + Colors.color(self.brand, Brands.colors[self.brand]) + " " + enchant_string + ' ' + Colors.color(self.base_string[4:], self.color)
+			else: return Colors.color(self.brand, Brands.colors[self.brand]) + " " + enchant_string + ' ' + self.name
 		else:
-			if self.base_string[:4].lower() == 'the ': return Colors.color(self.base_string[:4], self.color) + enchstr + ' ' + Colors.color(self.base_string[4:], self.color)
-			else: return enchstr + ' ' + self.name
+			if self.base_string[:4].lower() == 'the ': return Colors.color(self.base_string[:4], self.color) + enchant_string + ' ' + Colors.color(self.base_string[4:], self.color)
+			else: return enchant_string + ' ' + self.name

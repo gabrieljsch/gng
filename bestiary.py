@@ -92,11 +92,11 @@ class Monsters():
 
 		# Ironkeep Warsquad
 		"Ironkeep Knight" : 	["k","steel","man",'w',5,  6,4,3,4,4,1.3,14, 40, [0,0,0,0,0,0], [['steel longsword','steel kiteshield'],'halberd','steel battleaxe'], ['steel plate']],
-		"Iron Priest" : 		["p","bronze","man",'ms',6,  6,4,2,6,4,1.2,9, 40, [0,0,0,0,0,0], [['Tome of Iron','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing'],['evening rites']],
-		"Ironkeep Confessor" : 	["c","steel","man",'w',7,  5,7,5,5,4,1.1,14, 40, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes'],['evening rites']],
-		"Iron Dreadnought" :	["D","grey","machine",'w',8,  8,8,2,1,1,1.4,50, 40, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
+		"Iron Priest" : 		["p","bronze","man",'ms',6,  6,4,2,6,4,1.2,9, 60, [0,0,0,0,0,0], [['Tome of Iron','iron staff'],'warhammer'], ['iron chainmail'],['iron blessing'],['evening rites']],
+		"Ironkeep Confessor" : 	["c","steel","man",'w',7,  5,7,5,5,4,1.1,14, 100, [0,0,0,0,0,0], ['crusader greatsword'], ['ironkeep robes'],['evening rites']],
+		"Iron Dreadnought" :	["D","grey","machine",'w',8,  8,8,2,1,1,1.4,50, 200, [0,0,5,0,0,5], ['foehammers'], ['iron plate']],
 
-		# Felltrons
+		# Dreads
 		"Repair Bot" : 		["r","red",  "machine",'re',2,  3,1,3,5,1,1.0,50, 40, [0,0,3,0,0,0], ['bardiche'], ['bronze mail']],
 		"Assault Unit" : 	["f","steel","machine",'w',5,  5,5,1,4,4,1.5,50, 40, [1,0,3,0,0,2], [['scimitar','bronze aegis'],['blastmace','bronze aegis'],'shockglaive'], ['bronze mail']],
 		"Harrier Unit" : 	["h","steel","machine",'ar',5,  4,5,2,4,4,1.4,50, 40, [1,0,3,0,0,2], ['falchion'], ['bronze mail'],['machine crossbow','steel bolt']],
@@ -110,6 +110,8 @@ class Monsters():
 		"Broodmage" :  	   ["b","purple","chronid",'ma',5,  4,4,4,8,5,1.0,6, 40, [0,0,0,0,0,0], ['bone claws'] , ['chronid shell'],['armored limb']],
 		"Behemoth" :  	   ["B","bone","chronid",'w',6,  8,5,1,2,1,1.8,8, 60, [0,0,0,0,0,0], ['fist smash'] , ['chronid plate'],['claws','plated limb']],
 		"Hivelord" : 	   ["H","red","chronid",'w',7,  7,7,5,8,4,1.0,8, 100, [0,0,0,0,0,0], [['reaper talon','reaper talon'],['bonesword','bonesword']] , ['chronid plate'],['plated limb','bone claws']],
+
+		"the Worldeater" : ["W","bone","chronid",'w',10,  9,8,2,10,5,1.5,7, 700, [0,0,0,0,0,0], [['bonesword','bonesword','bonesword','Skullrazor']] , ['chronid plate'],[]],
 
 		# Dark Elves
 		"Wardancer" :  		["w","purple","elf",'w',4,  3,3,5,4,3,0.80,10, 23, [1,0,0,0,0,0], [['thornknife','thornknife']] , ['ironscale mail','leather armor']],
@@ -187,7 +189,7 @@ class Monsters():
 		}
 
 	# Unique, named enemies
-	uniques = ["Dane, Son of Erick", "Ro'khan, Prophet of Krog", "Waa'zhok, Conduit of Krog"]
+	uniques = ["Dane, Son of Erick", "Ro'khan, Prophet of Krog", "Waa'zhok, Conduit of Krog" ,"the Worldeater"]
 
 	# Not affected by bleeds or vampiric
 	dont_bleed = ["skeleton","machine","spirit","ooze"]
@@ -203,301 +205,314 @@ class Monsters():
 
 class Bands:  # Tier Bonus :   formations
 
- 	formations = {
+	formations = {
 
- 		'Wolf Den' :      (2, [ ['Wolf'],
- 								['Wolf'],
- 						 	    ['Wolf','Direwolf Cannibal'],
- 						 	    ['Direwolf','Direwolf Cannibal'],
- 						 	    ['Direwolf Cannibal'],
- 						 	    ['Direwolf Alpha'],
- 			]),
- 		'Kobold Party' : (2, [  ['Kobold'],
- 								['Kobold Archer'],
- 						 	    ['Kobold','Kobold','Kobold Mage','Greater Kobold'],
- 						 	    [],
- 						 	    ['Kobold Mage','Kobold Sneak'],
- 						 	    ['Greater Kobold'],
+		'Wolf Den' :      (2, [ ['Wolf'],
+								['Wolf'],
+								['Wolf','Direwolf Cannibal'],
+								['Direwolf','Direwolf Cannibal'],
+								['Direwolf Cannibal'],
+								['Direwolf Alpha'],
 			]),
- 		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'],
- 								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Brute'],
- 						 	    ['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Brute'],
- 						 	    ['Orc Warboy'],
- 						 	    ['Orc Warrior', 'Orc Berserker'],
- 						 	    ['Orc Brute'],
- 						 	    ['Orc Brute','Orc Warlock'],
- 						 	    ['Orc Warboy'],
- 						 	    ['Orc Warboss'],
- 						 	    ['Orc Warboy'],
- 						 	    ['Orc Brute'],
- 			]),
- 		'Hobgoblin Squad' :(-2, [ ['Hobgoblin Skirmisher','Hobgoblin Defender'],
- 								 ['Hobgoblin Defender'],
- 						 	     ['Hobgoblin Skirmisher','Hobgoblin Defender'],
- 						 	     ['Hobgoblin Bolter'],
- 						 	     [],
- 						 	     ['Hobgoblin Earthmage'],
- 						 	     [],
- 						 	     ['Hobgoblin General'],
- 						 	     [],
- 						 	     [],
- 						 	     [],
- 			]),
- 		'Orc Hunting Party' :(-1,[ ['Feral Warg'],
- 								   ['Feral Warg'],
- 						 	       ['Orc Warg-rider'],
- 						 	       ['Orc Warg-rider'],
- 						 	       ['Orc Warg-rider'],
- 						 	       ['Brute Warg-rider'],
- 						 	       ['Feral Warg'],
- 						 	       ['Brute Warg-rider'],
- 						 	       ['Brute warg-rider'],
- 			]),
- 		'Undead Horde' : (2, [  ['Living Corpse'],
- 								['Living Corpse'],
- 								['Living Corpse','Living Corpse','Undead Legionnaire','Plaguebearer'],
- 								['Undead Legionnaire', 'Undead Legionnaire','Plaguebearer','Flayed One'],
- 								['Undead Legionnaire', 'Plaguebearer','Flayed One'],
- 								['Living Corpse'],
- 								['Undead Hound','Flayed One'],
- 								['Living Corpse'],
- 								['Rotting Hulk'],
- 			]),
- 		'Uruk Warband' : (-1, [ ['Uruk Warrior'],
- 								['Uruk Bolter'],
- 								['Uruk Warrior','Uruk Pikeman'],
- 								['Uruk Bolter','Uruk-hai'],
- 								['Uruk Headhunter','Uruk Headhunter','Uruk-hai'],
- 								['Uruk Warrior'],
- 								['Uruk Warlord'],
- 								['Uruk Bodyguard'],
- 								['Uruk Bodyguard'],
- 			]),
+		'Kobold Party' : (2, [  ['Kobold'],
+								['Kobold Archer'],
+								['Kobold','Kobold','Kobold Mage','Greater Kobold'],
+								[],
+								['Kobold Mage','Kobold Sneak'],
+								['Greater Kobold'],
+			]),
+		'Orc Band' :      (1, [ ["Goblin",'Goblin Archer','Goblin Nob','Goblin Spiderrider', 'Goblin Chief'],
+								['Goblin Archer','Goblin Skirmisher','Witch Goblin','Orc Warboy','Orc Brute'],
+								['Goblin', 'Orc Archer', 'Orc Warboy', 'Orc Warrior', 'Orc Brute'],
+								['Orc Warboy'],
+								['Orc Warrior', 'Orc Berserker'],
+								['Orc Brute'],
+								['Orc Brute','Orc Warlock'],
+								['Orc Warboy'],
+								['Orc Warboss'],
+								['Orc Warboy'],
+								['Orc Brute'],
+			]),
+		'Hobgoblin Squad' :(-2, [ ['Hobgoblin Skirmisher','Hobgoblin Defender'],
+								 ['Hobgoblin Defender'],
+								 ['Hobgoblin Skirmisher','Hobgoblin Defender'],
+								 ['Hobgoblin Bolter'],
+								 [],
+								 ['Hobgoblin Earthmage'],
+								 [],
+								 ['Hobgoblin General'],
+								 [],
+								 [],
+								 [],
+			]),
+		'Orc Hunting Party' :(-1,[ ['Feral Warg'],
+								   ['Feral Warg'],
+								   ['Orc Warg-rider'],
+								   ['Orc Warg-rider'],
+								   ['Orc Warg-rider'],
+								   ['Brute Warg-rider'],
+								   ['Feral Warg'],
+								   ['Brute Warg-rider'],
+								   ['Brute warg-rider'],
+			]),
+		'Undead Horde' : (2, [  ['Living Corpse'],
+								['Living Corpse'],
+								['Living Corpse','Living Corpse','Undead Legionnaire','Plaguebearer'],
+								['Undead Legionnaire', 'Undead Legionnaire','Plaguebearer','Flayed One'],
+								['Undead Legionnaire', 'Plaguebearer','Flayed One'],
+								['Living Corpse'],
+								['Undead Hound','Flayed One'],
+								['Living Corpse'],
+								['Rotting Hulk'],
+			]),
+		'Uruk Warband' : (-1, [ ['Uruk Warrior'],
+								['Uruk Bolter'],
+								['Uruk Warrior','Uruk Pikeman'],
+								['Uruk Bolter','Uruk-hai'],
+								['Uruk Headhunter','Uruk Headhunter','Uruk-hai'],
+								['Uruk Warrior'],
+								['Uruk Warlord'],
+								['Uruk Bodyguard'],
+								['Uruk Bodyguard'],
+			]),
 
- 		'Dark Elf Guild' :  (-2, [  ['Wardancer','Wardancer','Dark Praetorian'],
-	 								['Wardancer','Dark Huntress'],
-	 								['Dark Praetorian'],
-	 								[],
-	 								['Dragoon','Dark Justicar'],
-	 								['Dark Praetorian'],
-	 								['Dark Justicar','Dragoon'],
-	 								['Dark Praetorian'],
-	 								[],
-	 								['Archon']
+		'Dark Elf Guild' :  (-2, [  ['Wardancer','Wardancer','Dark Praetorian'],
+									['Wardancer','Dark Huntress'],
+									['Dark Praetorian'],
+									[],
+									['Dragoon','Dark Justicar'],
+									['Dark Praetorian'],
+									['Dark Justicar','Dragoon'],
+									['Dark Praetorian'],
+									[],
+									['Archon']
 		]),
 
-		'Black Eye Cult' :  (0, [   ['Cultist', 'Cultist','Cultist','Cult Disciple'],
-	 								['Cultist', 'Cultist','Cultist','Cult Disciple'],
-	 								['Cult Disciple'],
-	 								[],
-	 								['Cult Gravewhisperer'],
-	 								['Cult Husk','Cult Husk','Cult Destroyer'],
-	 								[],
-	 								['Cult Destroyer'],
-	 								[],
-	 								[],
-	 								['Cult Prophet']
+		'Black Eye Cult' :  (0 + 4, [   ['Cultist', 'Cultist','Cultist','Cult Disciple'],
+									['Cultist', 'Cultist','Cultist','Cult Disciple'],
+									['Cult Disciple'],
+									[],
+									['Cult Gravewhisperer'],
+									['Cult Husk','Cult Husk','Cult Destroyer'],
+									[],
+									['Cult Destroyer'],
+									[],
+									[],
+									['Cult Prophet']
 			]),
 
- 		'Demon Horde' : (0, [   ['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
- 								[],
- 								[],
- 								[],
- 								[],
- 			]),
+		'Demon Horde' : (0, [   ['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								['Reaverfiend','Chaos Spawn','Skulltracker','Bloodhulk'],
+								[],
+								[],
+								[],
+								[],
+			]),
 
- 		'Jelly Band' :  (-2, [  ['Green Ooze','Clear Ooze'],
-	 							['Orange Ooze','Green Ooze'],
-	 							['Clear Ooze','Orange Ooze'],
-	 							[],
-	 							['Death Ooze'],
-	 							[],
-	 							['Death Ooze'],
-	 							[],
-	 							[],
-	 							[],
-	 							[]
-	 		]),
+		'Jelly Band' :  (-2, [  ['Green Ooze','Clear Ooze'],
+								['Orange Ooze','Green Ooze'],
+								['Clear Ooze','Orange Ooze'],
+								[],
+								['Death Ooze'],
+								[],
+								['Death Ooze'],
+								[],
+								[],
+								[],
+								[]
+			]),
 
- 		'Felltron Formation' :(-4, [['Assault Unit'],
-		 							['Assault Unit'],
-		 							['Repair Bot'],
-		 							['Repair Bot'],
-		 							['Harrier Unit'],
-		 							[],
-		 							['Mageslayer Unit'],
-		 							['Assault Unit','Harrier Unit'],
-		 							[],
-		 							[],
-		 							[]
-	 		]),
-
-
- 		'Chronid Hive' :  (1,  [['Drone'],
-	 							['Drone'],
-	 							['Drone'],
-	 							['Ripper Drone','Screamer Drone'],
-	 							['Ripper Drone','Screamer Drone'],
-	 							['Ripper Drone','Screamer Drone','Hive Warrior'],
-	 							['Hive Warrior'],
-	 							['Drone'],
-	 							['Behemoth'],
-	 							['Broodmage'],
-	 							['Ripper Drone','Screamer Drone','Hive Warrior'],
-	 							['Hivelord'],
-	 							[]
-	 		]),
-
- 		'Ironkeep Warsquad' :  (-4, [   ['Ironkeep Knight'],
-	 									['Ironkeep Knight'],
-	 									['Iron Priest'],
-	 									[],
-	 									['Ironkeep Confessor','Iron Dreadnought'],
-	 									[],
-	 									['Ironkeep Knight'],
-	 									[],
-	 									[],
-	 									[],
-	 									[]
-	 		]),
-
- 		'Spider Cave' :  (+3, [ ['Spiderling'],
-	 							['Spiderling'],
-	 							['Spiderling'],
-	 							['Spiderling'],
-	 							['Spiderling','Spiderling','Giant Wolfspider'],
-	 							[],
-	 							['Giant Wolfspider'],
-	 							['Fateweaver','Giant Wolfspider','Fateweaver'],
-	 							['Armored Crawler','Broodmother','Black Widower'],
-	 							[],
-	 							['Armored Crawler','Black Widower','Broodmother'],
-	 							['Lich Crawler','Tomblurker Spider'],
-	 							[],
-	 							['Spider Queen']
-	 		]),
-
- 		'Lone Rider' : (+3, [ ["Ogre"],
- 			]),
-
- 		'Wandering Monster' : (0, [	['Ogre','Direwolf Alpha','Cyclops Brute','Cave Troll','Ogre Berserker','Cyclops Hurler','Wartroll']
- 			]),
-
- 		'Dragon Nest' : (0, [	['Flame Dragon','Frost Dragon','Bone Dragon']
- 			]),
-
- 		'Dane and the CS Nerds' :  (10, [  ["Dane, Son of Erick"],
-	 										['Wartroll'],
-	 										['Cyclops Hurler'],
-	 										['Wartroll'],
-	 										['Ogre Berserker'],
-	 		]),
-
- 		"Ro'khan's Worldeaters" :  (10, [   ["Ro'khan, Prophet of Krog"],
- 											["Waa'zhok, Conduit of Krog"],
-	 										['Orc Dethbrute'],
-	 										['Orc Dethbrute'],
-	 										['Orc Dethbrute'],
-	 										['Orc Brute'],
-	 										['Orc Brute'],
-	 										['Orc Brute'],
-	 										['Orc Brute'],
-	 		]),
-
- 		'Revelation' :  		(10, [  ['Death'],
-	 									['Famine'],
-	 									['War'],
-	 									['Pestilence'],
-	 		]),
+		'Dread Formation' :(-4, [['Assault Unit'],
+									['Assault Unit'],
+									['Repair Bot'],
+									['Repair Bot'],
+									['Harrier Unit'],
+									[],
+									['Mageslayer Unit'],
+									['Assault Unit','Harrier Unit'],
+									[],
+									[],
+									[]
+			]),
 
 
+		'Chronid Hive' :  (1,  [['Drone'],
+								['Drone'],
+								['Drone'],
+								['Ripper Drone','Screamer Drone'],
+								['Ripper Drone','Screamer Drone'],
+								['Ripper Drone','Screamer Drone','Hive Warrior'],
+								['Hive Warrior'],
+								['Drone'],
+								['Behemoth'],
+								['Broodmage'],
+								['Ripper Drone','Screamer Drone','Hive Warrior'],
+								['Hivelord'],
+								[]
+			]),
+
+		'Ironkeep Warsquad' :  (-4, [   ['Ironkeep Knight'],
+										['Ironkeep Knight'],
+										['Iron Priest'],
+										[],
+										['Ironkeep Confessor','Iron Dreadnought'],
+										[],
+										['Ironkeep Knight'],
+										[],
+										[],
+										[],
+										[]
+			]),
+
+		'Spider Cave' :  (+3, [ ['Spiderling'],
+								['Spiderling'],
+								['Spiderling'],
+								['Spiderling'],
+								['Spiderling','Spiderling','Giant Wolfspider'],
+								[],
+								['Giant Wolfspider'],
+								['Fateweaver','Giant Wolfspider','Fateweaver'],
+								['Armored Crawler','Broodmother','Black Widower'],
+								[],
+								['Armored Crawler','Black Widower','Broodmother'],
+								['Lich Crawler','Tomblurker Spider'],
+								[],
+								['Spider Queen']
+			]),
+
+		'Lone Rider' : (+3, [ ["Kobold Mage"],
+			]),
+
+		'Wandering Monster' : (0, [	['Ogre','Direwolf Alpha','Cyclops Brute','Cave Troll','Ogre Berserker','Cyclops Hurler','Wartroll']
+			]),
+
+		'Dragon Nest' : (0, [	['Flame Dragon','Frost Dragon','Bone Dragon']
+			]),
+
+		'Dane and the CS Nerds' :  (10, [  ["Dane, Son of Erick"],
+											['Wartroll'],
+											['Cyclops Hurler'],
+											['Wartroll'],
+											['Ogre Berserker'],
+			]),
+
+		"Ro'khan's Warpath" :  (10, [   ["Ro'khan, Prophet of Krog"],
+											["Waa'zhok, Conduit of Krog"],
+											['Orc Dethbrute'],
+											['Orc Dethbrute'],
+											['Orc Dethbrute'],
+											['Orc Brute'],
+											['Orc Brute'],
+											['Orc Brute'],
+											['Orc Brute'],
+			]),
+
+		"the Earthshakers": (10, [  ['Ripper Drone'],
+									  ['Ripper Drone'],
+									  ['Ripper Drone'],
+									  ['Ripper Drone'],
+									  ['Ripper Drone'],
+									   ["Behemoth"],
+									   ['Behemoth'],
+									   ["Behemoth"],
+									   ['the Worldeater'],
+									   ]),
+
+		'Revelation' :  		(10, [  ['Death'],
+										['Famine'],
+										['War'],
+										['Pestilence'],
+			]),
 
 
 
- 	}
 
- 	dicto = {	   1 : ['Orc Band', 'Undead Horde', 'Wandering Monster', 'Wolf Den', 'Kobold Party', 'Spider Cave',
- 						],  # -----
- 				   2 : [
- 				   		],  # -----
- 				   3 : ['Black Eye Cult', 'Demon Horde', 'Chronid Hive',
- 				   		],  # -----
- 				   4 : ['Uruk Warband', 'Dark Elf Guild', 'Black Eye Cult', 'Jelly Band',
- 				   		],  # -----
- 				   5 : ['Orc Hunting Party','Hobgoblin Squad',
- 				   		'Wolf Den', 'Kobold Party'],  # -----
- 				   6 : [
- 				   		],  # -----
- 				   7 : ['Ironkeep Warsquad',
- 				   		],  # -----
- 				   8 : ['Felltron Formation',
- 				   		],  # -----
- 				   9 : [
- 				   		],  # -----
- 				   10: ['Dragon Nest',
- 				   		],  # -----
- 				   11 : [
- 				   		],  # -----
- 				   12 : [
- 				   		],  # -----
- 				   13 : [
- 				   		],  # -----
- 				   14 : [
- 				   		],  # -----
- 				   15 : ['Dane and the CS Nerds',
- 				   		],  # -----
- 				   16 : ['Revelation',
- 				   		],  # -----
- 				   17 : [
- 				   		],  # -----
- 				   18 : ["Ro'khan's Worldeaters",
- 				   		],  # -----
- 				   19 : [
- 				   		],  # -----
- 				   }
 
- 	# dicto = { 	   1 : ['Lone Rider',
- 	# 					], # -----
- 	# 				2 : [
- 	# 			   		], # -----
- 	# 			   3 : ["Chronid Hive",
- 	# 			   		"Wolf Den"], # -----
- 	# 			   4 : [
- 	# 			   		], # -----
- 	# 			   5 : [
- 	# 			   		], # -----
- 	# 			   6 : [
- 	# 			   		], # -----
- 	# 			   7 : [
- 	# 			   		], # -----
- 	# 			   8 : [
- 	# 			   		], # -----
- 	# 			   9 : [
- 	# 			   		], # -----
- 	# 			   10: ['Dragon Nest',
- 	# 			   		], # -----
- 	# 			   11 : [
- 	# 			   		], # -----
- 	# 			   	12 : [
- 	# 			   		], # -----
- 	# 			   	13 : [
- 	# 			   		], # -----
- 	# 			   	14 : [
- 	# 			   		], # -----
- 	# 			   	15 : ['Dane and the CS Nerds',
- 	# 			   		], # -----
- 	# 			   	16 : ['Revelation',
- 	# 			   		], # -----
- 	# 			   	17 : [
- 	# 			   		], # -----
- 	# 			   	18 : ["Ro'khan's Worldeaters",
- 	# 			   		], # -----
- 	# 			   	19 : [
- 	# 			   		], # -----
- 	# 			   }
+	}
+
+	dicto = {	   1 : ['Orc Band', 'Undead Horde', 'Wandering Monster', 'Wolf Den', 'Kobold Party', 'Spider Cave',
+						],  # -----
+				   2 : [
+						],  # -----
+				   3 : ['Black Eye Cult', 'Demon Horde', 'Chronid Hive',
+						],  # -----
+				   4 : ['Uruk Warband', 'Dark Elf Guild', 'Black Eye Cult', 'Jelly Band',
+						],  # -----
+				   5 : ['Orc Hunting Party','Hobgoblin Squad',
+						'Wolf Den', 'Kobold Party'],  # -----
+				   6 : [
+						],  # -----
+				   7 : ['Ironkeep Warsquad',
+						],  # -----
+				   8 : ['Dread Formation',
+						],  # -----
+				   9 : [
+						],  # -----
+				   10: ['Dragon Nest',
+						],  # -----
+				   11 : [
+						],  # -----
+				   12 : [
+						],  # -----
+				   13 : [
+						],  # -----
+				   14 : [
+						],  # -----
+				   15 : ['Dane and the CS Nerds',
+						],  # -----
+				   16 : ['Revelation',
+						],  # -----
+				   17 : [
+						],  # -----
+				   18 : ["Ro'khan's Warpath",
+						],  # -----
+				   19 : [
+						],  # -----
+				   20 : ["the Earthshakers"
+						],  # -----
+					}
+
+	# dicto = { 	   1 : ['the Earthshakers',
+	# 					], # -----
+	# 				2 : [
+	# 					], # -----
+	# 			   3 : [
+	# 					], # -----
+	# 			   4 : [
+	# 					], # -----
+	# 			   5 : [
+	# 					], # -----
+	# 			   6 : [
+	# 					], # -----
+	# 			   7 : [
+	# 					], # -----
+	# 			   8 : [
+	# 					], # -----
+	# 			   9 : [
+	# 					], # -----
+	# 			   10: ['Dragon Nest',
+	# 					], # -----
+	# 			   11 : [
+	# 					], # -----
+	# 				12 : [
+	# 					], # -----
+	# 				13 : [
+	# 					], # -----
+	# 				14 : [
+	# 					], # -----
+	# 				15 : ['Dane and the CS Nerds',
+	# 					], # -----
+	# 				16 : ['Revelation',
+	# 					], # -----
+	# 				17 : [
+	# 					], # -----
+	# 				18 : ["Ro'khan's Worldeaters",
+	# 					], # -----
+	# 				19 : [
+	# 					], # -----
+	# 			   }
 

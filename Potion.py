@@ -1,30 +1,25 @@
-import termios, fcntl
-import select
-from sty import fg, bg, rs
-from Descriptions import Descriptions, Colors
-from codex import Weapons, Ammos, Brands, Armors, Shields, Tomes, Potions
+from Colors import Colors
+from Descriptions import Descriptions
 
+def apply(unit, passive, count, stacking=False):
 
-def color(statement, color):
-	color = Colors.array[color]
-	return fg(color[0], color[1], color[2]) + str(statement) + fg.rs
+	for present_passive in unit.passives:
 
-def bcolor(statement, bcolor):
-	bcolor = Colors.array[bcolor]
-	return bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + bg.rs
+		if present_passive[0] == passive:
+			if stacking: present_passive[1] += count
+			else: present_passive[1] = count
+			return
 
-def fullcolor(statement, fcolor, bcolor):
-	color, bcolor = Colors.array[fcolor], Colors.array[bcolor]
-	return fg(color[0], color[1], color[2]) + bg(bcolor[0], bcolor[1], bcolor[2]) + str(statement) + rs.all
+	unit.passives.append([passive, count])
 
 class Potion:
 
-	def __init__(self, name, color_tone, loc, number = 1):
+	def __init__(self, name, color_tone, loc, number=1):
 		self.rep, self.color, self.number, self.loc = '!', color_tone, number, loc
 
-		self.name, self.base_string = color(name, self.color), name
+		self.name, self.base_string = Colors.color(name, self.color), name
 
-	def drink(self, user):
+	def drink(self, user, game):
 
 		if self.base_string == "healing potion":
 

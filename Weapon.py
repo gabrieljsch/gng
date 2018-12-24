@@ -1,7 +1,7 @@
 from Maps import Maps
 
 from bestiary import Monsters
-from codex import Weapons, Ammos, Brands
+from codex import Weapons, Ammos, Brands, Shields
 from Spells import Spells
 from Descriptions import Descriptions
 from Colors import Colors
@@ -39,7 +39,7 @@ class Weapon:
 		self.name, self.base_string = Colors.color(name, self.color), name
 
 		# Spell Damage
-		self.mdamage = 1 if wclass in ['staff'] else 0
+		self.mdamage = 1 if wclass in {'staff'} else 0
 
 		# Deal with prob
 		if self.probability is None: self.probability = 100
@@ -52,12 +52,8 @@ class Weapon:
 			self.range = 2 * damage + to_hit
 
 		# Legendary
-		if self.base_string in Weapons.legendaries:
-			self.legendary = True
-		else:
-			self.legendary = False
+		self.legendary = True if self.base_string in Weapons.legendaries else False
 
-		# Manage Kraken 5
 		self.thrown = False
 
 
@@ -98,11 +94,11 @@ class Weapon:
 			if self.base_string[:4].lower() == 'the ': return Colors.color(self.base_string[:4], self.color) + enchantment_string + ' ' + Colors.color(self.base_string[4:], self.color)
 			else: return enchantment_string + ' ' + self.name
 
-	def strike(self, attacker, enemy, game, firstswing=True):
+	def strike(self, attacker, enemy, game, firstswing=True, baal_reflect=False):
 
 
 		if enemy.rider is not None:
-			if d(10) >= 7 or self.wclass in ["spear","god spear","pike","lance","polearm","glaive"]:
+			if d(10) >= 7 or self.wclass in {"spear","god spear","pike","lance","polearm","glaive"}:
 				self.strike(attacker, enemy.rider, self.game, firstswing)
 				return
 
@@ -113,7 +109,10 @@ class Weapon:
 		frozen, marked = False, False
 		for passive in enemy.passives:
 			if passive[0] == "frozen": frozen = True
-			if passive[0] == "marked" and wclass not in ['fist','fists']: marked = True
+			if passive[0] == "marked" and wclass not in {'fist','fists'}: marked = True
+
+		# Declare Quivered
+		quivered = attacker.quivered if not baal_reflect else enemy.quivered
 
 		# Swing Probability
 		if d(100) > (100 - self.probability):
@@ -138,8 +137,8 @@ class Weapon:
 				if passive[0] == "blessed iron": enemy_encumb = min(0, enemy_encumb)
 
 
-			# TO HIT formula / Manage Godfinger
-			if (d(100) + (4 * (attacker.dex - enemy.dex)) + (2 * to_hit) + self.enchantment > 40 + 1.5 * (self_encumb - enemy_encumb)) or frozen or self.base_string == "Godfinger":
+			# TO HIT formula / Manage Godfinger / Manage Baal's Generator 4
+			if (d(100) + (4 * (attacker.dex - enemy.dex)) + (2 * to_hit) + self.enchantment > 40 + 1.5 * (self_encumb - enemy_encumb)) or frozen or self.base_string == "Godfinger" or baal_reflect:
 
 				# Keep projectiles
 				if self.hands > 0 and self.wclass in Weapons.ranged_wclasses or self.wclass in Ammos.thrown_amclasses:
@@ -151,18 +150,22 @@ class Weapon:
 							break
 					# Quivereds are same lol
 					if enemy.quivered is not None:
-						if attacker.quivered.base_string == enemy.quivered.base_string and attacker.quivered.brand == enemy.quivered.brand:
+						if quivered.base_string == enemy.quivered.base_string and quivered.brand == enemy.quivered.brand:
 							enemy.quivered.number += 1
 							already_in = True
-					if not already_in: enemy.inventory.append(Ammo(attacker.quivered.base_string,attacker.quivered.rep,attacker.quivered.color,attacker.quivered.wclass,1,attacker.quivered.damage,None,attacker.quivered.brand))
+
+					if not already_in: enemy.inventory.append(quivered.one_ammo())
+					# if not already_in: enemy.inventory.append(Ammo(quivered.base_string,quivered.rep,quivered.color,quivered.wclass,1,quivered.damage,None,quivered.brand))
 
 				# Shield Block
 
 				# Dagger passive
-				if wclass not in ['dagger','knife','scream']:
+				if wclass not in {'dagger','knife','scream'}:
 					for weapon in enemy.wielding:
 						if type(weapon) == Shield:
-							if d(100) > max(33, 90 - (3 * weapon.armor_rating)):
+
+							# Block Chance / Manage Baal's Generator 1
+							if d(100) > max(50, 90 - (3 * weapon.armor_rating)) or (wclass in Weapons.ranged_wclasses and weapon.base_string == "Baal's Generator"):
 
 								# Manage the Gauntlets of Mars
 								if self.base_string == "the Gauntlets of Mars":
@@ -182,7 +185,7 @@ class Weapon:
 
 									# Flavor Text
 									if attacker.name != "you": self.game.game_log.append("You smash through " + enemy.info[1] + " shield with " + self.name + ", dealing " + str(damage) + " damage and " + Colors.color("stunning","magenta") + " it!")
-									else: self.game.game_log.append(attacker.info[3] +  " smashes through " + attacker.info[1] + " shield with " + self.name + ", dealing " + str(damage) + " damage and " + Colors.color("stunning","magenta") + " " + enemy.info[0] + "!")
+									else: self.game.game_log.append(attacker.info[3] + " smashes through " + attacker.info[1] + " shield with " + self.name + ", dealing " + str(damage) + " damage and " + Colors.color("stunning","magenta") + " " + enemy.info[0] + "!")
 									return
 
 								# Manage Kraken 3
@@ -194,10 +197,21 @@ class Weapon:
 
 
 								# Block Statement
-								if attacker.name != "you": self.game.game_log.append("You block " + attacker.info[1] + " " + self.name + " with your " + weapon.name + "!")
+
+								# Legendary shield
+								if not weapon.legendary:
+									if attacker.name != 'you': poss = "your "
+									else: poss = "its "
+								else: poss = ""
+								if attacker.name != "you": self.game.game_log.append("You block " + attacker.info[1] + " " + self.name + " with " + poss + weapon.name + "!")
 								else:
-									if self.legendary: self.game.game_log.append(enemy.info[3] + " blocks " + self.name + " with its " + weapon.name + "!")
-									else: self.game.game_log.append(enemy.info[3] + " blocks " + attacker.info[1] + " " + self.name + " with its " + weapon.name + "!")
+									if self.legendary: self.game.game_log.append(enemy.info[3] + " blocks " + self.name + " with " + poss + weapon.name + "!")
+									else: self.game.game_log.append(enemy.info[3] + " blocks " + attacker.info[1] + " " + self.name + " with " + poss + weapon.name + "!")
+
+								# Manage Baal's Generator 2
+								if weapon.base_string == "Baal's Generator" and wclass in Weapons.ranged_wclasses and d(100) >= 66:
+									self.strike(enemy, attacker, game, firstswing, baal_reflect=True)
+
 								return
 
 
@@ -206,29 +220,32 @@ class Weapon:
 
 				# Projectile weapon
 				if self.wclass in Weapons.ranged_wclasses and self.hands > 0:
-					damage = int(d(self.damage) + d(attacker.quivered.damage) + attacker.dex / 2 + self.enchantment - ( 0.75 * enemy.calc_AC()))
-					brand, wclass = attacker.quivered.brand, attacker.quivered.wclass
+					damage = max(0, int(d(self.damage) + d(quivered.damage) + attacker.dex / 2 + self.enchantment - ( 0.75 * enemy.calc_AC())))
+					brand, wclass = quivered.brand, quivered.wclass
 				# Thrown Weapon
 				elif self.wclass in Ammos.thrown_amclasses and self.hands > 0:
-					damage = int(d(self.damage) + d(attacker.quivered.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC()))
-					brand, wclass = attacker.quivered.brand, attacker.quivered.wclass
-				# Manage Kraken 7
+					damage = max(0, int(d(self.damage) + d(quivered.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC())))
+					brand, wclass = quivered.brand, quivered.wclass
+				# Manage Kraken 6
 				elif self.base_string == 'Kraken' and self.thrown:
-					damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC()))
-				# Melee weapon
-				elif self.base_string in Weapons.array:
+					damage = max(0, int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC())))
+				# Melee weapon / Manage Invictus 2
+				else:
+				# elif self.base_string in Weapons.array or self.base_string == "Invictus":
 					# Manage Runed weapon
-					if brand == 'runed':damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment)
-					# Manage demon sword
-					elif self.wclass in ['demon sword']: damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.50 * enemy.calc_AC()))
-					# Manage scream
-					elif self.wclass in ['scream']: damage = int(d(self.damage) + attacker.cha / 1.5 + self.enchantment)
+					if brand == 'runed': damage = max(0, int(d(self.damage) + attacker.str / 1.5 + self.enchantment))
 					# REGULAR MELEE HIT
-					else: damage = int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC()))
+					elif self.base_string == "Skullrazor": damage = max(0, int(d(self.damage) + attacker.str / 1.5 + self.enchantment))
+					# Manage demon sword
+					elif self.wclass in {'demon sword'}: damage = max(0, int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.50 * enemy.calc_AC())))
+					# Manage scream
+					elif self.wclass in {'scream'}: damage = max(0, int(d(self.damage) + attacker.cha / 1.5 + self.enchantment))
+					# REGULAR MELEE HIT
+					else: damage = max(0, int(d(self.damage) + attacker.str / 1.5 + self.enchantment - ( 0.75 * enemy.calc_AC())))
 
 					# Manage Deadly Precision
 					if 'deadly precision' in attacker.traits:
-						if d(100) >= 99 and self.wclass not in ['knife','dagger'] or d(100) >= 97 and self.wclass in ['knife','dagger']:
+						if d(100) >= 99 and self.wclass not in {'knife','dagger'} or d(100) >= 97 and self.wclass in {'knife','dagger'}:
 							damage *= 3
 							critical = True
 
@@ -259,7 +276,7 @@ class Weapon:
 						else: brand_hit = d(100) > 60 and d(4) > firer
 					elif brand == "electrified":
 						# Manage Mjölnir 1
-						if self.base_string == "Mjölnir": brand_hit = d(100) > 40 and d(5) > shockr
+						if self.base_string == "Mjölnir": brand_hit = d(100) > 30 and d(6) > shockr
 						else: brand_hit = d(100) > 40 and d(4) > shockr
 					elif brand == "soulflame": brand_hit = True if d(100) > 65 and "evening rites" not in enemy.traits else False
 					elif brand == "frozen": brand_hit = d(100) > 80 and d(4) > frostr
@@ -268,13 +285,13 @@ class Weapon:
 					elif brand == "vorpal": brand_hit = True if len(enemy.passives) != 0 else False
 					elif brand == "holy":
 						if enemy.name != 'you': brand_hit = True if enemy.etype in Monsters.holy_vulnerable else False
-						else: brand_hit = True if enemy.race in ["Demonkin"] else False
+						else: brand_hit = True if enemy.race in {"Demonkin","Dhampir"} else False
 					elif brand == "silvered":
 						if enemy.name != 'you': brand_hit = True if enemy.etype in Monsters.silver_vulnerable else False
-						else: brand_hit = True if enemy.race in ["Ghoul"] else False
+						else: brand_hit = True if enemy.race in {"Ghoul","Dhampir"} else False
 					elif brand == "vampiric":
 						if enemy.name != 'you': brand_hit = False if enemy.etype in Monsters.dont_bleed or "evening rites" in enemy.traits else True
-						else: brand_hit = False if enemy.race in ["Felltron"] or "evening rites" in enemy.traits else True
+						else: brand_hit = False if enemy.race in {"Dread"} or "evening rites" in enemy.traits else True
 					elif brand == "runed":
 						brand_hit = False
 						if attacker.mana >= self.damage / 2:
@@ -293,18 +310,22 @@ class Weapon:
 				# Marked
 				if marked:
 					verb, preposition = Weapons.weapon_classes[wclass]
-					if attacker.name != "you": self.game.game_log.append(attacker.info[3] + " ignites " + enemy.info[1] +  " mark with its " + wclass + ", tearing " + enemy.info[1] +  " body apart for " + str(damage) + " damage!")
-					else: self.game.game_log.append("You ignite the " + enemy.info[1] + " mark with your " + wclass + ", tearing its body apart for "  + str(damage) + " damage!")
+					if attacker.name != "you": self.game.game_log.append(attacker.info[3] + " ignites " + enemy.info[1] + " mark with its " + wclass + ", tearing " + enemy.info[1] + " body apart for " + str(damage) + " damage!")
+					else: self.game.game_log.append("You ignite the " + enemy.info[1] + " mark with your " + wclass + ", tearing its body apart for " + str(damage) + " damage!")
+
+				# Manage Baal's Generator 3
+				elif baal_reflect:
+					self.game.game_log.append(Colors.color("Baal's Generator", Shields.array["Baal's Generator"][1]) + " reflects the " + quivered.name + " back at " + enemy.info[0] + ", dealing " + str(damage) + " damage!")
 
 				# No damage case
 				elif damage <= 0:
 					damage = 0
 
-					if attacker.name != "you": self.game.game_log.append(attacker.info[3] + " hits " + enemy.info[0] +  " with its " + wclass + " but does no damage!")
-					else: self.game.game_log.append("You " + Weapons.weapon_classes[wclass][0] + " your "+ str(wclass) + " " + Weapons.weapon_classes[wclass][1] + " " + enemy.info[0] + " but deal no damage!")
+					if attacker.name != "you": self.game.game_log.append(attacker.info[3] + " hits " + enemy.info[0] + " with its " + wclass + " but does no damage!")
+					else: self.game.game_log.append("You " + Weapons.weapon_classes[wclass][0] + " your " + str(wclass) + " " + Weapons.weapon_classes[wclass][1] + " " + enemy.info[0] + " but deal no damage!")
 
 				# Damage Case - Statement
-				else: self.damage_statement(attacker, enemy, damage, brand, brand_hit, critical)
+				else: self.damage_statement(attacker, enemy, damage, brand, brand_hit, critical, quivered)
 
 				# Check passives
 				if brand_hit:
@@ -314,6 +335,11 @@ class Weapon:
 						if passive[1] == 0:
 							self.passives.remove(passive)
 							self.brand = self.origbrand
+
+
+				# Manage the Blasting Rod
+				if self.base_string == 'the Blasting Rod':
+					Spells.thunderbolt("thunderbolt",attacker, enemy, game, map, game.room_filler, verbose=False)
 
 				# Manage runic Armor
 				if enemy.equipped_armor.brand == 'runic' and enemy.mana > 0:
@@ -345,7 +371,7 @@ class Weapon:
 
 					# Check if unit is still alive
 					if attacker.name != "you":
-						self.game.player.well_being_statement(attacker, enemy, "spikes", self.game, False)
+						self.game.player.well_being_statement(attacker, enemy, "spikes", estatus=False)
 
 				except: pass
 
@@ -387,7 +413,8 @@ class Weapon:
 				# Check to see who weapon killed
 				for unit in self.game.units[1:]:
 					if unit == attacker: continue
-					self.game.player.well_being_statement(unit,attacker,self,game,False)
+					if baal_reflect: self.game.player.well_being_statement(unit, attacker, self, estatus=False)
+					else: self.game.player.well_being_statement(unit, attacker, self, estatus=False)
 
 			# Miss Case
 			else:
@@ -403,14 +430,14 @@ class Weapon:
 				counter = None
 				for weapon in enemy.wielding:
 					if type(weapon) == Weapon:
-						if weapon.wclass in ["sword","bastard sword","demon sword","god sword"] and self.wclass not in Weapons.ranged_wclasses:
+						if weapon.wclass in {"sword","bastard sword","demon sword","god sword"} and self.wclass not in Weapons.ranged_wclasses:
 
 							# Manage Nightsbane
 							if weapon.base_string == "Nightsbane":
 								if attacker.name != 'you':
 									if attacker.etype in Monsters.silver_vulnerable: counter = weapon
 								else:
-									if attacker.race in ["Ghoul"]: counter = weapon
+									if attacker.race in {"Ghoul"}: counter = weapon
 							else:
 								# Normal Counter chance
 								if d(100) + 3 * enemy.dex > 75: counter = weapon
@@ -446,21 +473,21 @@ class Weapon:
 
 						# Manage runic Armor
 						if attacker.equipped_armor.brand == 'runic' and attacker.mana > 0:
-							manadam = min(attacker.mana, damage)
-							attacker.mana -= manadam
-							attacker.hp -= damage - manadam
+							mana_damage = min(attacker.mana, damage)
+							attacker.mana -= mana_damage
+							attacker.hp -= damage - mana_damage
 						else:
 							# Resolve Damage
 							attacker.hp -= damage
 						if enemy.name == 'you':
-							try: self.game.player.well_being_statement(attacker, game.player, counter, game, False)
+							try: self.game.player.well_being_statement(attacker, game.player, counter, estatus=False)
 							except: pass
 
 
 	def weapon_type_swing(self, attacker, enemy):
 
 		# CLEAVE ATTACK
-		if self.wclass in ["greatsword","god sword","bastard sword","scythe","greataxe","god axe","claw gauntlets"]:
+		if self.wclass in {"greatsword","god sword","bastard sword","scythe","greataxe","god axe","claw gauntlets"}:
 
 			# CLEAVE Attack
 			# --START--------------------------------
@@ -512,17 +539,16 @@ class Weapon:
 						if unit.loc == (enemy.loc[0], enemy.loc[1] + 2*x):
 							self.strike(attacker, unit, self.game, False)
 
-			if not cleave and self.wclass in ['greatsword','god sword'] and unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, self.game, False)
+			if not cleave and self.wclass in {'greatsword','god sword'} and unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, self.game, False)
 			# --END------------------------------------
 
-		if self.wclass in ["spear","polearm","lance","glaive"]:
+		if self.wclass in {"spear","polearm","lance","glaive"}:
 			for unit in self.game.units:
-				print("TYPES", type(attacker), type(unit))
 				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])):
 					self.strike(attacker, unit, self.game, False)
 					break
 
-		if self.wclass in ["pike","god spear"]:
+		if self.wclass in {"pike","god spear"}:
 			for unit in self.game.units:
 				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])):
 					self.strike(attacker, unit, self.game, False)
@@ -534,16 +560,16 @@ class Weapon:
 
 
 		# Blunt weapons
-		if self.wclass in ["hammer","club","mace","flail","gauntlet","maul"]:
+		if self.wclass in {"hammer","club","mace","flail","gauntlet","maul"}:
 			if enemy.equipped_armor.aclass == 'plate': damage *= 1.4
 
-		elif self.wclass in ["warhammer","greatclub","god hammer","fists","gauntlets"]:
+		elif self.wclass in {"warhammer","greatclub","god hammer","fists","gauntlets"}:
 			if enemy.equipped_armor.aclass == 'plate': damage *= 1.4
 
 			# Stun
 			if d(100) >= 65: apply(enemy, 'stunned', 1)
 
-		elif self.wclass in ["greataxe","god axe","axe","claw gauntlet","claw gauntlets"]:
+		elif self.wclass in {"greataxe","god axe","axe","claw gauntlet","claw gauntlets"}:
 			damage *= (1 + max(0, (0.25 - enemy.calc_AC() / 50)))
 
 		return int(damage)
@@ -577,7 +603,7 @@ class Weapon:
 			# Manage Splinter
 			count = 3 if self.base_string == 'Splinter' else Brands.dict["envenomed"]["count"]
 
-			apply(enemy, 'poisoned', count, stacking = True)
+			apply(enemy, 'poisoned', count, stacking=True)
 
 		# Manage Silvered
 		elif brand == "silvered": damage *= 1.6
@@ -595,16 +621,16 @@ class Weapon:
 			if self.base_string == "Mjölnir":
 
 				# Shock Radius
-				def shock(enemy, affected=[]):
-					if enemy in affected: return
-					affected.append(enemy)
+				def shock(target, affected=[]):
+					if target in affected: return
+					affected.append(target)
 					spaces = set([])
 					for x in range(-1,2):
 						for y in range(-1,2):
-							if enemy.loc[0] + x >= 0 and enemy.loc[1] + y >= 0: spaces.add((enemy.loc[0] + x, enemy.loc[1] + y))
+							if target.loc[0] + x >= 0 and target.loc[1] + y >= 0: spaces.add((target.loc[0] + x, target.loc[1] + y))
 					# Find units affected
-					for unit in self.game.units:
-						if unit.loc in spaces and enemy != unit and unit not in affected and unit != attacker: shock(unit, affected)
+					for other_unit in self.game.units:
+						if other_unit.loc in spaces and target != other_unit and other_unit not in affected and other_unit != attacker: shock(other_unit, affected)
 					return affected[1:]
 
 				affected = shock(enemy)
@@ -635,9 +661,8 @@ class Weapon:
 		# Manage Vorpal
 		elif brand == "vorpal":
 
-			vdamage = int(len(enemy.passives) * enemy.maxhp / 5)
-			self.game.check_passives(enemy, True)
-			damage += vdamage
+			damage += int(len(enemy.passives) * enemy.maxhp / 5)
+			self.game.check_passives(enemy, purge=True)
 
 
 		# Manage Frozen
@@ -647,13 +672,13 @@ class Weapon:
 		return damage
 
 
-	def damage_statement(self, attacker, enemy, damage, brand, brand_hit, critical):
+	def damage_statement(self, attacker, enemy, damage, brand, brand_hit, critical, quivered):
 		name, wclass = self.name, self.wclass
 
-		if self.wclass in Weapons.ranged_wclasses and self.hands > 0: name, wclass = attacker.quivered.name, attacker.quivered.wclass
+		if self.wclass in Weapons.ranged_wclasses and self.hands > 0: name, wclass = quivered.name, quivered.wclass
 
 		# Manage legendary and unique
-		name = name if self.legendary and attacker.name == 'you' else "its " + name
+		name = name if self.legendary else "its " + name
 
 		# Make the sentence awesome
 		verb, preposition = Weapons.weapon_classes[wclass]
@@ -685,7 +710,7 @@ class Weapon:
 				self.game.game_log.append("With a clean sweep you cleave off " + enemy.info[1] + " head with " + name + "!")
 			enemy.hp = 0
 
-		# Manage Kraken 6
+		# Manage Kraken 5
 		elif self.base_string == "Kraken" and self.thrown:
 			if attacker.name != "you":
 				self.game.game_log.append(attacker.info[3] + " throws " + name + " into " + enemy.info[0] + " for " + str(damage) + " damage with!")

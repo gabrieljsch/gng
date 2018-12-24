@@ -1,7 +1,4 @@
-import sys, os
-import termios, fcntl
-import select
-from codex import Weapons, Ammos, Brands, Armors, Shields, Tomes, Potions
+from codex import Weapons, Ammos, Brands
 from Descriptions import Descriptions
 from Colors import Colors
 
@@ -10,12 +7,9 @@ class Ammo:
 
 	def __init__(self, name, rep, color_tone, wclass, number, damage, loc, brand=None):
 		self.rep, self.color, self.wclass, self.damage, self.number, self.loc, self.brand = rep, color_tone, wclass, damage, number, loc, brand
-
 		self.name, self.base_string = Colors.color(name, self.color), name
 
 	def details(self):
-		brand = '' if self.brand is None else self.brand + ' '
-
 		print(self,' (' + self.wclass + ')')
 		print("")
 		if self.wclass in Ammos.thrown_amclasses:
@@ -31,6 +25,9 @@ class Ammo:
 		if self.brand is not None:
 			print("")
 			print(Descriptions.brand[self.brand])
+
+	def one_ammo(self):
+		return Ammo(self.name, self.rep, self.color, self.damage, 1, self.loc, self.brand)
 
 	def __str__(self):
 

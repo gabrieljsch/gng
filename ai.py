@@ -201,7 +201,7 @@ def shortest_path(looker, other, map_arr, game, blockers = True):
 					if neighbor == other: return spath + [neighbor]
 
 					# Exception Squares
-					if (game.map.map_array[neighbor[1]][neighbor[0]] in set(['|', '-', '#', ' ', '+','_']) or neighbor in locs) and blockers: continue
+					if (game.map.map_array[neighbor[1]][neighbor[0]] in {'|', '-', '#', ' ', '+','_'} or neighbor in locs) and blockers: continue
 					
 					new = spath[:] + [neighbor]
 					squeue.append(new)
@@ -246,19 +246,19 @@ def los(looker, other, map_arr, game, range = False):
 
 		if other[0] >= looker[0] and other[1] >= looker[1]:
 			for cnode in new[1:-1]:
-				if game.map.map_array[cnode[1]][cnode[0]] in set(['|', '-', '#', '+','_']) or cnode in locs or not (other[0] >= cnode[0] >= looker[0] and other[1] >= cnode[1] >= looker[1]):
+				if game.map.map_array[cnode[1]][cnode[0]] in {'|', '-', '#', '+', '_'} or cnode in locs or not (other[0] >= cnode[0] >= looker[0] and other[1] >= cnode[1] >= looker[1]):
 					return None
 		elif other[0] >= looker[0] and other[1] <= looker[1]:
 			for cnode in new[1:-1]:
-				if game.map.map_array[cnode[1]][cnode[0]] in set(['|', '-', '#', '+','_']) or cnode in locs or not (other[0] >= cnode[0] >= looker[0] and other[1] <= cnode[1] <= looker[1]):
+				if game.map.map_array[cnode[1]][cnode[0]] in {'|', '-', '#', '+', '_'} or cnode in locs or not (other[0] >= cnode[0] >= looker[0] and other[1] <= cnode[1] <= looker[1]):
 					return None
 		elif other[0] <= looker[0] and other[1] >= looker[1]:
 			for cnode in new[1:-1]:
-				if game.map.map_array[cnode[1]][cnode[0]] in set(['|', '-', '#', '+','_']) or cnode in locs or not (other[0] <= cnode[0] <= looker[0] and other[1] >= cnode[1] >= looker[1]):
+				if game.map.map_array[cnode[1]][cnode[0]] in {'|', '-', '#', '+', '_'} or cnode in locs or not (other[0] <= cnode[0] <= looker[0] and other[1] >= cnode[1] >= looker[1]):
 					return None
 		elif other[0] <= looker[0] and other[1] <= looker[1]:
 			for cnode in new[1:-1]:
-				if game.map.map_array[cnode[1]][cnode[0]] in set(['|', '-', '#', '+','_']) or cnode in locs or not (other[0] <= cnode[0] <= looker[0] and other[1] <= cnode[1] <= looker[1]):
+				if game.map.map_array[cnode[1]][cnode[0]] in {'|', '-', '#', '+', '_'} or cnode in locs or not (other[0] <= cnode[0] <= looker[0] and other[1] <= cnode[1] <= looker[1]):
 					return None
 
 		return new
@@ -339,17 +339,3 @@ def los(looker, other, map_arr, game, range = False):
 				paths[enode] = epath
 
 	return None
-
-
-
-
-
-
-
-
-
-
-
-
-
-						

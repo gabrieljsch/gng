@@ -2,6 +2,7 @@
   <dictionary name="GSchneid">
     <words>
       <w>abcdefghijklmnopqrstuvwxyz</w>
+      <w>abcdefghiklmnopqrstuvwxyz</w>
       <w>acidr</w>
       <w>aclass</w>
       <w>amclasses</w>
@@ -27,6 +28,7 @@
       <w>blightmaul</w>
       <w>bloodhulk</w>
       <w>bloodletter</w>
+      <w>bloodlust</w>
       <w>bloodmaul</w>
       <w>bloodreave</w>
       <w>bloodreaver</w>
@@ -51,6 +53,7 @@
       <w>choppa</w>
       <w>chronid</w>
       <w>chronids</w>
+      <w>cooldown</w>
       <w>cooldowns</w>
       <w>crackhammer</w>
       <w>cytherean</w>
@@ -63,6 +66,7 @@
       <w>demonkin</w>
       <w>dethbrute</w>
       <w>dethklaw</w>
+      <w>dhampir</w>
       <w>direwolf</w>
       <w>dominus</w>
       <w>doomhammer</w>
@@ -74,6 +78,7 @@
       <w>dreadplate</w>
       <w>dwarven</w>
       <w>earthmage</w>
+      <w>earthshakers</w>
       <w>elfrobe</w>
       <w>eviscerator</w>
       <w>falchion</w>
@@ -104,9 +109,11 @@
       <w>hivelord</w>
       <w>hjklyubn</w>
       <w>hregen</w>
+      <w>huehuecóyotl</w>
       <w>indominable</w>
       <w>indominbable</w>
       <w>inventoryize</w>
+      <w>invictus</w>
       <w>ironkeep</w>
       <w>ironscale</w>
       <w>justicar</w>
@@ -171,6 +178,7 @@
       <w>shortbow</w>
       <w>shortsword</w>
       <w>shortswords</w>
+      <w>skullrazor</w>
       <w>skullsplitter</w>
       <w>skulltracker</w>
       <w>slica</w>
@@ -191,6 +199,7 @@
       <w>swiftaxe</w>
       <w>swiftmail</w>
       <w>swiftspike</w>
+      <w>thirstfangs</w>
       <w>thornarrow</w>
       <w>thornblade</w>
       <w>thornknife</w>
@@ -201,6 +210,7 @@
       <w>tripmine</w>
       <w>trollhammer</w>
       <w>trollhide</w>
+      <w>unequip</w>
       <w>uruk</w>
       <w>uruks</w>
       <w>vampiric</w>
@@ -225,10 +235,12 @@
       <w>witchhunter</w>
       <w>wolfspider</w>
       <w>wooddagger</w>
+      <w>worldeater</w>
       <w>worldeaters</w>
       <w>worldshaper</w>
       <w>wraithform</w>
       <w>wraithwalk</w>
+      <w>wspeed</w>
       <w>wyvern</w>
       <w>wyvernscale</w>
     </words>

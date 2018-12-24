@@ -1,31 +1,4 @@
-from sty import Rule, Render
 
-class Colors:
-
-	array = {
-		'red' : (255, 10, 10),
-		'orange' : (255, 150, 50),
-		'fire' : (255,69,0),
-		'green' : (50, 205, 50),
-		'darkgreen' : (0,128,0),
-		'springgreen' : (0,250,154),
-		'yellow' : (255,255,0),
-		'gold' : (212,175,55),
-		'cyan' : (0,255,255),
-		'blue' : (0,0,255),
-		'lightblue' : (65,105,225),
-		'brown' : (139,69,19),
-		'darkbrown' : (84,42,14),
-		'tan' : (205,133,63),
-		'grey' : (105,105,105),
-		'purple' : (128,0,128),
-		'magenta' : (255,0,255),
-		'salmon' : (250,128,114),
-		'darkred' : (139, 0, 0),
-		'bronze' : (205,127,50),
-		'bone' : (238,232,170),
-		'steel' : (119,136,153),
-	}
 
 
 
@@ -36,7 +9,7 @@ class Descriptions:
 
 	legendary = {
 		# Weapons
-		"the Glaive of Gore" : "This rustic glaive was forged during the first wars of men. Its intensely sharp blade and opposite fleshhooks allow it to easily disembowel enemies with a single motion. Rivulets in the blade allow blood to flow from the blade down the shaft of the weapon in streams.",
+		"the Glaive of Gore" : "This rustic glaive was forged during the first wars of men. Its intensely sharp blade and opposite flesh-hooks allow it to easily disembowel enemies with a single motion. Rivulets in the blade allow blood to flow from the blade down the shaft of the weapon in streams.",
 			# 10% Chance to cause disemboweled effect, which causes a bleeding damage over time and weakens the afflicted.
 		"Soulreaper" : "This ancient warscythe's blade glows a faint blue, indiscernible whispers are heard when wielding it. Its blade emerges from a skull on its shaft fashioned from femurs, which pulsate lightly...as if the weapon were breathing.",
 			# Increasing damage with kill tiers, 6 tiers, at last tier also gains possessed brand.
@@ -57,21 +30,35 @@ class Descriptions:
 		"Nightsbane" : "This bastard sword of legend has a name feared by all creatures of darkness. Its blade is forged entirely from blessed dark silver, its dark-golden hilt and guard in the form of a sharp cross. A vial of holy water rests in center of the hilt, and scrolls covered in holy words are wrapped around the weapon's grip.",
 			# Automatically counter enemies who would be affected by silver brand.
 		"Longfang" : "This beautiful bastard sword runs black and white with twisted vein patterns of damascus steel. The blade is inscribed with strange magical runes, one for each school of magic. The pommel is dominated by the ivory tooth of some creature, as long as the grip and as straight as a spike.",
-			# Casting a spell while wielding this weapon grants this weapon the brand corresponding to the type of spell for a single hit.  
+			# Casting a spell while wielding this weapon grants this weapon the brand corresponding to the type of spell for a single hit.
+		"Skullrazor" : "This bonesword has a name feared by all, its broad blade is so sharp it can shear bone on contact. Its hilt is made of compacted grey matter, no doubt accumulated over time from its many victims. It was once wielded by the Worldeater, who used it to slaughter entire civilizations in a span of weeks.",
+			# Ignores all armor, all the time
 		"God-Cleaver" : "This executioner greatsword has a name feared by all but the one who wields it. Once this blade tastes the blood of a victim four times, the fifth is guaranteed to end its life, regardless of magic and deception. Its blade is as long as a mortal man is tall, and its fully-engraved blade glows a faint orange.",
 			# After 4 damaging hits with this weapon, the next hit will execute the target (if its not a unique?).
 		"Worldshaper" : "This legendary hammer is the size of a mortal man, for it is said to have been wielded by Odin. A crackling blue energy field surrounds this golden hammer at all times. Its single golden head sits atop its long mithril shaft, and a brilliant opal rests on its large pommel.",
 			# Killing enemies with this weapon restores a quarter tank of mana.
 		"Mjölnir" : "This hammer of legend was once wielded by the god Thor, it still crackles with his thunderous energy. Its short haft is offset by its enormous, almost rectangular head, decorated with ancient runes and images of Yggdrasil.",
-			# Electrified brand hit bounces thunder to adjacent enemies.
+			# Electrified brand hit bounces thunder to adjacent enemies, harder to resist, and is more probable
 		"the Gauntlets of Mars": "These ancient stone gauntlets generate a small energy field around them. The blood-red stone of the gauntlets are carved with ancient symbols of war and battle, and numerous cracks and battle-scars adorn the edges of the weapons.",
 			# Blocking this weapon instead causes full damage and the blocker to be stunned.
 		"the Talons of Belial": "These bone-white gauntlets hold in place two long, razor-sharp talons each. The talons are each longer than the gauntlet itself and curve near the end slightly in towards the gauntlet. Its a miracle if anything comes into contact with one of the talons and isn't shorn completely in half.",
 			# Killing an enemy causes enemies of a lower tier in small radius to be feared for a few turns (feared also reduces ac slightly).
+		"the Blasting Rod" : "This ghastly staff is made out of a silvered spine, as the shaft, and a skull for the head. It crackles with electrical energy, in the darkness the skull seems to grimace towards those who do not wield it.",
+			# Hits cast thunderbolt on enemies hit
 		"Tempest" : "This golden bow radiates with flashes of dark storms and bright sunbeams, for it was once wielded by Horus himself. It takes great strength to draw the string fully back, for the bow easily can retain its intended shape while strung indefinitely.",
 			# Also fires quivered ammo at 2 other random enemies in range.
 		"Godfinger" : "This seemingly normal bow somehow operates without a bowstring. When drawn, a blue phantasmal hand is seen over the user's own, assisting in the bow's operation. It is said that the bow has yet to miss a target, no matter the operator.",
 			# You can never miss your target when firing this bow.
+
+		# Shields
+		"Baal's Generator" : "This mysterious shield consists of a light gauntlet attached to a glowing ethereal disc; it is said Baal has once wielded this shield . A purple orb of power shields the user when the gauntlet is raised, inside which whispering voices can be heard .",
+			# Always blocks projectiles, chance to redirect back towards enemies
+		"Invictus" : "This radiant shield is a round aegis of gold and bone. Your blood boils with victorious rage when you grasp its gauntlet, which design allows the shield to be used aggressively with horizontal bashes to the head.",
+			# Acts as a weapon when attacking, 100% swing chance
+		"the Black Cross" : "This massive obsidian shield was forged in the shape of a templar cross; holy symbols, seals, and vials of holy water adorn its front. When wielded, the shield has a palpable, burning hatred towards anyone or anything of magical properties.",
+			# Applies burn effect to anyone that casts a spell in the same room as someone wielding it
+		"" : "",
+			#
 
 		# Armor
 		"Kain's Pact" : "These fiery robes burn blood red to the eye. The robes utilize an ornate leather breastplate, resembling a rib-cage, to allow its users more protection than normal robes. Wearers are able to cast spells when magical energy is spent...for a price.",
@@ -90,9 +77,9 @@ class Descriptions:
 	wclass = {
 		# Weapons
 		# Augmented Innate
-		"fists" :["Weapons carried in or fuzed with the hand to increase punching power."],
-		"fist" : ["A weapon carried in or fuzed with the hand to increase punching power."],
-		"claw" : ["A weapon carried in or fuzed with the hand, with built-in claws to rend flesh.","This weapon does increased damage to lightly armored enemies"],
+		"fists" : ["Weapons carried in or fused with the hand to increase punching power."],
+		"fist" : ["A weapon carried in or fused with the hand to increase punching power."],
+		"claw" : ["A weapon carried in or fused with the hand, with built-in claws to rend flesh.","This weapon does increased damage to lightly armored enemies"],
 
 		# Blunt
 		"hammer" : ["A blunt weapon with a flat head and a sturdy handle.","This weapon does bonus damage against enemies wearing plate armor."],
@@ -191,6 +178,7 @@ class Descriptions:
 	skill = {
 		# Spells and Abilities
 		"poison breath" : ["You breathe a cloud of noxious gas at your enemy to poison them."],
+		"flame tongue": ["You exhale a line of flame at a target with a high chance of lighting it on fire."],
 		"magic missile" : ["You conjure a phantasmal arrow of energy to pierce your foe at any range."],
 		"combat roll" : ["Roll 2 squares across the floor, then throw a quivered throwing weapon at a random in-range enemy."],
 		"chain lightning" : ["You fire wild lightning into the air at a specific target. The lightning has a chance to bounce on every unit within 2 squares."],
@@ -207,15 +195,16 @@ class Descriptions:
 		"iron blessing" : ["You bless an ally's armor and weapons, reducing their encumbrance. Casting on a machine will heal it instead."],
 		"deathmark" : ["You curse a target with the black mark, which ignites when the target is hit by a physical attack."],
 		"spectral sword" : ["You conjure a phantasmal sword from the energy around you. The sword's damage is equal to your intelligence."],
+		"godhammer": ["You invoke your deity to grant you a powerful weapon formed from your deity's pure will."],
 		"double shot" : ["You nock two arrows on your bow in hopes of showering death upon the enemy."],
-		"battlecry" : ["You conjure a phantasmal sword from the energy around you. The sword's damage is equal to your intelligence."],
+		"battlecry" : ["You let out a deafening cry, bolstering your armor for every enemy in a small radius around you."],
 		# Traits
-		"furious charge" : ["You gain a mad ferocity. You strike adjacent enemies in the same direction you move."],
+		"furious charge" : ["You gain a mad ferocity. You strike adjacent enemies in the same direction after you move."],
 		"deadly precision" : ["You target weaknesses in enemies' armor, giving you a chance to critically strike with hits. The chance is doubled when using knives and daggers."],
 		"martial draw" : ["You swing at a random adjacent enemy when you draw a melee weapon."],
 		"evening rites" : ["You prayers and rituals make you immune to the effects of hellfire, soulflame, and vampiric weapons."],
 		"life leech" : ["Your damaging spells drain enemies to heal you for some of their damage."],
-		"mana flow" : ["Your connection to mana lets you regenerates it at twice its normal rate."],
+		"mana flow" : ["Your connection to mana lets you regenerate it at twice its normal rate."],
 
 
 	}	
@@ -224,13 +213,14 @@ class Descriptions:
 		"Cytherean" : "A race of ethereal humanoids hailing from Venus, characterized by their intelligence and ability to temporarily walk through time.",
 		"Gnome" : "A race of crafty, agile humanoids, characterized by their dexterity and ability to set explosive mines.",
 		"Hobbit" : "A race of small but hardy humanoids, characterized by their charisma, dexterity, and their ability to leap moderate distances.",
+		"Dhampir" : "The race of half-human, half-vampires, characterized by their strength, speed, and boundless bloodlust when close to death. ",
 		"Elf" : "A ancient race of noble humanoids, characterized by their intelligence, dexterity, and their ability to restore health and mana.",
 		"Terran" : "A race of adventurous humanoids hailing from Earth, characterized by their charisma and ability to learn quickly.",
 		"Naga" : "A race of reptilian humanoids, characterized by their speed and ability to temporarily poison their weapons at will.",
 		"Ghoul" : "A race of decaying undead creatures, characterized by their quick regeneration and ability to tear foes apart with their teeth.",
 		"Dragonborn" : "An ancient race of half-dragon humanoids, characterized by their strength and ability to breathe fire.",
 		"Black Orc" : "A race of barbaric humanoid warriors, characterized by their melee proficiency and ability to purge their blood of status effects.",
-		"Felltron" : "A race of ancient, sentient robotic humanoids, characterized by their strength, constitution, and very slow health regeneration.",
+		"Dread" : "A race of ancient, sentient robotic humanoids, characterized by their strength, constitution, and very slow health regeneration.",
 		"Dwarf" : "A race of stout humanoids with homes deep underground, characterized by their constitution and ability to fight long after they receive mortal wounds.",
 		"Hill Troll" : "A race of hulking, brute humanoids, characterized by their huge stature and ability to wield larger weapons with great ease.",
 	}
