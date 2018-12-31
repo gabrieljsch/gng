@@ -179,7 +179,7 @@ class Map:
 		y,x = coord
 		return self.def_map_array[x][y]
 
-	def can_move(self, loc, leap = False):
+	def can_move(self, loc, leap=False):
 		unallowed = ['|', '-', ' ', '#','_']
 		if leap: unallowed.append('@')
 		units = game.units
@@ -259,7 +259,7 @@ class Game:
 				print("GNG")
 				print("---------------------------")
 
-				print(Colors.color(self.race, CharacterInfo.races[self.race][0][-1]) + "      (Press spacebar to rechoose)")
+				print(Colors.color(self.race, CharacterInfo.races[self.race][0][-1]) + "      (Press spacebar to re-choose)")
 				print("")
 
 				i, record = 0, {}
@@ -286,7 +286,7 @@ class Game:
 
 					go_back = False
 
-		except IndexError:
+		except KeyError:
 			self.character_select(info)
 
 
@@ -707,10 +707,10 @@ class Game:
 						len(carrying) == 1 and self.player.race == "Hill Troll" and weapons[-1].wclass not in {"gauntlets", "claw gauntlets"} or type(
 						carrying[-1]) == Shield and len(carrying) == 1):
 					if len(carrying) == 0 and self.player.race == "Hill Troll":
-						fists = self.room_filler.give_weapon(self.player, 'fist smash')
+						fists = Weapon.give_weapon(self.player, 'fist smash', hands=False)
 						weapons.append(fists)
 					else:
-						fists = self.player.give_weapon('fist')
+						fists = Weapon.give_weapon(self.player, 'fist', hands=False)
 						weapons.append(fists)
 
 				# Attack with each weapon
@@ -794,16 +794,15 @@ class Game:
 			for weapon in weapons:
 				if weapon.wclass == 'lance':
 					for unit in self.units[1:]:
-						if unit.loc == (
-						self.loc[0] - 2 * (self.loc[0] - coordinates[0]), self.loc[1] - 2 * (self.loc[1] - coordinates[1])):
-							weapon.strike(self, unit, game, False)
+						if unit.loc == (self.player.loc[0] - 2 * (self.player.loc[0] - coordinates[0]), self.player.loc[1] - 2 * (self.player.loc[1] - coordinates[1])):
+							weapon.strike(self.player, unit, game, firstswing=False)
 							break
 
 		# Manage Furious Charge
 		elif "furious charge" in self.player.traits:
 			for unit in self.units[1:]:
-				if unit.loc == (self.loc[0] - 2 * (self.loc[0] - coordinates[0]), self.loc[1] - 2 * (self.loc[1] - coordinates[1])):
-					for weapon in weapons: weapon.strike(self, unit, game)
+				if unit.loc == (self.player.loc[0] - 2 * (self.player.loc[0] - coordinates[0]), self.player.loc[1] - 2 * (self.player.loc[1] - coordinates[1])):
+					for weapon in weapons: weapon.strike(self.player, unit, game)
 					break
 
 		# move unit
@@ -1136,7 +1135,7 @@ class Game:
 				unit.mount.unit.rider = None
 
 			# Drop Loot
-			unit.drop_booty(game)
+			unit.drop_booty()
 
 			# XP Gain
 			game.player.xp += unit.xp + int(d(game.player.cha) / 2)

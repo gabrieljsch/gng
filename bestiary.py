@@ -11,9 +11,9 @@ class Monsters():
 		# Animals
 		# Wolves
 		"Wolf" : 	  	   	  ["w","steel","beast",'w',1,  2,2,2,2,1,0.75,12, 4, [1,0,0,0,0,0], ['fangs'] , ['wolf pelt']],
-		"Direwolf" : 	   	  ["W","steel","beast",'w',2,  4,3,4,2,1,0.85,12, 8, [1,0,0,0,0,0], ['fangs'] , ['wolf pelt','direwolf pelt']],
-		"Direwolf Cannibal" : ["c","red","beast",'w',2,  3,4,4,2,1,0.75,10, 8, [1,0,0,0,0,0], ['blood fangs'] , ['wolf pelt'],['furious charge']],
-		"Direwolf Alpha" : 	  ["A","darkred","beast",'w',3,  5,5,5,2,1,0.8,12, 15, [1,0,0,0,0,0], ['demon fangs','blood fangs'] , ['direwolf pelt'],['furious charge']],
+		"Direwolf" : 	   	  ["W","steel","beast",'w',2,  4,3,4,2,1,0.85,12, 8, [1,0,0,0,0,0], ['fangs'] , ['wolf pelt','direwolf pelt'], ['pounce']],
+		"Direwolf Cannibal" : ["c","red","beast",'w',2,  3,4,4,2,1,0.75,10, 8, [1,0,0,0,0,0], ['blood fangs'] , ['wolf pelt'],['furious charge','pounce']],
+		"Direwolf Alpha" : 	  ["A","darkred","beast",'w',3,  5,5,5,2,1,0.8,12, 15, [1,0,0,0,0,0], ['demon fangs','blood fangs'] , ['direwolf pelt'],['furious charge','pounce']],
 
 		# Kobolds
 		"Kobold" : 		  ["k","orange","kobold",'w',1,  2,2,2,1,3,1.0,15, 4, [0,1,0,1,1,0], ['spear',"iron shortsword",['hand axe','buckler shield']] , ['leather armor','troll hide']],
@@ -476,43 +476,43 @@ class Bands:  # Tier Bonus :   formations
 						],  # -----
 					}
 
-	# dicto = { 	   1 : ['the Earthshakers',
-	# 					], # -----
-	# 				2 : [
-	# 					], # -----
-	# 			   3 : [
-	# 					], # -----
-	# 			   4 : [
-	# 					], # -----
-	# 			   5 : [
-	# 					], # -----
-	# 			   6 : [
-	# 					], # -----
-	# 			   7 : [
-	# 					], # -----
-	# 			   8 : [
-	# 					], # -----
-	# 			   9 : [
-	# 					], # -----
-	# 			   10: ['Dragon Nest',
-	# 					], # -----
-	# 			   11 : [
-	# 					], # -----
-	# 				12 : [
-	# 					], # -----
-	# 				13 : [
-	# 					], # -----
-	# 				14 : [
-	# 					], # -----
-	# 				15 : ['Dane and the CS Nerds',
-	# 					], # -----
-	# 				16 : ['Revelation',
-	# 					], # -----
-	# 				17 : [
-	# 					], # -----
-	# 				18 : ["Ro'khan's Worldeaters",
-	# 					], # -----
-	# 				19 : [
-	# 					], # -----
-	# 			   }
+	dicto = { 	   1 : ['Chronid Hive',
+						],  # -----
+					2 : [
+						],  # -----
+				   3 : [
+						],  # -----
+				   4 : [
+						],  # -----
+				   5 : [
+						],  # -----
+				   6 : [
+						],  # -----
+				   7 : [
+						],  # -----
+				   8 : [
+						],  # -----
+				   9 : [
+						],  # -----
+				   10: ['Dragon Nest',
+						],  # -----
+				   11 : [
+						],  # -----
+					12 : [
+						],  # -----
+					13 : [
+						],  # -----
+					14 : [
+						],  # -----
+					15 : ['Dane and the CS Nerds',
+						],  # -----
+					16 : ['Revelation',
+						],  # -----
+					17 : [
+						],  # -----
+					18 : ["Ro'khan's Worldeaters",
+						],  # -----
+					19 : [
+						],  # -----
+				   }
 

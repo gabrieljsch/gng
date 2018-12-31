@@ -144,7 +144,8 @@ class Shields:
 		# Legendary Shields
 		"Baal's Generator":   ['}','purple',1,8,1,0],
 		"the Black Cross":    ['}','grey',1,15,7,0],
-		"Invictus": 		  ['}','gold',1,11,4,0],
+		"Invictus": 		  ['}','gold',1,11,3,0],
+		"Dominus": 			  ['}','bone',1,13,4,0],
 		}
 
 class Tomes:
@@ -450,6 +451,7 @@ class Weapons:
 
 		# Demon Weapons
 		# ---------------------------------------------------------------------
+		"demon trident" : 	['/','darkred','trident',2, 0, 12, 0, 1.7],
 		"bloodletter" :     ['!','darkred','bastard sword',2, 0, 10, -2, 1.0],
 		"filthaxe" :   		['&','darkgreen','axe',1, 0, 9, -3, 1.3,"envenomed"],
 		"skullsplitter" :   ['!','red','greataxe',2, 0, 16, -5, 1.5],
@@ -547,7 +549,8 @@ class Weapons:
 		# Legendary Weapons
 		"the Glaive of Gore" :    	  ['/','darkred','glaive',  2, d(5), 16, 0, 1.2],
 		"the Singing Spear" : 		  ['/','orange','god spear',   2, d(5), 12, 3, 0.75],
-		"Soulreaper" :    	  		  ['/','cyan','scythe',  2, d(5), 17, -2, 2],
+		"Soulreaper" :    	  		  ['/','cyan','scythe',  2, d(5), 17, -2, 1.7],
+		"the Trident of Atlas" : 	  ['/','gold','trident',   2, d(5), 18, 5, 1.5],
 
 		"Kraken" : 					  ['&','springgreen','axe',  1, d(5), 13, 0, 1.1],
 		"Krog's Maw" :    		  	  ['&','red','god axe',     2, d(5), 19, -5, 1.6, 'vampiric'],
@@ -577,9 +580,9 @@ class Weapons:
 	legendaries = {"the Glaive of Gore", "the Singing Spear", "Krog's Maw", "Nightsbane", "Splinter",
 				   "Dawn", "Longfang", "Bloodreaver", "God-Cleaver", "Worldshaper", "Tempest", "Godfinger",
 				   "Mjölnir", "Soulreaper", "Swiftspike", "the Gauntlets of Mars", "the Talons of Belial",
-				   "Kraken", "the Blasting Rod", "Skullrazor",
+				   "Kraken", "the Blasting Rod", "Skullrazor","the Trident of Atlas",
 				    # Shields
-				   "Baal's Generator","Invictus","the Black Cross",
+				   "Baal's Generator","Invictus","the Black Cross","Dominus",
 				    # Armor
 				   "God-Frame", "Bloodshell", "Kain's Pact", "Plaguebringer", "the Phasic Robes"}
 	enemy_legendaries = ["Mjölnir", "Krog's Maw", "Skullrazor"]
@@ -623,6 +626,7 @@ class Weapons:
 
 		# Polearm
 		"spear" : ["thrust","into"],
+		"trident": ["thrust", "into"],
 		"pike" : ["thrust", "into"],
 		"god spear" : ["plunge", "deep into"],
 		"lance" : ["drive", "into"],

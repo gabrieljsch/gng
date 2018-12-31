@@ -109,9 +109,12 @@ class RoomFiller:
 		if other_items is not None:
 			for item in other_items:
 				if item in Ammos.array:
-					unit.give_ammo(item)
+					given_brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1] if d(100) > 99 - self.tier and item not in Weapons.legendaries else None
+					unit.quivered = Ammo.give_ammo(unit, item, number=(10 + 5 * self.tier, 4 + 2 * self.tier), brand=given_brand)
 				elif item in Weapons.array:
-					unit.give_weapon(item)
+					given_brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1] if d(100) > 99 - self.tier and item not in Weapons.legendaries else None
+					given_enchantment = d(int(max(1, self.tier / 2))) - 1 if d(10) + (1.5 * self.tier) > 13 else 0
+					Weapon.give_weapon(unit, item, hands=False, brand=given_brand, enchantment=given_enchantment)
 				elif item in Shields.array:
 					unit.give_shield(item)
 				elif item in Spells.spells:
@@ -133,7 +136,9 @@ class RoomFiller:
 		if type(items) != list: items = [items]
 		for item in items:
 			if item in Weapons.array:
-				unit.give_weapon(item)
+				given_brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1] if d(100) > 99 - self.tier and item not in Weapons.legendaries else None
+				given_enchantment = d(int(max(1, self.tier / 2))) - 1 if d(10) + (1.5 * self.tier) > 13 else 0
+				Weapon.give_weapon(unit, item, hands=False, brand=given_brand, enchantment=given_enchantment)
 			elif item in Shields.array:
 				unit.give_shield(item)
 			elif item in Tomes.array:
@@ -185,59 +190,14 @@ class RoomFiller:
 		except IndexError: pass
 
 		# Create Ammo Object
-		self.game.items.append(Ammo(ammo, data[0], data[1], data[2], number, data[3], loc, brand))
+		self.game.items.append(Ammo(self.game, ammo, data[0], data[1], data[2], number, data[3], loc, brand))
 
 
 	def place_potion(self, pot, loc, number):
 		data = Ammos.array[pot]
 
 		# Create Potion Object
-		self.game.items.append(Ammo(pot, data, loc, number))
+		self.game.items.append(Potion(pot, data, loc, number))
 
 	def place_chest(self, chest_type, tier, loc):
 		self.game.items.append(Chest(chest_type, tier, loc, self.game))
-
-	def give_weapon(self, unit, weapon, hands=True):
-		data = Weapons.array[weapon]
-		player = True if unit.name == "you" else False
-
-		if player:
-			# Manage Brand + Probability
-			try: brand = data[8]
-			except IndexError: brand = None
-			try: prob = data[9]
-			except IndexError: prob = None
-
-			if hands: unit.hands -= data[3]
-
-			# Create Weapon Object
-			if data[2] in Weapons.ranged_wclasses and data[3] > 0:
-				unit.inventory.append( Weapon(self.game, weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob))
-				weapon = unit.inventory[-1]
-			else:
-				unit.wielding.append( Weapon(self.game, weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob))
-				weapon = unit.wielding[-1]
-
-
-		else:
-			# Manage Enchantment
-			spawned_enchantment = data[4]
-			if d(10) + (1.5 * unit.tier) > 13: spawned_enchantment += d(int(max(1, unit.tier / 2))) - 1
-
-			# Manage Brand + Probability
-			try: brand = data[8]
-			except:
-				if d(100) > 99 - unit.tier and data[3] > 0 and weapon not in Weapons.legendaries:
-					brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1]
-				else: brand = None
-			try: prob = data[9]
-			except: prob = None
-
-			# Create Weapon Object
-			unit.wielding.append( Weapon(weapon, data[0], data[1], data[2], data[3], spawned_enchantment, data[5], data[6], data[7], None, brand, prob))
-			weapon = unit.wielding[-1]
-
-		try: self.game.legendaries_to_spawn.remove(weapon.base_string)
-		except: pass
-
-		return weapon

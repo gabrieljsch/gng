@@ -47,8 +47,8 @@ class Monster:
 
 		# Initialize Health
 		bonushp = md(6,self.tier)
-		self.maxhp = 5 * con + bonushp
-		self.hp = 5 * con + bonushp
+		self.maxhp = 6 * con + bonushp
+		self.hp = 6 * con + bonushp
 
 		# Initialize Mana
 		self.mana, self.maxmana = 5 * int + self.tier, 5 * int + self.tier
@@ -70,6 +70,7 @@ class Monster:
 		self.frostr, self.firer, self.poisonr, self.acidr, self.shockr, self.expr = resistances
 
 		# Monster's Equipment
+		self.hands = 2
 		self.wielding , self.other_items, self.quivered, self.inventory = [], other_items, None, []
 
 		# Manage God-Cleaver Passive
@@ -117,25 +118,6 @@ class Monster:
 			self.quivered.loc = self.loc
 			self.game.items.append(self.quivered)
 
-
-	def give_weapon(self, weapon):
-		data = Weapons.array[weapon]
-
-		# Manage Enchantment
-		spawned_enchantment = data[4]
-		if d(10) + (1.5 * self.tier) > 13: spawned_enchantment += d(int(max(1, self.tier / 2))) - 1
-
-		# Manage Brand + Probability
-		try: brand = data[8]
-		except:
-			if d(100) > 99 - self.tier and data[3] > 0 and weapon not in Weapons.legendaries: brand = Brands.weapon_brands[d(len(Brands.weapon_brands)) - 1]
-			else: brand = None
-		try: prob = data[9]
-		except: prob = None
-
-		# Create Weapon Object
-		self.wielding.append(Weapon(self.game, weapon, data[0], data[1], data[2], data[3], spawned_enchantment, data[5], data[6], data[7], None, brand, prob))
-
 	def give_armor(self, armor):
 		data = Armors.array[armor]
 
@@ -170,22 +152,6 @@ class Monster:
 		# Create Weapon Object
 		self.wielding.append(Tome(data[0], tome, '_', data[2], data[1], None, brand))
 		return self.wielding[-1]
-
-	def give_ammo(self, ammo):
-		data = Ammos.array[ammo]
-
-		# Manage Enchantment + Brand
-		try: brand = data[4]
-		except: brand = None
-		if brand is None:
-			if d(100) > 99 - self.tier and data[3] > 0: brand = Brands.ammo_brands[d(len(Brands.ammo_brands)) - 1]
-
-		# Manage Number
-		if data[2] in Ammos.thrown_amclasses: number = 4 + 2 * self.tier
-		else: number = 10 + 5 * self.tier
-
-		# Create Ammo Object
-		self.quivered = Ammo(ammo, data[0], data[1], data[2], number, data[3], None, brand)
 
 	def give_potion(self, pot):
 		data = Potions.array[pot]
@@ -241,7 +207,6 @@ class Monster:
 
 
 		# Ally Unit
-		los = None
 		if self in game.allies:
 			enemy, mini = None, 100
 			for unit in game.units:
@@ -369,7 +334,7 @@ class Monster:
 		if self.quivered is not None:
 			if self.quivered.wclass in Ammos.thrown_amclasses:
 				thrown = True
-				self.give_weapon(self.quivered.base_string)
+				Weapon.give_weapon(self, self.quivered.base_string)
 
 		# Make Ranged attacks
 		for item in self.wielding:

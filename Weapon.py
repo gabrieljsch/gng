@@ -7,9 +7,6 @@ from Descriptions import Descriptions
 from Colors import Colors
 from ai import *
 from Shield import Shield
-from Ammo import Ammo
-
-from sty import fg
 
 def apply(unit, passive, count, stacking=False):
 
@@ -56,6 +53,38 @@ class Weapon:
 
 		self.thrown = False
 
+	@staticmethod
+	def give_weapon(unit, weapon, hands=True, brand=None, enchantment=0):
+		data = Weapons.array[weapon]
+
+		# Manage Brand + Probability
+		try: brand = data[8]
+		except IndexError: pass
+		try: prob = data[9]
+		except IndexError: prob = None
+
+		enchantment = enchantment + data[4]
+
+		weapon = Weapon(unit.game, weapon, data[0], data[1], data[2], data[3], enchantment, data[5], data[6], data[7], None, brand, prob)
+		if hands < data[3] and hands:
+			unit.inventory.append(weapon)
+		else:
+			if hands: unit.hands -= data[3]
+			unit.wielding.append(weapon)
+		return weapon
+
+	@staticmethod
+	def make_weapon(weapon, game):
+		data = Weapons.array[weapon]
+
+		# Manage Brand + Probability
+		try: brand = data[8]
+		except IndexError: brand = None
+		try: prob = data[9]
+		except IndexError: prob = None
+
+		# Create Weapon Object
+		return Weapon(game, weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob)
 
 	def details(self):
 
@@ -98,7 +127,7 @@ class Weapon:
 
 
 		if enemy.rider is not None:
-			if d(10) >= 7 or self.wclass in {"spear","god spear","pike","lance","polearm","glaive"}:
+			if d(10) >= 7 or self.wclass in {"spear","god spear","pike","lance","polearm","glaive","trident"}:
 				self.strike(attacker, enemy.rider, self.game, firstswing)
 				return
 
@@ -116,6 +145,39 @@ class Weapon:
 
 		# Swing Probability
 		if d(100) > (100 - self.probability):
+
+			# Manage the Trident of Atlas
+			if self.base_string == "the Trident of Atlas" and firstswing:
+
+				spaces, affected = [], []
+				for x in range(-3, 4):
+					for y in range(-3, 4):
+						if x != 0 or y != 0: spaces.append((max(0, attacker.loc[0] + x), max(0, attacker.loc[1] + y)))
+
+				# Find units affected
+				for other_unit in game.units:
+					if other_unit.loc in spaces and other_unit != attacker: affected.append(other_unit)
+
+				delta = [attacker.loc[0] - enemy.loc[0], attacker.loc[1] - enemy.loc[1]]
+				hit = ""
+
+				for affected_unit in affected:
+
+					if affected_unit == enemy: continue
+					if self.game.map.can_move((affected_unit.loc[0] - 2*delta[0], affected_unit.loc[1] - 2*delta[1])):
+						affected_unit.loc = (affected_unit.loc[0] - 2*delta[0], affected_unit.loc[1] - 2*delta[1])
+					elif self.game.map.can_move((affected_unit.loc[0] - delta[0], affected_unit.loc[1] - delta[1])):
+						affected_unit.loc = (affected_unit.loc[0] - delta[0], affected_unit.loc[1] - delta[1])
+
+					if affected_unit.name == 'you':
+						if len(hit) == 0: hit += "you"
+						else: hit += ", you"
+					else:
+						if len(hit) == 0: hit += "the " + affected_unit.name
+						else: hit += ", the " + affected_unit.name
+
+				if hit != "": self.game.after_hit.append("Seaward winds from " + self.name + " blow away " + hit + "!")
+
 
 			# Weapon Swing
 			if firstswing: self.weapon_type_swing(attacker, enemy)
@@ -144,13 +206,13 @@ class Weapon:
 				if self.hands > 0 and self.wclass in Weapons.ranged_wclasses or self.wclass in Ammos.thrown_amclasses:
 					already_in = False
 					for item in enemy.inventory:
-						if type(item) == Ammo and attacker.quivered.base_string == item.base_string and attacker.quivered.brand == item.brand:
+						if quivered.same_value(item):
 							item.number += 1
 							already_in = True
 							break
 					# Quivereds are same lol
 					if enemy.quivered is not None:
-						if quivered.base_string == enemy.quivered.base_string and quivered.brand == enemy.quivered.brand:
+						if quivered.same_value(enemy.quivered):
 							enemy.quivered.number += 1
 							already_in = True
 
@@ -299,6 +361,14 @@ class Weapon:
 							brand_hit = True
 					elif brand == "hellfire": brand_hit = True if "evening rites" not in enemy.traits else False
 					elif brand is not None: brand_hit = True
+
+
+					# Manage Dominus
+					for weapon in enemy.wielding:
+						if weapon.base_string == "Dominus":
+							brand_hit = False
+							break
+
 
 				# Apply Brands
 				if not marked and damage > 0 and brand_hit: damage = self.apply_brands(attacker, enemy, damage, brand)
@@ -483,6 +553,11 @@ class Weapon:
 							try: self.game.player.well_being_statement(attacker, game.player, counter, estatus=False)
 							except: pass
 
+			# Add back after statement
+			if len(self.game.after_hit) != 0:
+				for line in self.game.after_hit: self.game.game_log.append(line)
+				self.game.after_hit = []
+
 
 	def weapon_type_swing(self, attacker, enemy):
 
@@ -500,60 +575,63 @@ class Weapon:
 				# Horizontal Case
 				if x == 0:
 					if unit.loc == (enemy.loc[0], enemy.loc[1] + 1):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if unit.loc == (enemy.loc[0], enemy.loc[1] - 1):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if self.wclass == 'scythe':
 						if unit.loc == (attacker.loc[0], enemy.loc[1] + 1):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 						if unit.loc == (attacker.loc[0], enemy.loc[1] - 1):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 
 				# Vertical Case
 				elif y == 0:
 					if unit.loc == (enemy.loc[0] + 1, enemy.loc[1]):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if unit.loc == (enemy.loc[0] - 1, enemy.loc[1]):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if self.wclass == 'scythe':
 						if unit.loc == (enemy.loc[0] + 1, attacker.loc[1]):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 						if unit.loc == (enemy.loc[0] - 1, attacker.loc[1]):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 
 				# Corner case
 				else:
 					if unit.loc == (enemy.loc[0] + y, enemy.loc[1]):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if unit.loc == (enemy.loc[0], enemy.loc[1] + x):
-						self.strike(attacker, unit, self.game, False)
+						self.strike(attacker, unit, self.game, firstswing=False)
 						cleave = True
 					if self.wclass == 'scythe':
 						if unit.loc == (enemy.loc[0] + 2*y, enemy.loc[1]):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 						if unit.loc == (enemy.loc[0], enemy.loc[1] + 2*x):
-							self.strike(attacker, unit, self.game, False)
+							self.strike(attacker, unit, self.game, firstswing=False)
 
 			if not cleave and self.wclass in {'greatsword','god sword'} and unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])): self.strike(attacker, unit, self.game, False)
 			# --END------------------------------------
 
-		if self.wclass in {"spear","polearm","lance","glaive"}:
+
+		elif self.wclass in {"spear","polearm","lance","glaive","trident"}:
 			for unit in self.game.units:
 				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])):
-					self.strike(attacker, unit, self.game, False)
+					self.strike(attacker, unit, self.game, firstswing=False)
 					break
 
-		if self.wclass in {"pike","god spear"}:
+
+
+		elif self.wclass in {"pike","god spear"}:
 			for unit in self.game.units:
 				if unit.loc == (attacker.loc[0] - 2 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 2 * (attacker.loc[1] - enemy.loc[1])):
-					self.strike(attacker, unit, self.game, False)
-				if unit.loc == (attacker.loc[0] - 3 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 3 * (attacker.loc[1] - enemy.loc[1])):
-					self.strike(attacker, unit, self.game, False)
+					self.strike(attacker, unit, self.game, firstswing=False)
+				elif unit.loc == (attacker.loc[0] - 3 * (attacker.loc[0] - enemy.loc[0]), attacker.loc[1] - 3 * (attacker.loc[1] - enemy.loc[1])):
+					self.strike(attacker, unit, self.game, firstswing=False)
 
 
 	def weapon_type_effect(self, attacker, enemy, damage):
@@ -805,8 +883,3 @@ class Weapon:
 				self.game.game_log.append(attacker.info[3] + " hits " + enemy.info[0] + " for " + str(damage) + " damage with " + name + " and " + Colors.color("poisons","green") + " " + enemy.info[0] + "!")
 			else:
 				self.game.game_log.append("You " + verb + " your " + str(wclass) + " " + preposition + " " + enemy.info[0] + ", dealing " + str(damage) + " damage and " + Colors.color("poisoning","green") + " it!")
-
-		# Add back after statement
-		if len(self.game.after_hit) != 0:
-			for line in self.game.after_hit: self.game.game_log.append(line)
-			self.game.after_hit = []

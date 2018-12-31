@@ -15,6 +15,8 @@ class Descriptions:
 			# Increasing damage with kill tiers, 6 tiers, at last tier also gains possessed brand.
 		"the Singing Spear" : "This ornate spear can be heard emitting musical tones when moving, it was once wielded by Huehuecóyotl. Its broad head has eight bloodletting holes, and its sturdy wooden shaft is wrapped in faded yet colorful linen bands.",
 			# Chance to change brand with every hit.
+		"the Trident of Atlas" : "This legendary spear was used by King Atlas to forge the kingdom of Atlantis. Ornate images of sea monsters, heroes, and sea life adorn the full length of the trident, its three barbed prongs radiate with the untamed power of the seas.",
+			# on strike, pushes non-hit enemies in a radius of 3 in the direction of the strike
 		"Kraken" : "This ancient axe looks as if it had lain at the bottom of the ocean for centuries. Barnacles, coral, and in places even moss adorn this weapon like so many ornaments. Its simple design and light frame allow it to be thrown with relative ease and deadly effectiveness.",
 			# This axe can be thrown but takes a turn to return, but deals secondary damage and immobilizes when ripped out of an enemy to return to user, assuming a hand is free.
 		"Krog's Maw" : "This huge waraxe is the size of a mortal man, for it is said once to be wielded by the orc deity himself. Its single head is covered in huge teeth, spinning on mechanical chains to rend flesh. Records of those slain by this axe are depicted in crude markings along its ivory haft.",
@@ -57,8 +59,8 @@ class Descriptions:
 			# Acts as a weapon when attacking, 100% swing chance
 		"the Black Cross" : "This massive obsidian shield was forged in the shape of a templar cross; holy symbols, seals, and vials of holy water adorn its front. When wielded, the shield has a palpable, burning hatred towards anyone or anything of magical properties.",
 			# Applies burn effect to anyone that casts a spell in the same room as someone wielding it
-		"" : "",
-			#
+		"Dominus" : "This bone-white shield was fashioned from the grimacing skulls of dozens of necromancers. Each skull is softly whispering in a different tongue, such that a cacophony of voices can be heard when surroundings are silent. Rumor has it that the skulls inhale flame, ice, and hellfire alike.",
+			# Ignores enemy weapon brands completely
 
 		# Armor
 		"Kain's Pact" : "These fiery robes burn blood red to the eye. The robes utilize an ornate leather breastplate, resembling a rib-cage, to allow its users more protection than normal robes. Wearers are able to cast spells when magical energy is spent...for a price.",
@@ -67,7 +69,7 @@ class Descriptions:
 			# Getting hit by a melee attack causes you to blink.
 		"Plaguebringer" : "This feared chainmail armor uses inbuilt vents to spread infectious diseases through the air. The chainmail is rusty and almost green with packed filth, and spikes holding heads of various defeated opponents are adorned on its backplate.",
 			# Emits an aura of plague, applying one stack of poison to enemies in radius 2.
-		"God-Frame" : "This set of golden plate armor is designed to protect a god from everything possible. It is beautifully engraved with scenes of myth and legend, and on its backplate is welded a force generator that can emit bursts of stunning energy.",
+		"God-Frame" : "This set of golden plate armor is designed to protect a god from anything possible. It is beautifully engraved with scenes of myth and legend, and on its backplate is welded a force generator that can emit bursts of stunning energy.",
 			# Small chance to stun attackers on taking a hit.
 		"Bloodshell" : "This dark red plate armor is covered in small white teeth, which seem to breathe and react to the touch. In place of a chest pauldron, this armor utilizes a cracked monstrous chronid skull, teeth flared outwards.",
 			# Damage done by spikes also heals you for a percent.
@@ -95,8 +97,9 @@ class Descriptions:
 
 		# Polearm
 		"spear" : ["A light polearm with a long shaft and sharp tip.","This weapon strikes the enemy behind the target on a successful hit."],
+		"trident": ["A heavy polearm with a long shaft and sharp tips, numbering three to five.", "This weapon strikes the enemy behind the target on a successful hit."],
 		"pike" : ["A two-handed polearm with an extremely long shaft and sharp tip.", "This weapon strikes the next two enemies behind the target on a successful hit."],
-		"lance" : ["A light polearm with a pointed tip, usually used while mounted.", "This weapon strikes the enemy behind the target on a successful hit."],
+		"lance" : ["A light polearm with a pointed tip, to be used while mounted.", "This weapon strikes the enemy behind the target on a successful hit and attacks adjacent enemies on a charge while mounted."],
 		"polearm" : ["A weapon with a long shaft and sharp metal head used for chopping.", "This weapon strikes the enemy behind the target on a successful hit."],
 		"glaive" : ["A weapon with a long shaft and a long, sharp metal head used for chopping.", "This weapon strikes the enemy behind the target on a successful hit."],
 		"scythe" : ["A polearm with a long curved blade that can carve men in two.", "This weapon cleaves two adjacent units on either side of the target on a successful hit."],

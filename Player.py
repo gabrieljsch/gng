@@ -95,7 +95,7 @@ class Player:
 		self.rider, self.mount = None, None
 
 		# Inventory, Spells
-		self.inventory, self.spells, self.abilities, self.cooldowns = [], ["godhammer","deathmark","frost breath"], ["double shot"], []
+		self.inventory, self.spells, self.abilities, self.cooldowns = [], [], ["double shot"], []
 
 		# Initialize Equipment
 		self.wielding, self.hands, self.total_hands, self.quivered = [], 2, 2, None
@@ -109,20 +109,16 @@ class Player:
 
 		# Innate Equipment
 		for equipment in innate_equipment:
-			if equipment in Weapons.array: self.give_weapon(equipment)
+			if equipment in Weapons.array: Weapon.give_weapon(self, equipment)
 			elif equipment[0] in Spells.spells and equipment[1]: self.abilities.append(equipment[0])
 			elif equipment[0] in Spells.spells and not equipment[1]: self.spells.append(equipment[0])
 
 		# Class Equipment
 		for item in CharacterInfo.race_starting_equipment[self.game.race][CharacterInfo.class_list.index(self.game.pclass)]:
 			if item in Ammos.array:
-				data = Ammos.array[item]
-				if data[2] in Ammos.thrown_amclasses: number = 6
-				else: number = 20
-				self.inventory.append(Ammo(item,data[0],data[1],data[2], number,data[3],None))
-				self.quivered = self.inventory[-1]
+				self.quivered = Ammo.give_ammo(self, item)
 			elif item in Weapons.array:
-				self.give_weapon(item)
+				Weapon.give_weapon(self, item)
 			elif item in Shields.array:
 				data = Shields.array[item]
 				try: brand = data[6]
@@ -344,7 +340,7 @@ class Player:
 			if self.quivered.wclass in Ammos.thrown_amclasses and not kraken:
 				thrown = True
 				# Create Throwing platform
-				self.give_weapon(self.quivered.base_string, hands=False)
+				Weapon.give_weapon(self, self.quivered.base_string, hands=False)
 
 
 
@@ -1183,7 +1179,7 @@ class Player:
 		already_in = False
 		if type(item) == Ammo:
 			for thing in self.inventory:
-				if type(thing) == Ammo and thing.base_string == item.base_string and thing.brand == item.brand:
+				if item.same_value(thing):
 					thing.number += item.number
 					already_in = True
 					break
@@ -1196,6 +1192,7 @@ class Player:
 
 		self.game.items.remove(item)
 		if not already_in: self.inventory.append(item)
+		if type(item) == Ammo: print(item.name, item.base_string, item.number, item.wclass)
 		if type(item) in {Ammo, Potion}:
 			if item.number > 1: self.game.game_log.append("You pick up " + str(item.number) + ' ' + item.name + "s.")
 			else: self.game.game_log.append("You pick up the " + item.name + ".")
@@ -1223,26 +1220,6 @@ class Player:
 		try: self.game.game_log.append("You drop " + article + str(item.number) + ' ' + item.name + "s")
 		except: self.game.game_log.append("You drop " + article + item.name)
 		self.time += self.mspeed
-
-	# noinspection PyTypeChecker
-	def give_weapon(self, weapon, hands=True):
-		data = Weapons.array[weapon]
-
-		# Manage Brand + Probability
-		try: brand = data[8]
-		except IndexError: brand = None
-		try: prob = data[9]
-		except IndexError: prob = None
-
-		if hands: self.hands -= data[3]
-
-		# Create Weapon Object
-		if data[2] in Weapons.ranged_wclasses and data[3] > 0:
-			self.inventory.append(Weapon(self.game, weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],None, brand, prob))
-			return self.inventory[-1]
-		else:
-			self.wielding.append(Weapon(self.game, weapon, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], None, brand, prob))
-			return self.wielding[-1]
 
 
 	def calc_AC(self):

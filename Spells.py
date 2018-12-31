@@ -422,7 +422,7 @@ class Spells:
 		if attacker.name == 'you': game.temp_log.append("There are no places to raise a skeleton!")
 		return False
 
-	def wraithwalk(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def wraithwalk(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		status, count = "wraithform", 5
@@ -465,7 +465,7 @@ class Spells:
 
 		return True
 
-	def blink(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def blink(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Check Condition
 		if attacker.name != 'you':
@@ -474,7 +474,7 @@ class Spells:
 		spaces = []
 		for x in range(-3,4):
 			for y in range(-3,4):
-				if (x != 0 or y != 0): spaces.append((max(0,attacker.loc[0] + x), max(0,attacker.loc[1] + y)))
+				if x != 0 or y != 0: spaces.append((max(0,attacker.loc[0] + x), max(0,attacker.loc[1] + y)))
 		shuffle(spaces)
 
 		for space in spaces:
@@ -493,7 +493,7 @@ class Spells:
 		if attacker.name == 'you': game.temp_log.append("There are no places to blink to!")
 		return False
 
-	def poison_breath(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def poison_breath(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Traits
 		status, count = 'poisoned', 2
@@ -513,7 +513,7 @@ class Spells:
 		apply(enemy, status, count, stacking = True)
 		return True
 
-	def ignite_venom(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def ignite_venom(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Condition
 		poisoned = False
@@ -540,7 +540,7 @@ class Spells:
 
 		return True
 
-	def spectral_sword(name, attacker, enemy, game, map, roomfiller, ability = False):
+	def spectral_sword(name, attacker, enemy, game, map, roomfiller, ability=False):
 
 		# Condition
 		if attacker.hands < 1:
@@ -912,7 +912,7 @@ class Spells:
 			apply(closest, status, count)
 			return True
 
-	def frost_breath(name, attacker, enemy, game, map, roomfiller,  ability = False):
+	def frost_nova(name, attacker, enemy, game, map, roomfiller,  ability = False):
 
 		# Traits
 		status, count = "frozen", 3
@@ -948,7 +948,7 @@ class Spells:
 			if unit == attacker: continue
 			los = ai.los(attacker.loc, unit.loc, Maps.rooms[game.map.map][0], game)
 			if los is not None:
-				if len(los) - 1 <= Spells.spells['frost breath'][5]:
+				if len(los) - 1 <= Spells.spells['frost nova'][5]:
 					freeze(unit)
 					tar = True
 		if not tar:
@@ -1201,7 +1201,7 @@ class Spells:
 	spell_schools = {
 		# Spells
 		"fire" : 			["flame tongue"],
-		"frost" : 			["frost breath"],
+		"frost" : 			["frost nova"],
 		"electricity" : 	["chain lightning", "thunderbolt"],
 		"poison" : 			["envenom","poison breath","ignite venom"],
 		"necromancy" : 		["dark bolt","raise skeleton","bloodreave","dark transformation","deathmark","death's hand","life leech"],
@@ -1311,7 +1311,7 @@ class Spells:
 
 		# Fire
 		# Frost
-		"frost breath" :  		(frost_breath,      	9, 1.3,  False, False, 3),
+		"frost nova" :  		(frost_nova,      	9, 1.3,  False, False, 3),
 		# Necromancy
 		"dark transformation" : (dark_transformation,   0, 3.0,  False, False),
 		"deathmark" :  			(deathmark, 			10, 1.4,  True, False),
